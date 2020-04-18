@@ -5,7 +5,6 @@
 astraRoomAssistant/bin/
 ASTRARoomManager/build/
 ASTRARoomManager/bin/
-ASTRARoomManager/out/
 
 */node_modules/
 */.gradle/
