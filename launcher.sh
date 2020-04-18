@@ -1,16 +1,12 @@
 #! /bin/bash
 
-cd SourceSample
-
-/c/Windows/System32/cmd.exe //c 'start cmd /c launcher.sh'
-
 cd ../DisplaySample
 
-/c/Windows/System32/cmd.exe //c 'start cmd /c launcher.sh'
+/c/Windows/System32/cmd.exe //c 'start cmd /c npm install & launcher.sh'
 
 cd display-client
 
-/c/Windows/System32/cmd.exe //c 'start cmd /c npm start'
+/c/Windows/System32/cmd.exe //c 'start cmd /c npm install && npm start'
 
 cd ../../
 
