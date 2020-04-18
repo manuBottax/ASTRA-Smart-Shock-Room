@@ -25,7 +25,6 @@ DisplaySample/.idea/*
 
 DisplaySample/display-client/node_modules/
 DisplaySample/display-client/README.md
-DisplaySample/display-client/public
 
 AlexaInputHandler/node_modules/*
 AlexaInputHandler/.gradle/*

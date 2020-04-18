@@ -1,15 +1,15 @@
 #! /bin/bash
 
-cd ../DisplaySample
+cd DisplaySample
 
-/c/Windows/System32/cmd.exe //c 'start cmd /c npm install & launcher.sh'
+/c/Windows/System32/cmd.exe //c 'start cmd /c npm start'
 
 cd display-client
 
-/c/Windows/System32/cmd.exe //c 'start cmd /c npm install && npm start'
+/c/Windows/System32/cmd.exe //c 'start cmd /c npm start'
 
 cd ../../
 
-cd ASTRARoomManager/out/artifacts/ASTRARoomManager_jar 
+cd ASTRARoomManager/
 
 /c/Windows/System32/cmd.exe //c 'start cmd /c java -jar ASTRARoomManager.jar'
