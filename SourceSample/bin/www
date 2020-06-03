@@ -87,4 +87,8 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+
+  console.log(" --- ASTRA Data Source Service ---")
+  console.log(" ------ Listening on port " + bind + " ------- ")
+  console.log(" ------------------------------------------ ")
 }

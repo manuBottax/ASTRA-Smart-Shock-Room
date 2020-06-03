@@ -34,6 +34,14 @@ SourceSample/node_modules/*
 SourceSample/.gradle/*
 SourceSample/.idea/*
 
+RoomCommandManager/node_modules/*
+RoomCommandManager/.gradle/*
+RoomCommandManager/.idea/*
+
+RoomCommandManager/node_modules/
+RoomCommandManager/.gradle/
+RoomCommandManager/.idea/
+
 DisplaySample/node_modules/
 DisplaySample/.gradle/
 DisplaySample/.idea/

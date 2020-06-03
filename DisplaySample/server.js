@@ -17,5 +17,5 @@ app.use('/', router);
 
 const PORT = 3001;
 
-// Start server on 3000 port
+// Start server on 3001 port
 app.listen(PORT, () => console.log(`Swamp Events service listening on port ${PORT}`));

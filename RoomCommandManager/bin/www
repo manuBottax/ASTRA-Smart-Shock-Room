@@ -5,14 +5,14 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('alexainputhandler:server');
+var debug = require('debug')('roomcommandmanager:server');
 var http = require('http');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3005');
+var port = normalizePort(process.env.PORT || '3010');
 app.set('port', port);
 
 /**
@@ -87,7 +87,9 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  console.log(" --- ASTRA ALEXA Manager Service ---")
+
+  console.log(" --- ASTRA Room Command Manager Service ---")
   console.log(" ------ Listening on port " + bind + " ------- ")
   console.log(" ------------------------------------------ ")
+
 }
