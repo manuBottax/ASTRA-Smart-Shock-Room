@@ -1,7 +1,7 @@
 var mongoose = require( 'mongoose' );
 
 // Command Sample Format {
-//     command_id : String,
+//     _id : String,
 //     type : String,
 //     target : String,
 //     issuer : String,
@@ -17,6 +17,7 @@ var mongoose = require( 'mongoose' );
 
 var commandSchema = new mongoose.Schema({ 
     type: {type: String, required: true},
+    category: {type: String, required: true},
     target: {type: String, required: true},
     issuer: {type: String, required: true},
     status: {type: String, required: true},
