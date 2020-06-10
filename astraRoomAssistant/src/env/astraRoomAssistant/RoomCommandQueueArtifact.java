@@ -60,7 +60,6 @@ public class RoomCommandQueueArtifact extends Artifact {
 		this.queueName = queueName;
 		
 		execInternalOp("connect");
-	
 	}
 	
 	@OPERATION
@@ -75,19 +74,22 @@ public class RoomCommandQueueArtifact extends Artifact {
 		
 		JSONObject cmd = (JSONObject) last.getValue();
 		
-		String commandId = cmd.getString("command_id");
+		String commandID = cmd.getString("command_id");
 		
-		if (! commandId.equals("-1")) {
+		if (! commandID.equals("-1")) {
 		
 			//TODO: sospendi il piano dell'agente finchè non riceve risposta -> usare multistep op
 					
 			try {
 				
-				String path = COMMAND_SERVICE_URL + "/" + commandId + "/status";
+				String path = COMMAND_SERVICE_URL + "/" + commandID + "/status";
 				
 				cmd.put("status", CommandStatus.in_processing.getStatusCode());
 				
-				int res = NetworkManager.doPUT(path, cmd.toString());
+				JSONObject status = new JSONObject();
+				status.put("status", CommandStatus.in_processing.getStatusCode());
+				
+				int res = NetworkManager.doPUT(path, status.toString());
 				
 				if (res == 200) {
 					// l'agente può proseguire
@@ -124,15 +126,56 @@ public class RoomCommandQueueArtifact extends Artifact {
 		}
 	}
 	
-	/*
 	@OPERATION
-	void completeCommand(String id) {
+	void completeCommand(String commandID) {
 	
-		
+		try {
+			
+			String path = COMMAND_SERVICE_URL + "/" + commandID + "/status";
+			
+			JSONObject status = new JSONObject();
+			status.put("status", CommandStatus.completed.getStatusCode());
+			
+			int res = NetworkManager.doPUT(path, status.toString());
+			
+			if (res == 200) {
+				signal("command_completed", commandID);
+			} else {
+				System.out.println("Error : Cannot complete command");
+				signal("command_status_error", commandID);
+			}
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			signal("command_status_error", commandID);
+		}
 		
 	}
 	
-	*/
+	@OPERATION
+	void setCommandError(String commandID) {
+				
+		try {
+			
+			String path = COMMAND_SERVICE_URL + "/" + commandID + "/status";
+			
+			JSONObject status = new JSONObject();
+			status.put("status", CommandStatus.completed.getStatusCode());
+			
+			int res = NetworkManager.doPUT(path, status.toString());
+			
+			if (res == 200) {
+				signal("command_completed", commandID);
+			} else {
+				System.out.println("Error : Cannot complete command");
+				signal("command_status_error", commandID);
+			}
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			signal("command_status_error", commandID);
+		}
+		
+	}
+		
 	
 	@INTERNAL_OPERATION
 	void connect() {

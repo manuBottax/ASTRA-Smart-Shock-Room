@@ -3,15 +3,24 @@ const express = require('express');
 var router = express.Router();
 var jsonUtils = require("./jsonUtilities");
 
+app = express();
+app.use(express.json());
+app.use(express.urlencoded());
+
 router.get('/', (req, res) => {
   res.send('<h1>ASTRA Shock Room Display Service</h1> <p> You should not be here. </p>');
 });
 
-router.post('/api/display/:position/:data',  (req, res) => {
+router.post('/api/display/:position',  (req, res) => {
 
   if (req.params){
+
       var position = req.params.position;
-      var data = req.params.data;
+
+      console.log("Body : ");
+      console.log(req.body)
+
+      var data = req.body.type + " : " + req.body.data;
 
       io.emit("display_data", {position : position, value : data});
       jsonUtils.sendJsonResponse(res, 201, "OK");
@@ -20,8 +29,6 @@ router.post('/api/display/:position/:data',  (req, res) => {
   }
 
 });
-
-app = express();
 
 app.use('/', router);
 

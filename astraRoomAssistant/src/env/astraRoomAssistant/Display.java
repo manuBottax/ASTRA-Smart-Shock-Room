@@ -2,25 +2,55 @@
 
 package astraRoomAssistant;
 
-import cartago.*;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+
+import org.json.JSONObject;
+
+import cartago.*;
+import utils.NetworkManager;
 
 public class Display extends Artifact {
 	
-	private static final String DISPLAY_URL = "http://localhost:3001/data";
+	private static final String DISPLAY_SERVICE_URL = "http://192.168.1.120:3001/api/display";
 	
 	void init() {
 		System.out.println("Display Artifact created");
 	}
 
 	@OPERATION
-	void requestDisplay(String data, String position) {
+	void printData(String type, String data, String position, OpFeedbackParam<String> result) {
+		
+		try {
+			
+			String path = DISPLAY_SERVICE_URL + "/" + position;
+			
+			/* String path = DISPLAY_SERVICE_URL + "/" + position + "/" + data; */
+			
+			System.out.println(path);
+			
+			JSONObject body = new JSONObject();
+			
+			body.put("type", type);
+			body.put("data", data);
+			
+			int res = NetworkManager.doPOST(path, body.toString());
+			
+			if (res == 201) {	
+				
+				result.set("OK");
+				
+			} else {
+				System.out.println("Error : Cannot visualise data on display");
+				result.set("Error");
+			}
+		} catch (IOException ex) {
+            ex.printStackTrace();
+            signal("display_request_failed", ex.getCause().getMessage());
+        }
+    
+	}
+		
+		/*
 		
         try {
 
@@ -61,7 +91,7 @@ public class Display extends Artifact {
             ex.printStackTrace();
             signal("display_request_failed", ex.getCause().getMessage());
         }
-    }
+    } */
 		
 }
 

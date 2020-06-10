@@ -9,7 +9,7 @@
 /* Plans */
 
 +! observe : true <- 
-	?find_queue(Queue)
+	?init_queue(Queue)
 	?find_display(Display)
 	?find_tt_source(TTSource)
 	?find_tac_source(Tac)
@@ -20,50 +20,58 @@
 	
 +last_available_command(Command) : true <-
 	.println("A new command is received : " , Command);
-	acceptCommand(Result, Id, Type, Value, Target, Position) [artifact_id(QueueId)];
-	/* .println(Result, " | " , Id , " | ", Type , " | ", Value , " | ", Target , " | ", Position); */
-	+accepted_work(Result, Command, Id, Type, Value, Target, Position).
+	acceptCommand(Result, Id, Type, DataType, Target, Position) [artifact_id(QueueId)];
+	/* .println(Result, " | " , Id , " | ", Type , " | ", DataType , " | ", Target , " | ", Position); */
+	+accepted_work(Result, Id, Type, DataType, Target, Position).
 	
-+accepted_work(Result, Command, Id, Type, Value, Target, Position) : Result = "OK" <-
++accepted_work(Result, Id, Type, DataType, Target, Position) : Result = "OK" <-
 	.println("Command Taken");
-	!processCommand(Command, Id, Type, Value, Target, Position).
+	!processCommand(Id, Type, DataType, Target, Position).
 	
-+accepted_work(Result, Command, Id, Type, Value, Target, Position) : Result = "Error" <-
++accepted_work(Result, Id, Type, DataType, Target, Position) : Result = "Error" <-
 	.println("Error on command Acceptance").
 	
-+accepted_work(Result, Command, Id, Type, Value, Target, Position) : Result = "Init OK" <-
-	.println("Initialization Completed").
++accepted_work(Result, Id, Type, DataType, Target, Position) : Result = "Init OK" <-
+	.println("Queue Initialization Completed").
 	
-+! processCommand(Command, Id, Type, Value, Target, Position) : Type = "visualisation" <- 
++! processCommand(CommandId, Type, DataType, Target, Position) : Type = "visualisation" <- 
 	.println("Working on Command ", Id)
-	.println("Want to visualise ", Value)
-	!requestData(Value, Data)
-	.println("Got ", Value, " value : ", Data)
-	!displayData(Data, Target, Position).
+	.println("Want to visualise ", DataType)
+	!requestData(DataType, Value)
+	.println("Got ", DataType, " value : ", Value)
+	!displayData(CommandId, DataType, Value, Target, Position).
 	
-+! processCommand(Command, Id, Type, Value, Target, Position) : Type = "monitoring" <- 
++! processCommand(Command, Id, Type, DataType, Target, Position) : Type = "monitoring" <- 
 	.println("Working on Command ", Id)
-	.println("Want to monitor ", Value).
+	.println("Want to monitor ", DataType).
 	
-+! processCommand(Command, Id, Type, Value, Target, Position) : Type = "action" <- 
++! processCommand(Command, Id, Type, DataType, Target, Position) : Type = "action" <- 
 	.println("Working on Command ", Id)
 	.println("Want an action on ", Target).
 
-+! requestData(Value, Data) : true <- 
-	.println("Searching for data ", Value);
-	getDataValue(Value, Data) [artifact_id(SourceId)].
++! requestData(DataType, Value) : true <- 
+	.println("Searching for data ", DataType);
+	getDataValue(DataType, Value) [artifact_id(TTSourceId)].
 	
 /* Display data in Shock Room Display using related artifact*/
-+! displayData(Data, Target, Position) : true <-
-	.println("Displaying data " , Data, " in ", Target, " on ", Position).
-	/* requestDisplay(Data, Position) [artifact_id(Target)]. */
++! displayData(CommandId, DataType, Value, Target, Position) : true <-
+	.println("Displaying ", DataType, " data " , Value, " in ", Target, " on ", Position)
+	printData(DataType, Value, Position, Result) [artifact_id(Target)]
+	!completeCommand(Result, CommandId).
 	
-+display_request_completed(Output) : true <-
-	println("Display request completed : " , Output)
-	completeCommand(Id) [artifact_id(QueueId)].
++! completeCommand(Result, CommandId) : Result = "OK" <-
+	println("Display request completed successfully ")
+	completeCommand(CommandId) [artifact_id(QueueId)].
+	
++! completeCommand(Result, CommandId) : Result = "Error" <-
+	println("Display request failed")
+	setCommandError(CommandId) [artifact_id(QueueId)].
+	
++ command_completed(CommandId) : true <-
+	println("Command processing " , CommandId , " completed.").
 
-+display_request_failed(Error) : true <-
-	println("Display request failed : " , Error).	
++ command_status_error(CommandId) : true <-
+	println("Cannot update " , CommandId , " status.").
 	
 	
 	
@@ -73,8 +81,9 @@
 	
 	
 	
-+? find_queue(QueueId) : true <-
-	lookupArtifact("roomCommands", QueueId);
++? init_queue(QueueId) : true <-
+	makeArtifact("roomCommands", "astraRoomAssistant.RoomCommandQueueArtifact", [], QueueId)
+	/*lookupArtifact("roomCommands", QueueId);*/
 	subscribeQueue("room.*", "room_commands_queue")[artifact_id(QueueId)].
 	/* +queue(QueueId). */
 	
