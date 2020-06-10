@@ -12,7 +12,8 @@
 	?init_queue(Queue)
 	?find_display(Display)
 	?find_tt_source(TTSource)
-	?find_tac_source(Tac)
+	?find_tac_source(TacSource)
+	?find_mock_source(MockSource)
 	
 	focus(Queue)
 	focus(Display)
@@ -34,24 +35,73 @@
 +accepted_work(Result, Id, Type, DataType, Target, Position) : Result = "Init OK" <-
 	.println("Queue Initialization Completed").
 	
-+! processCommand(CommandId, Type, DataType, Target, Position) : Type = "visualisation" <- 
-	.println("Working on Command ", Id)
++! processCommand(CommandId, "visualisation", DataType, Target, Position) <- 
+	.println("Working on Command ", CommandId)
 	.println("Want to visualise ", DataType)
 	!requestData(DataType, Value)
 	.println("Got ", DataType, " value : ", Value)
 	!displayData(CommandId, DataType, Value, Target, Position).
 	
-+! processCommand(Command, Id, Type, DataType, Target, Position) : Type = "monitoring" <- 
-	.println("Working on Command ", Id)
++! processCommand(CommandId, "monitoring", DataType, Target, Position)  <- 
+	.println("Working on Command ", CommandId)
 	.println("Want to monitor ", DataType).
+	/* TODO : gestione monitoraggio */
 	
-+! processCommand(Command, Id, Type, DataType, Target, Position) : Type = "action" <- 
-	.println("Working on Command ", Id)
++! processCommand(CommandId, "action", DataType, Target, Position) <- 
+	.println("Working on Command ", CommandId)
 	.println("Want an action on ", Target).
-
-+! requestData(DataType, Value) : true <- 
-	.println("Searching for data ", DataType);
+	/* TODO : Gestione Azioni */
+	
+/* ----------- DATA REQUEST  ----------- */
+	
++! requestData("patient_details", Value) <- 
+	.println("Searching for Patient Personal Data ");
+	getMockData(Value) [artifact_id(MockSourceId)]. 
+	
+/* Vital Parameters request */
++! requestData(DataType, Value) 
+	: DataType = "blood_pressure" | DataType = "spO2" | 
+	  DataType = "heart_rate" | DataType = "temperature" <- 
+	.println("Searching for Vital Parameter data : ", DataType);
 	getDataValue(DataType, Value) [artifact_id(TTSourceId)].
+	
+/* Biometrical Data request */
++! requestData(DataType, Value) 
+	: DataType = "CO2_level" | DataType = "ega" | DataType = "rotem" <- 
+	.println("Searching for Biometrical Data : ", DataType);
+	getMockData(Value) [artifact_id(MockSourceId)].
+
+/* Diagnostic data */
++! requestData(DataType, Value) 
+	: DataType = "chest_rx" | DataType = "blood_tests" | DataType = "ecg" <- 
+	.println("Searching for Diagnostic Data : ", DataType);
+	getMockData(Value) [artifact_id(MockSourceId)].	
+	
++! requestData("tac", Value) <- 
+	.println("Searching for TAC data ");
+	getTACData(Value) [artifact_id(TacSourceId)]. 
+
+/* Temporal data */
+/* TODO: gestione degli aspetti temporali */
++! requestData(DataType, Value) 
+	: DataType = "eta" | DataType = "total_time" <- 
+	.println("Searching for Temporal Data : ", DataType);
+	getMockData(Value) [artifact_id(MockSourceId)].	
+	
+/* Environment data */
++! requestData(DataType, Value) 
+	: DataType = "used_blood_unit" <- 
+	.println("Searching for Environmental Data : ", DataType);
+	getMockData(Value) [artifact_id(MockSourceId)].	
+	
+/* All other Data */
+/* TODO : Gestire tipi unhandled */
++! requestData(DataType, Value) : true <- 
+	.println("non dovrei essere qui")
+	.println("Searching for data ", DataType);
+	getMockData(Value) [artifact_id(MockSourceId)].
+
+/* -------------------------------------------------------------------------------------- */
 	
 /* Display data in Shock Room Display using related artifact*/
 +! displayData(CommandId, DataType, Value, Target, Position) : true <-
@@ -81,37 +131,41 @@
 	
 	
 	
-+? init_queue(QueueId) : true <-
++? init_queue(QueueId) <-
 	makeArtifact("roomCommands", "astraRoomAssistant.RoomCommandQueueArtifact", [], QueueId)
-	/*lookupArtifact("roomCommands", QueueId);*/
 	subscribeQueue("room.*", "room_commands_queue")[artifact_id(QueueId)].
-	/* +queue(QueueId). */
 	
--? find_queue(QueueId) : true <-
+-? find_queue(QueueId) <-
 	.wait(200);
 	?find_queue(QueueId).
 	
-+? find_display(DisplayId) : true <-
++? find_display(DisplayId) <-
 	lookupArtifact("display_sr", DisplayId).
-	/* +display("display_sr", DisplayId).  */
 	
--? find_display(DisplayId) : true <-
+-? find_display(DisplayId) <-
 	.wait(200);
 	?find_display(DisplayId).
 	
-+? find_tt_source(TTSourceId) : true <-
++? find_tt_source(TTSourceId) <-
 	lookupArtifact("traumaTrackerService", TTSourceId).
 
--? find_tt_source(TTSourceId) : true <-
+-? find_tt_source(TTSourceId) <-
 	.wait(200);
-	?find_source(TTSourceId).
+	?find_tt_source(TTSourceId).
 	
-+? find_tac_source(TacSourceId) : true <-
++? find_tac_source(TacSourceId) <-
 	lookupArtifact("tacPS", TacSourceId).
 
--? find_tac_source(TacSourceId) : true <-
+-? find_tac_source(TacSourceId) <-
 	.wait(200);
-	?find_source(TacSourceId).
+	?find_tac_source(TacSourceId).
+	
++? find_mock_source(MockSourceId) <- 
+   	lookupArtifact("mockSource", MockSourceId).
+ 
+-? find_mock_source(MockSourceId) <-
+	.wait(200);
+	?find_mock_source(MockSourceId).
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

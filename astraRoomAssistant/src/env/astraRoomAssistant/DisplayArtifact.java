@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import cartago.*;
 import utils.NetworkManager;
 
-public class Display extends Artifact {
+public class DisplayArtifact extends Artifact {
 	
 	private static final String DISPLAY_SERVICE_URL = "http://192.168.1.120:3001/api/display";
 	

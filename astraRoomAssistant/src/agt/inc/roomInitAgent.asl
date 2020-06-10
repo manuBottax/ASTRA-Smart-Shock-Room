@@ -11,20 +11,20 @@
 +!create_artifact : true <- 
 	!setup_display(Display_id);
 	!setup_tt_source(Source_TT_id);
-	!setup_tac(Source_TAC_id).
-	/*!setup_command_queue(Queue_id).*/
+	!setup_tac(Source_TAC_id);
+	!setup_mock_source(Source_id).
 	
 +! setup_display(D) : true <-
-	makeArtifact("display_sr", "astraRoomAssistant.Display", [], D).
+	makeArtifact("display_sr", "astraRoomAssistant.DisplayArtifact", [], D).
 	
 +! setup_tt_source(S) : true <-
-	makeArtifact("traumaTrackerService", "astraRoomAssistant.TraumaTrackerArtifact", [], S).
+	makeArtifact("traumaTrackerService", "astraRoomAssistant.TraumaArtifact", [], S).
 	
 +! setup_tac(T) : true <-
 	makeArtifact("tacPS", "astraRoomAssistant.TACArtifact", [], T).
 	
-/* +! setup_command_queue(Q) : true <-
-	makeArtifact("roomCommands", "astraRoomAssistant.RoomCommandQueueArtifact", [], Q). */
++! setup_mock_source(U) : true <-
+	makeArtifact("mockSource", "astraRoomAssistant.MockDataSourceArtifact", [], U). 
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

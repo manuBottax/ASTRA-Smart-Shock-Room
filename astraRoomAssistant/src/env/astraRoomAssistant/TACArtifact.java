@@ -10,5 +10,12 @@ public class TACArtifact extends Artifact {
 		System.out.println("TAC Artifact created");
 	}
 	
+	@OPERATION
+	void getTACData(OpFeedbackParam<String> result) {
+				
+		result.set("This is a TAC Sample");
+		
+	}
+	
 }
 
