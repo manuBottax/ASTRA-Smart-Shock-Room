@@ -20,7 +20,7 @@ public class Display extends Artifact {
 	}
 
 	@OPERATION
-	void requestDisplay(String data) {
+	void requestDisplay(String data, String position) {
 		
         try {
 
