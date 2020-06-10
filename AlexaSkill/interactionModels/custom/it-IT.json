@@ -1,0 +1,82 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "esempio di prova",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "HelloWorldIntent",
+          "slots": [],
+          "samples": [
+            "Alexa cosa volevi dire",
+            "cosa volevi dire ",
+            "vediamo se funziona"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "SlotAnswerTestIntent",
+          "slots": [
+            {
+              "name": "name",
+              "type": "AMAZON.FirstName"
+            }
+          ],
+          "samples": [
+            "saluta {name}",
+            "ciao {name}"
+          ]
+        },
+        {
+          "name": "PatientParameterRequestIntent",
+          "slots": [
+            {
+              "name": "data_type",
+              "type": "patient_parameter"
+            }
+          ],
+          "samples": [
+            "visualizza {data_type} del paziente "
+          ]
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "tutto"
+              }
+            },
+            {
+              "name": {
+                "value": "pressione"
+              }
+            },
+            {
+              "name": {
+                "value": "battito"
+              }
+            }
+          ],
+          "name": "patient_parameter"
+        }
+      ]
+    }
+  },
+  "version": "14"
+}
