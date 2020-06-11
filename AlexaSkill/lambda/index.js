@@ -1,9 +1,10 @@
 
 const Alexa = require('ask-sdk-core');
 
-//TODO: Usare le richieste asincrone in produzione
-// const requestHandler = require('then-request');
-const requestHandler = require('sync-request');
+const requestHandler = require('then-request');
+// const requestHandler = require('sync-request');
+
+const COMMAND_SERVICE_PATH = 'http://151.61.151.43:3010/api/commands'
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -11,62 +12,21 @@ const LaunchRequestHandler = {
     },
     
     handle(handlerInput) {
-        const speakOutput = 'Ciao Bottax ! Cosa posso fare per te ?';
+        const speakOutput = 'Benvenuto in ASTRA Room Controller. Attendo istruzioni';
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
             .getResponse();
     }
 };
-const HelloWorldIntentHandler = {
+
+const VisualisationRequestIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
-    },
-    handle(handlerInput) {
-        const speakOutput = 'Certo ! Funziono benissimo e so rispondere ad ogni tua richiesta';
-
-
-        return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt('Vuoi sapere altro ?')
-            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
-            .getResponse();
-    }
-};
-
-const SlotAnswerTestIntentHandler = {
-    canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'SlotAnswerTestIntent';
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'VisualisationRequestIntent';
     },
     
-    handle(handlerInput) {
-       const slots = handlerInput
-            .requestEnvelope
-            .request
-            .intent
-            .slots;
-           
-        const name = slots.name.value;
-        
-        const speakOutput = 'Ciao ' + name;
-        
-        return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt("Chi devo salutare adesso ? ")
-            .getResponse();
-    }
-}
-
-const PatientParameterRequestIntentHandler = {
-    canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'PatientParameterRequestIntent';
-    },
-    
-    // async handle(handlerInput) {
-    handle(handlerInput) {
+    async handle(handlerInput) {
         
        const slots = handlerInput
             .requestEnvelope
@@ -75,86 +35,312 @@ const PatientParameterRequestIntentHandler = {
             .slots;
            
         const data_type = slots.data_type.value;
+        var position = slots.position.value;
         
-        var speechOutput = 'Richiedo ' + data_type + ' del paziente'
+        var id = slots.data_type.resolutions.resolutionsPerAuthority[0].values[0].value.id;
         
-        const path = 'http://151.61.210.34:3005/parameterRequest'
+        //If position is not defined by the user use a default value;
+        if (! isFinite(position)){
+            position = 4;
+        }
+        
+        //TODO: switch sul tipo per gestione category
+        var data = {json: {
+            type : "visualisation",
+            category : "room",
+            target : "display_sr",
+            issuer : "alexa_ASTRA_controller",
+            params : {
+                value : id,
+                position : position
+            }
+        }}
+        
+        var speechOutput = 'Richiedo la visualizzazione di ' + data_type + ' del paziente'
+        
+        await requestHandler('POST', COMMAND_SERVICE_PATH, data)
+            .getBody('utf-8')
+            .then(JSON.parse)
+            .done(function (res) {
+                console.log(res);
+            });
+            
+        return handlerInput.responseBuilder
+                .speak(speechOutput)
+                .reprompt("Rimango in attesa di altri comandi")
+                .getResponse();
+
+    }
+}
+
+const DrugInfoVisualisationRequestIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'DrugInfoVisualisationRequestIntent';
+    },
+    
+    
+    async handle(handlerInput) {
+        
+       const slots = handlerInput
+            .requestEnvelope
+            .request
+            .intent
+            .slots;
+           
+        const drug_name = slots.drug_name.value;
+        
+        //TODO: va gestita position per questo tipo di dato visto che non posso chiederla insieme al nome del farmaco.
+        //If position is not defined by the user use a default value;
+        const position = 5;
         
         /////// SYNC [OK] ////////////////////////////////////////////////////////////////////////////////////
         
-        const res = requestHandler('POST', path, 
-            {json:{
-                data_type : data_type,
-                patient_id : '123456'
-            }}).getBody('utf-8');
-                
-        var status = JSON.parse(res)
+        //TODO: switch sul tipo per gestione category
+        var data = {json: {
+            type : "visualisation",
+            category : "room",
+            target : "display_sr",
+            issuer : "alexa_ASTRA_controller",
+            params : {
+                value : "drug_quantity",
+                drug_name : drug_name,
+                position : position
+            }
+        }}
         
-        console.log(status);
+        var speechOutput = 'Richiedo la visualizzazione della quantità di farmaco  ' + drug_name + ' somministrata al paziente' 
         
-        speechOutput = status;
-
+        await requestHandler('POST', COMMAND_SERVICE_PATH, data)
+            .getBody('utf-8')
+            .then(JSON.parse)
+            .done(function (res) {
+                console.log(res);
+            });
+            
         return handlerInput.responseBuilder
-            .speak(speechOutput)
-            .reprompt("Vuoi sapere altro ?")
-            .getResponse();
+                .speak(speechOutput)
+                .reprompt("Rimango in attesa di altri comandi")
+                .getResponse();
         
-        /////// SYNC ////////////////////////////////////////////////////////////////////////////////////
     }
-    
-    
-    /////// ASYNC [NON FUNZIONA] ////////////////////////////////////////////////////////////////////////////////////
-        
-    // var result = await requestHandler('GET', path)
-    //             .getBody('utf-8')
-    //             .then(JSON.parse)
-    //             .done(function (res) {
-    //                 console.log(res);
-    //                 speechOutput = res.box_id;
-    //                 return handlerInput.responseBuilder
-    //                     .speak(speechOutput)
-    //                     .reprompt("Vuoi sapere altro ?")
-    //                     .getResponse();
-    //             });
-                
-    // return result;
-        
-    ///////////////////////////////////////////////////////////////////////////////////////////
-        
-    //     try {
-            
-    //      requestHandler('POST', path, {json:{
-    //             data_type : data_type,
-    //             patient_id : '123456'
-    //             }}) .getBody('utf-8')
-    //                 .then(JSON.parse)
-    //                 .done(function (res) {
-    //                     console.log(res);
-    //                     return handlerInput.responseBuilder
-    //                         .speak(speechOutput)
-    //                         .reprompt("Vuoi sapere altro ?")
-    //                         .getResponse();
-    //                 });
-    //         // const response = await postHttp('parameterRequest',postData) 
-    //         // speechOutput = 'Richiedo ' + data_type + ' del paziente';
-
-            
-    //     } catch (error){
-    //         console.log(error)
-    //         return handlerInput.responseBuilder
-    //             .speak(' Errore, non ho trovato niente')
-    //             .reprompt("Vuoi sapere altro ?")
-    //             .getResponse();
-    //     }
-        
-    //     // return handlerInput.responseBuilder
-    //     //     .getResponse();
-        
-    // }
-    
 }
 
+const MonitorRequestIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'MonitorRequestIntent';
+    },
+    
+    async handle(handlerInput) {
+        
+       const slots = handlerInput
+            .requestEnvelope
+            .request
+            .intent
+            .slots;
+           
+        const data_type = slots.data_type.id;
+        var position = slots.position.value;
+        
+        //If position is not defined by the user use a default value;
+        if (! isFinite(position)){
+            position = 4;
+        }
+        
+         
+        var id = slots.data_type.resolutions.resolutionsPerAuthority[0].values[0].value.id;
+        console.log(id);
+        
+        
+        //TODO: switch sul tipo per gestione category
+        var data = {json: {
+            type : "monitoring",
+            category : "room",
+            target : "display_sr",
+            issuer : "alexa_ASTRA_controller",
+            params : {
+                value : id,
+                position : position
+            }
+        }}
+        
+        var speechOutput = 'Richiedo il monitoraggio di ' + data_type + ' del paziente'
+        
+        await requestHandler('POST', COMMAND_SERVICE_PATH, data)
+            .getBody('utf-8')
+            .then(JSON.parse)
+            .done(function (res) {
+                console.log(res);
+            });
+            
+        return handlerInput.responseBuilder
+                .speak(speechOutput)
+                .reprompt("Rimango in attesa di altri comandi")
+                .getResponse();
+        
+    }
+}
 
+const OperationAnnotationRequestIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'OperationAnnotationRequestIntent';
+    },
+    
+    async handle(handlerInput) {
+        
+       const slots = handlerInput
+            .requestEnvelope
+            .request
+            .intent
+            .slots;
+           
+        const type = slots.type.value;
+        const operation = slots.operation.value;
+        
+        var data = {json: {
+            type : "annotation",
+            category : "trauma",
+            target : "display_sr",
+            issuer : "alexa_ASTRA_controller",
+            params : {
+                type : "operation",
+                status : type,
+                operation : operation
+            }
+        }}
+        
+        var speechOutput = "Richiedo l'annotazione di " + type + " " + operation + " del paziente"
+
+        await requestHandler('POST', COMMAND_SERVICE_PATH, data)
+            .getBody('utf-8')
+            .then(JSON.parse)
+            .done(function (res) {
+                console.log(res);
+            });
+            
+        return handlerInput.responseBuilder
+                .speak(speechOutput)
+                .reprompt("Rimango in attesa di altri comandi")
+                .getResponse();
+    }
+}
+
+const DrugAnnotationRequestIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'DrugAnnotationRequestIntent';
+    },
+    
+    async handle(handlerInput) {
+        
+       const slots = handlerInput
+            .requestEnvelope
+            .request
+            .intent
+            .slots;
+           
+        const drug_name = slots.drug_name.value;
+        const drug_quantity = slots.drug_quantity.value;
+        
+        var data = {json: {
+            type : "annotation",
+            category : "trauma",
+            target : "display_sr",
+            issuer : "alexa_ASTRA_controller",
+            params : {
+                type : "drug_administration",
+                drug_name : drug_name,
+                drug_quantity : drug_quantity
+            }
+        }}
+        
+        var speechOutput = "Richiedo l'annotazione della somministrazione di " + drug_quantity + " di " + drug_name + " al paziente"
+
+        await requestHandler('POST', COMMAND_SERVICE_PATH, data)
+            .getBody('utf-8')
+            .then(JSON.parse)
+            .done(function (res) {
+                console.log(res);
+            });
+            
+        return handlerInput.responseBuilder
+                .speak(speechOutput)
+                .reprompt("Rimango in attesa di altri comandi")
+                .getResponse();
+    
+    }
+}
+        
+const StartActionIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'StartActionIntent';
+    },
+    
+    async handle(handlerInput) {
+        
+        var data = {json: {
+            type : "action",
+            category : "room",
+            target : "",
+            issuer : "alexa_ASTRA_controller",
+            params : {
+                type : "start_trauma"
+            }
+        }}
+        
+        var speechOutput = "Richiedo l'inizio della gestione di un trauma per il paziente in arrivo";
+
+        await requestHandler('POST', COMMAND_SERVICE_PATH, data)
+            .getBody('utf-8')
+            .then(JSON.parse)
+            .done(function (res) {
+                console.log(res);
+            });
+            
+        return handlerInput.responseBuilder
+                .speak(speechOutput)
+                .reprompt("Rimango in attesa di altri comandi")
+                .getResponse();
+        
+    }
+}
+
+const EndActionIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'EndActionIntent';
+    },
+    
+    async handle(handlerInput) {
+        
+        var data = {json: {
+            type : "action",
+            category : "room",
+            target : "",
+            issuer : "alexa_ASTRA_controller",
+            params : {
+                type : "end_trauma"
+            }
+        }}
+        
+        var speechOutput = "Richiedo la fine della gestione del trauma del paziente";
+
+        await requestHandler('POST', COMMAND_SERVICE_PATH, data)
+            .getBody('utf-8')
+            .then(JSON.parse)
+            .done(function (res) {
+                console.log(res);
+            });
+            
+        return handlerInput.responseBuilder
+                .speak(speechOutput)
+                .reprompt("Rimango in attesa di altri comandi")
+                .getResponse();
+    }
+}
 
 const HelpIntentHandler = {
     canHandle(handlerInput) {
@@ -162,7 +348,7 @@ const HelpIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'You can say hello to me! How can I help?';
+        const speakOutput = 'Come posso aiutarti ?';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -191,7 +377,7 @@ const SessionEndedRequestHandler = {
     },
     handle(handlerInput) {
         // Any cleanup logic goes here.
-        return handlerInput.responseBuilder.getResponse();
+        // return handlerInput.responseBuilder.getResponse();
     }
 };
 
@@ -223,7 +409,7 @@ const ErrorHandler = {
     },
     handle(handlerInput, error) {
         console.log(`~~~~ Error handled: ${error.stack}`);
-        const speakOutput = `Sorry, I had trouble doing what you asked. Please try again.`;
+        const speakOutput = `Mi dispiace, un errore mi ha impedito di completare la tua richiesta.`;
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -238,9 +424,13 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
-        HelloWorldIntentHandler,
-        SlotAnswerTestIntentHandler,
-        PatientParameterRequestIntentHandler,
+        VisualisationRequestIntentHandler,
+        MonitorRequestIntentHandler,
+        OperationAnnotationRequestIntentHandler,
+        DrugAnnotationRequestIntentHandler,
+        DrugInfoVisualisationRequestIntentHandler,
+        StartActionIntentHandler,
+        EndActionIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
@@ -250,3 +440,20 @@ exports.handler = Alexa.SkillBuilders.custom()
         ErrorHandler,
     )
     .lambda();
+    
+    
+ /////// SYNC VERSION -> Not suitable for production env ////////////////////////////////////////////////////////////////////////////////////
+        
+        // const res = requestHandler('POST', COMMAND_SERVICE_PATH, data).getBody('utf-8');
+                
+        // var status = JSON.parse(res)
+        
+        // console.log(status);
+        
+        // speechOutput = status;
+    
+
+        // return handlerInput.responseBuilder
+        //     .speak(speechOutput)
+        //     .reprompt("Rimango in attesa di altri comandi")
+        //     .getResponse();

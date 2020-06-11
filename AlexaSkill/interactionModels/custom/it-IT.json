@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "esempio di prova",
+      "invocationName": "astra room controller",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
@@ -16,41 +16,134 @@
           "samples": []
         },
         {
-          "name": "HelloWorldIntent",
-          "slots": [],
-          "samples": [
-            "Alexa cosa volevi dire",
-            "cosa volevi dire ",
-            "vediamo se funziona"
-          ]
-        },
-        {
           "name": "AMAZON.NavigateHomeIntent",
           "samples": []
         },
         {
-          "name": "SlotAnswerTestIntent",
-          "slots": [
-            {
-              "name": "name",
-              "type": "AMAZON.FirstName"
-            }
-          ],
-          "samples": [
-            "saluta {name}",
-            "ciao {name}"
-          ]
-        },
-        {
-          "name": "PatientParameterRequestIntent",
+          "name": "VisualisationRequestIntent",
           "slots": [
             {
               "name": "data_type",
-              "type": "patient_parameter"
+              "type": "data_type",
+              "samples": [
+                "{data_type}",
+                "mostra {data_type}",
+                "visualizza {data_type}",
+                "il {data_type}"
+              ]
+            },
+            {
+              "name": "position",
+              "type": "AMAZON.NUMBER"
             }
           ],
           "samples": [
+            "fammi vedere {data_type} del paziente in {position}",
+            "fammi vedere {data_type} in {position}",
+            "visualizza {data_type} del paziente in {position}",
+            "visualizza {data_type} in {position}",
+            "mostra {data_type} del paziente in {position}",
+            "mostra {data_type} in {position}",
+            "fammi vedere {data_type} del paziente",
+            "fammi vedere {data_type}",
+            "mostra {data_type}",
+            "visualizza {data_type}",
+            "mostra {data_type} del paziente",
             "visualizza {data_type} del paziente "
+          ]
+        },
+        {
+          "name": "MonitorRequestIntent",
+          "slots": [
+            {
+              "name": "data_type",
+              "type": "data_type",
+              "samples": [
+                "monitora {data_type}",
+                "il {data_type}",
+                "{data_type}"
+              ]
+            },
+            {
+              "name": "position",
+              "type": "AMAZON.NUMBER"
+            }
+          ],
+          "samples": [
+            "monitora {data_type} del paziente in {position}",
+            "monitora {data_type} in {position}",
+            "monitora {data_type}",
+            "monitora {data_type} del paziente"
+          ]
+        },
+        {
+          "name": "DrugAnnotationRequestIntent",
+          "slots": [
+            {
+              "name": "drug_quantity",
+              "type": "AMAZON.SearchQuery",
+              "samples": [
+                "{drug_quantity}"
+              ]
+            },
+            {
+              "name": "drug_name",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "Salva somministrazione di {drug_name}",
+            "Annota somministrazione {drug_name}",
+            "Salva somministrazione  {drug_name}",
+            "Annota somministrazione di {drug_name}"
+          ]
+        },
+        {
+          "name": "OperationAnnotationRequestIntent",
+          "slots": [
+            {
+              "name": "type",
+              "type": "operation_type"
+            },
+            {
+              "name": "operation",
+              "type": "operation"
+            }
+          ],
+          "samples": [
+            "è {type} la manovra {operation}",
+            "Salva {type} manovra {operation}",
+            "Annota {type} manovra {operation}"
+          ]
+        },
+        {
+          "name": "StartActionIntent",
+          "slots": [],
+          "samples": [
+            "Inizia gestione trauma",
+            "nuovo paziente",
+            "Paziente in arrivo"
+          ]
+        },
+        {
+          "name": "EndActionIntent",
+          "slots": [],
+          "samples": [
+            "Termina Gestione Trauma"
+          ]
+        },
+        {
+          "name": "DrugInfoVisualisationRequestIntent",
+          "slots": [
+            {
+              "name": "drug_name",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "Visualizza quantità {drug_name}",
+            "visualizza quantità di {drug_name}",
+            "visualizza quanto {drug_name} è stato somministrato"
           ]
         }
       ],
@@ -58,25 +151,418 @@
         {
           "values": [
             {
+              "id": "used_blood_unit",
               "name": {
-                "value": "tutto"
+                "value": "Sacche di sangue utilizzate",
+                "synonyms": [
+                  "sacche di sangue",
+                  "unità di sangue utilizzate",
+                  "unità di sangue ",
+                  "unità utilizzate"
+                ]
               }
             },
             {
+              "id": "tt_report",
               "name": {
-                "value": "pressione"
+                "value": "Trauma Tracker",
+                "synonyms": [
+                  "report di trauma tracker",
+                  "report trauma tracker",
+                  "report"
+                ]
               }
             },
             {
+              "id": "procedure_time",
               "name": {
-                "value": "battito"
+                "value": "tempo procedura"
+              }
+            },
+            {
+              "id": "total_time",
+              "name": {
+                "value": "tempo totale",
+                "synonyms": [
+                  "tempo gestione trauma"
+                ]
+              }
+            },
+            {
+              "id": "eta",
+              "name": {
+                "value": "tempo di arrivo",
+                "synonyms": [
+                  "tempo mancante all\u0027arrivo",
+                  "tempo mancante",
+                  "eta",
+                  "tempo all\u0027arrivo"
+                ]
+              }
+            },
+            {
+              "id": "ecg",
+              "name": {
+                "value": "ECG",
+                "synonyms": [
+                  "elettrocardiogramma"
+                ]
+              }
+            },
+            {
+              "id": "blood_tests",
+              "name": {
+                "value": "esami del sangue",
+                "synonyms": [
+                  "esami"
+                ]
+              }
+            },
+            {
+              "id": "tac",
+              "name": {
+                "value": "tac"
+              }
+            },
+            {
+              "id": "chest_rx",
+              "name": {
+                "value": "RX torace",
+                "synonyms": [
+                  "lastre torace",
+                  "lastra torace"
+                ]
+              }
+            },
+            {
+              "id": "rotem",
+              "name": {
+                "value": "rotem"
+              }
+            },
+            {
+              "id": "ega",
+              "name": {
+                "value": "emogas analisi",
+                "synonyms": [
+                  "EGA"
+                ]
+              }
+            },
+            {
+              "id": "CO2_level",
+              "name": {
+                "value": "livello CO2",
+                "synonyms": [
+                  "CO2"
+                ]
+              }
+            },
+            {
+              "id": "patient_details",
+              "name": {
+                "value": "nome",
+                "synonyms": [
+                  "dettagli del paziente",
+                  "dettagli",
+                  "dati",
+                  "id",
+                  "informazioni",
+                  "info",
+                  "dati del paziente"
+                ]
+              }
+            },
+            {
+              "id": "temperature",
+              "name": {
+                "value": "temperatura"
+              }
+            },
+            {
+              "id": "spO2",
+              "name": {
+                "value": "saturazione",
+                "synonyms": [
+                  "spo2"
+                ]
+              }
+            },
+            {
+              "id": "blood_pressure",
+              "name": {
+                "value": "pressione",
+                "synonyms": [
+                  "pressione arteriosa"
+                ]
+              }
+            },
+            {
+              "id": "heart_rate",
+              "name": {
+                "value": "frequenza cardiaca",
+                "synonyms": [
+                  "polso",
+                  "battito"
+                ]
               }
             }
           ],
-          "name": "patient_parameter"
+          "name": "data_type"
+        },
+        {
+          "values": [
+            {
+              "id": "pos_10",
+              "name": {
+                "value": "10"
+              }
+            },
+            {
+              "id": "pos_9",
+              "name": {
+                "value": "9"
+              }
+            },
+            {
+              "id": "pos_8",
+              "name": {
+                "value": "8"
+              }
+            },
+            {
+              "id": "pos_7",
+              "name": {
+                "value": "7"
+              }
+            },
+            {
+              "id": "pos_6",
+              "name": {
+                "value": "6"
+              }
+            },
+            {
+              "id": "pos_5",
+              "name": {
+                "value": "5"
+              }
+            },
+            {
+              "id": "pos_4",
+              "name": {
+                "value": "4"
+              }
+            },
+            {
+              "id": "pos_3",
+              "name": {
+                "value": "3"
+              }
+            },
+            {
+              "id": "pos_2",
+              "name": {
+                "value": "2"
+              }
+            },
+            {
+              "id": "pos_1",
+              "name": {
+                "value": "1"
+              }
+            }
+          ],
+          "name": "data_position"
+        },
+        {
+          "values": [
+            {
+              "id": "end",
+              "name": {
+                "value": "fine",
+                "synonyms": [
+                  "finito",
+                  "finita"
+                ]
+              }
+            },
+            {
+              "id": "start",
+              "name": {
+                "value": "inizio",
+                "synonyms": [
+                  "iniziato",
+                  "iniziata"
+                ]
+              }
+            }
+          ],
+          "name": "operation_type"
+        },
+        {
+          "values": [
+            {
+              "id": "test",
+              "name": {
+                "value": "Operazione di test",
+                "synonyms": [
+                  "operazione",
+                  "test operation"
+                ]
+              }
+            }
+          ],
+          "name": "operation"
         }
       ]
-    }
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "VisualisationRequestIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "data_type",
+              "type": "data_type",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.41329811334.642492191076"
+              }
+            },
+            {
+              "name": "position",
+              "type": "AMAZON.NUMBER",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            }
+          ]
+        },
+        {
+          "name": "MonitorRequestIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "data_type",
+              "type": "data_type",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.630754850205.847163679926"
+              }
+            },
+            {
+              "name": "position",
+              "type": "AMAZON.NUMBER",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            }
+          ]
+        },
+        {
+          "name": "DrugAnnotationRequestIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "drug_quantity",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.207283582451.276046810580"
+              }
+            },
+            {
+              "name": "drug_name",
+              "type": "AMAZON.SearchQuery",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.207283582451.698821535640"
+              }
+            }
+          ]
+        },
+        {
+          "name": "OperationAnnotationRequestIntent",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "type",
+              "type": "operation_type",
+              "elicitationRequired": false,
+              "confirmationRequired": false,
+              "prompts": {}
+            },
+            {
+              "name": "operation",
+              "type": "operation",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.341305546380.707301860819"
+              }
+            }
+          ]
+        }
+      ],
+      "delegationStrategy": "ALWAYS"
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.41329811334.642492191076",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Cosa vuoi visualizzare ?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.630754850205.847163679926",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Cosa devo monitorare ?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.207283582451.276046810580",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Quanto farmaco {drug_name} è stato somministrato ?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.207283582451.698821535640",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Quale farmaco è stato somministrato ?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.341305546380.707301860819",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Quale operazione deve essere annotata ?"
+          }
+        ]
+      }
+    ]
   },
-  "version": "14"
+  "version": "18"
 }
