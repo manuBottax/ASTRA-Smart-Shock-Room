@@ -2,8 +2,6 @@
 
 package astraRoomAssistant;
 
-import java.io.IOException;
-
 import org.json.JSONObject;
 
 import cartago.*;
@@ -23,9 +21,7 @@ public class DisplayArtifact extends Artifact {
 		try {
 			
 			String path = DISPLAY_SERVICE_URL + "/" + position;
-			
-			/* String path = DISPLAY_SERVICE_URL + "/" + position + "/" + data; */
-			
+						
 			System.out.println(path);
 			
 			JSONObject body = new JSONObject();
@@ -43,9 +39,9 @@ public class DisplayArtifact extends Artifact {
 				System.out.println("Error : Cannot visualise data on display");
 				result.set("Error");
 			}
-		} catch (IOException ex) {
-            ex.printStackTrace();
-            signal("display_request_failed", ex.getCause().getMessage());
+		} catch (Exception ex) {
+			System.out.println("Error : Exception in data display");
+            result.set("Error");
         }
     
 	}

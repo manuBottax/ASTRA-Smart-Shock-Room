@@ -23,17 +23,22 @@ public class TraumaArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void getDataValue(String type, OpFeedbackParam<String> result) {
+	void getDataValue(String type, OpFeedbackParam<String> result, OpFeedbackParam<String> value) {
 				
 		if (type.equals("blood_pressure")) {
-			result.set(this.pressureSample);
+			value.set(this.pressureSample);
+			result.set("OK");
 		} else if (type.equals("spO2")){
-			result.set(this.saturationSample);
+			value.set(this.saturationSample);
+			result.set("OK");
 		} else if (type.equals("heart_rate")){
-			result.set(this.rateSample);
+			value.set(this.rateSample);
+			result.set("OK");
 		} else if (type.equals("temperature")){
-			result.set(this.temperatureSample);
+			value.set(this.temperatureSample);
+			result.set("OK");
 		} else {
+			value.set("");
 			result.set("Error");
 		}
 

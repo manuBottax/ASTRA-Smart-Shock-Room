@@ -15,32 +15,32 @@
 	?find_tac_source(TacSource)
 	?find_mock_source(MockSource)
 	
-	focus(Queue)
-	focus(Display)
-	focus(TTSource).
+	focus(Queue).
 	
-+last_available_command(Command) : true <-
++last_pending_command(Command) : true <-
 	.println("A new command is received : " , Command);
 	acceptCommand(Result, Id, Type, DataType, Target, Position) [artifact_id(QueueId)];
 	/* .println(Result, " | " , Id , " | ", Type , " | ", DataType , " | ", Target , " | ", Position); */
-	+accepted_work(Result, Id, Type, DataType, Target, Position).
+	+accepted_work(Result, Command, Id, Type, DataType, Target, Position).
 	
-+accepted_work(Result, Id, Type, DataType, Target, Position) : Result = "OK" <-
++accepted_work(Result, Command, Id, Type, DataType, Target, Position) : Result = "OK" <-
 	.println("Command Taken");
+	-+current_command(Id);
 	!processCommand(Id, Type, DataType, Target, Position).
 	
-+accepted_work(Result, Id, Type, DataType, Target, Position) : Result = "Error" <-
-	.println("Error on command Acceptance").
++accepted_work(Result, Command, Id, Type, DataType, Target, Position) : Result = "Error" <-
+	.println("Error on command Acceptance");
+	setErrorOnCommand(Id) [artifact_id(QueueId)].
 	
-+accepted_work(Result, Id, Type, DataType, Target, Position) : Result = "Init OK" <-
++accepted_work(Result, Command, Id, Type, DataType, Target, Position) : Result = "Init OK" <-
 	.println("Queue Initialization Completed").
 	
 +! processCommand(CommandId, "visualisation", DataType, Target, Position) <- 
 	.println("Working on Command ", CommandId)
 	.println("Want to visualise ", DataType)
-	!requestData(DataType, Value)
+	!requestData(DataType, Result, Value)
 	.println("Got ", DataType, " value : ", Value)
-	!displayData(CommandId, DataType, Value, Target, Position).
+	!displayData(Result, CommandId, DataType, Value, Target, Position).
 	
 +! processCommand(CommandId, "monitoring", DataType, Target, Position)  <- 
 	.println("Working on Command ", CommandId)
@@ -54,81 +54,73 @@
 	
 /* ----------- DATA REQUEST  ----------- */
 	
-+! requestData("patient_details", Value) <- 
++! requestData("patient_details", Result, Value) <- 
 	.println("Searching for Patient Personal Data ");
-	getMockData(Value) [artifact_id(MockSourceId)]. 
+	getMockData(Result, Value) [artifact_id(MockSourceId)]. 
 	
 /* Vital Parameters request */
-+! requestData(DataType, Value) 
-	: DataType = "blood_pressure" | DataType = "spO2" | 
-	  DataType = "heart_rate" | DataType = "temperature" <- 
++! requestData(DataType, Result, Value) 
+	: DataType = "blood_pressure" |/* DataType = "spO2" | 
+	  DataType = "heart_rate" |*/ DataType = "temperature" <- 
 	.println("Searching for Vital Parameter data : ", DataType);
-	getDataValue(DataType, Value) [artifact_id(TTSourceId)].
+	getDataValue(DataType, Result, Value) [artifact_id(TTSourceId)].
 	
 /* Biometrical Data request */
-+! requestData(DataType, Value) 
++! requestData(DataType, Result, Value) 
 	: DataType = "CO2_level" | DataType = "ega" | DataType = "rotem" <- 
 	.println("Searching for Biometrical Data : ", DataType);
-	getMockData(Value) [artifact_id(MockSourceId)].
+	getMockData(Result, Value) [artifact_id(MockSourceId)].
 
 /* Diagnostic data */
-+! requestData(DataType, Value) 
++! requestData(DataType, Result, Value) 
 	: DataType = "chest_rx" | DataType = "blood_tests" | DataType = "ecg" <- 
 	.println("Searching for Diagnostic Data : ", DataType);
-	getMockData(Value) [artifact_id(MockSourceId)].	
+	getMockData(Result, Value) [artifact_id(MockSourceId)].	
 	
-+! requestData("tac", Value) <- 
++! requestData("tac", Result, Value) <- 
 	.println("Searching for TAC data ");
-	getTACData(Value) [artifact_id(TacSourceId)]. 
+	getTACData(Result, Value) [artifact_id(TacSourceId)]. 
 
 /* Temporal data */
 /* TODO: gestione degli aspetti temporali */
-+! requestData(DataType, Value) 
++! requestData(DataType, Result, Value) 
 	: DataType = "eta" | DataType = "total_time" <- 
 	.println("Searching for Temporal Data : ", DataType);
-	getMockData(Value) [artifact_id(MockSourceId)].	
+	getMockData(Result, Value) [artifact_id(MockSourceId)].	
 	
 /* Environment data */
-+! requestData(DataType, Value) 
++! requestData(DataType, Result, Value) 
 	: DataType = "used_blood_unit" <- 
 	.println("Searching for Environmental Data : ", DataType);
-	getMockData(Value) [artifact_id(MockSourceId)].	
+	getMockData(Result, Value) [artifact_id(MockSourceId)].	
 	
 /* All other Data */
-/* TODO : Gestire tipi unhandled */
-+! requestData(DataType, Value) : true <- 
-	.println("non dovrei essere qui")
-	.println("Searching for data ", DataType);
-	getMockData(Value) [artifact_id(MockSourceId)].
++! requestData(DataType, Result, Value) : current_command(CommandId) <- 
+	.println("Comandi non gestiti")
+	Result = "Error"
+	refuseCommand(CommandId) [artifact_id(QueueId)].
 
 /* -------------------------------------------------------------------------------------- */
 	
 /* Display data in Shock Room Display using related artifact*/
-+! displayData(CommandId, DataType, Value, Target, Position) : true <-
++! displayData(Result, CommandId, DataType, Value, Target, Position) : Result = "OK" <-
 	.println("Displaying ", DataType, " data " , Value, " in ", Target, " on ", Position)
-	printData(DataType, Value, Position, Result) [artifact_id(Target)]
-	!completeCommand(Result, CommandId).
+	printData(DataType, Value, Position, Res) [artifact_id(Target)]
+	!completeCommand(Res, CommandId).
+	
++! displayData(Result, CommandId, DataType, Value, Target, Position) : Result = "Error" <-
+	.println("Error in command handling").
 	
 +! completeCommand(Result, CommandId) : Result = "OK" <-
-	println("Display request completed successfully ")
+	.println("Display request completed successfully ")
 	completeCommand(CommandId) [artifact_id(QueueId)].
 	
 +! completeCommand(Result, CommandId) : Result = "Error" <-
-	println("Display request failed")
-	setCommandError(CommandId) [artifact_id(QueueId)].
-	
-+ command_completed(CommandId) : true <-
-	println("Command processing " , CommandId , " completed.").
+	.println("Display request failed")
+	setErrorOnCommand(CommandId) [artifact_id(QueueId)].
 
-+ command_status_error(CommandId) : true <-
-	println("Cannot update " , CommandId , " status.").
-	
-	
-	
-	
-	
-	
-	
+
+
 	
 	
 +? init_queue(QueueId) <-

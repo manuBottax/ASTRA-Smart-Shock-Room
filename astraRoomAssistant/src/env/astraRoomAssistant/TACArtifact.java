@@ -11,9 +11,10 @@ public class TACArtifact extends Artifact {
 	}
 	
 	@OPERATION
-	void getTACData(OpFeedbackParam<String> result) {
+	void getTACData(OpFeedbackParam<String> result, OpFeedbackParam<String> value) {
 				
-		result.set("This is a TAC Sample");
+		value.set("This is a TAC Sample");
+		result.set("OK");
 		
 	}
 	

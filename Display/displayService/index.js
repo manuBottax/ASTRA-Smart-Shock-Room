@@ -17,9 +17,6 @@ router.post('/api/display/:position',  (req, res) => {
 
       var position = req.params.position;
 
-      // console.log("Body : ");
-      // console.log(req.body)
-
       var data = req.body.type + " : " + req.body.data;
 
       io.emit("display_data", {position : position, value : data});

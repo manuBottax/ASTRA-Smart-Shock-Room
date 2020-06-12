@@ -5,9 +5,9 @@ package astraRoomAssistant;
 import cartago.*;
 import utils.CommandStatus;
 import utils.NetworkManager;
+import utils.PriorityComparator;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.TimeoutException;
@@ -28,29 +28,163 @@ public class RoomCommandQueueArtifact extends Artifact {
     private Channel channel = null;
 		
 	private Queue<JSONObject> pendingQueue;
+	private Queue<JSONObject> refusedQueue;
+	private Queue<JSONObject> wrongQueue;
 	
 	void init() {
 		
-		this.pendingQueue = new PriorityQueue<JSONObject>(10, new Comparator<JSONObject>() {
-
-			public int compare(JSONObject o1, JSONObject o2) {
-				if (o1.getInt("priority") < o1.getInt("priority"))
-					return -1;
-				else if (o1.getInt("priority") == o2.getInt("priority"))
-					return 0; 
-				else 
-					return 1;
-			}
-		});
-		
-		//defineObsProperty("available_command", false);
+		this.pendingQueue = new PriorityQueue<JSONObject>(10, new PriorityComparator());
+		this.refusedQueue = new PriorityQueue<JSONObject>(10, new PriorityComparator());
+		this.wrongQueue = new PriorityQueue<JSONObject>(10, new PriorityComparator());
 		
 		JSONObject initCommand = new JSONObject();
 		initCommand.put("command_id", "-1");
 		
-		defineObsProperty("last_available_command", initCommand);
+		defineObsProperty("last_pending_command", initCommand);
+		defineObsProperty("last_refused_command", initCommand);
+		defineObsProperty("last_wrong_command", initCommand);
 		
 		System.out.println("Room Command Queue Artifact created");
+	}
+	
+	/**
+	 * Get the list of pending command that are waiting to be handled
+	 */
+	@OPERATION
+	void getPendingQueue(OpFeedbackParam<Queue<JSONObject>> list) {
+		list.set(this.pendingQueue);
+	}
+	
+	/**
+	 * Get the list of command that the ASTRA System cannot handle
+	 */
+	@OPERATION
+	void getRefusedQueue(OpFeedbackParam<Queue<JSONObject>> list) {
+		list.set(this.refusedQueue);
+	}
+	
+	/**
+	 * Get the list of command with an error
+	 */
+	@OPERATION
+	void getWrongQueue(OpFeedbackParam<Queue<JSONObject>> list) {
+		list.set(this.wrongQueue);
+	}
+	
+	/**
+	 * Set a command as refused and remove it from the pending list. 
+	 * This mean that the system cannot handle this type of command. 
+	 * 
+	 * @param id - The id of the command that is refused by the system
+	 */
+	@OPERATION
+	void refuseCommand(String id) {
+		ObsProperty last = getObsProperty("last_pending_command");
+		JSONObject cmd = (JSONObject) last.getValue();
+		
+		if (id.equals(cmd.getString("command_id"))) {
+			JSONObject c = this.pendingQueue.poll();
+			this.refusedQueue.add(c);
+			
+			//TODO: Aggiornare lo stato del comando nel servizio
+			
+			ObsProperty refused = getObsProperty("last_refused_command");
+			refused.updateValue(c);
+			
+			JSONObject l = this.pendingQueue.peek();
+			
+			if ( l != null) {
+				last.updateValue(l);
+			}
+			
+		}
+	}
+	
+	/**
+	 * Set a command as wrong and remove it from the pending list. 
+	 * This is used when the handling of that command generate some sort of error.
+	 * Actions may be taken by agents to remove errors and complete the command handling. 
+	 * 
+	 * @param id - The id of the command that generate the error.
+	 */
+	@OPERATION
+	void setErrorOnCommand(String id) {
+		ObsProperty last = getObsProperty("last_pending_command");
+		JSONObject cmd = (JSONObject) last.getValue();
+		
+		String commandID = cmd.getString("command_id");
+		
+		if (! commandID.equals("-1")) {
+		
+			if (id.equals(cmd.getString("command_id"))) {
+				JSONObject c = this.pendingQueue.poll();
+				
+				System.out.println(c);
+				
+				if (c != null) {
+				
+					this.wrongQueue.add(c);
+					
+					ObsProperty erroneous = getObsProperty("last_wrong_command");
+					erroneous.updateValue(c);
+					
+					JSONObject l = this.pendingQueue.peek();
+					
+					if ( l != null) {
+						last.updateValue(l);
+					}
+				
+				}
+				
+				//TODO: Aggiornare lo stato del comando nel servizio
+				
+				
+			}
+		}
+	}
+	
+	/**
+	 * Add a command to the pending command queue.
+	 * @param command - the command to be added. 
+	 */
+	@OPERATION
+	void addPendingCommand(JSONObject command) {
+		
+		ObsProperty last = getObsProperty("last_pending_command");
+		
+		if (! command.getString("command_id").equals("-1")) {
+		
+		     if (this.pendingQueue.size() > 0 ) {
+			     if (command.getInt("priority") > ((JSONObject) last.getValue()).getInt("priority")) {
+			    	 this.pendingQueue.add((JSONObject) last.getValue());
+			    	 last.updateValue(command);
+			     } else {
+			    	 this.pendingQueue.add(command);
+			     }
+		     } else {
+		    	 this.pendingQueue.add(command);
+		    	 last.updateValue(command);
+		     }
+		} 
+	}
+	
+	/**
+	 * Remove a command from the wrong command queue.
+	 */
+	@OPERATION
+	void handledError(JSONObject command) {
+		ObsProperty last = getObsProperty("last_wrong_command");
+		JSONObject cmd = (JSONObject) last.getValue();
+		
+		if (command.getString("command_id").equals(cmd.getString("command_id"))) {
+			
+			JSONObject c = this.wrongQueue.poll();
+			
+			if ( c != null) {
+				last.updateValue(c);
+			}
+			
+		}
 	}
 	
 	@OPERATION
@@ -70,15 +204,16 @@ public class RoomCommandQueueArtifact extends Artifact {
 			OpFeedbackParam<String> target,
 			OpFeedbackParam<String> position) {
 		
-		ObsProperty last = getObsProperty("last_available_command");
-		
+		ObsProperty last = getObsProperty("last_pending_command");
 		JSONObject cmd = (JSONObject) last.getValue();
-		
 		String commandID = cmd.getString("command_id");
+		
+		System.out.println("Accepting command.");
+		System.out.println("Left pending command : " + this.pendingQueue.size());
 		
 		if (! commandID.equals("-1")) {
 		
-			//TODO: sospendi il piano dell'agente finchè non riceve risposta -> usare multistep op
+			//TODO: sospendi il piano dell'agente finchè non riceve risposta -> multistep op ?
 					
 			try {
 				
@@ -94,15 +229,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 				if (res == 200) {
 					// l'agente può proseguire
 					
-					this.pendingQueue.poll();
-					
-					JSONObject nextCommand = this.pendingQueue.peek();
-					
-					if ( nextCommand != null) {
-						last.updateValue(nextCommand);
-					} /*else {
-						available.updateValue(false);
-					}*/
+					System.out.println("Comando accettato");
 					
 					JSONObject params = cmd.getJSONObject("params");
 					
@@ -128,8 +255,18 @@ public class RoomCommandQueueArtifact extends Artifact {
 	
 	@OPERATION
 	void completeCommand(String commandID) {
+		
+		ObsProperty last = getObsProperty("last_pending_command");
 	
 		try {
+			
+			this.pendingQueue.poll();
+			
+			JSONObject nextCommand = this.pendingQueue.peek();
+			
+			if ( nextCommand != null) {
+				last.updateValue(nextCommand);
+			}
 			
 			String path = COMMAND_SERVICE_URL + "/" + commandID + "/status";
 			
@@ -150,7 +287,8 @@ public class RoomCommandQueueArtifact extends Artifact {
 		}
 		
 	}
-	
+
+	/*
 	@OPERATION
 	void setCommandError(String commandID) {
 				
@@ -159,12 +297,12 @@ public class RoomCommandQueueArtifact extends Artifact {
 			String path = COMMAND_SERVICE_URL + "/" + commandID + "/status";
 			
 			JSONObject status = new JSONObject();
-			status.put("status", CommandStatus.completed.getStatusCode());
+			status.put("status", CommandStatus.error.getStatusCode());
 			
 			int res = NetworkManager.doPUT(path, status.toString());
 			
 			if (res == 200) {
-				signal("command_completed", commandID);
+				signal("command_status_error", commandID);
 			} else {
 				System.out.println("Error : Cannot complete command");
 				signal("command_status_error", commandID);
@@ -174,7 +312,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 			signal("command_status_error", commandID);
 		}
 		
-	}
+	} */
 		
 	
 	@INTERNAL_OPERATION
@@ -186,30 +324,18 @@ public class RoomCommandQueueArtifact extends Artifact {
 			     JSONObject req = new JSONObject(message);
 			     System.out.println(" [ " + queueName + " Queue ] Received "  + delivery.getEnvelope().getRoutingKey() + " : " + message + " ");
 
-			     //ObsProperty available = getObsProperty("available_command");
-			     ObsProperty last = getObsProperty("last_available_command");
-			     
-			     //System.out.println(" [ " + queueName + " Queue ] Obs Retrieved");
-			     
-			     //System.out.println(" [ " + queueName + " Queue ] Req :" + req.getInt("priority"));
-			    // System.out.println(" [ " + queueName + " Queue ] last :" + ((JSONObject) last.getValue()).getInt("priority"));
-			     
-			     //System.out.println(" [ " + queueName + " Queue ] Checking Priority");
+			     ObsProperty last = getObsProperty("last_pending_command");
 			     
 			     // save message for future elaboration;
 			     if (pendingQueue.size() > 0) {
 				     if (req.getInt("priority") > ((JSONObject) last.getValue()).getInt("priority")) {
-				    	 //System.out.println(" [ " + queueName + " Queue ] Updating last");
 				    	 pendingQueue.add((JSONObject) last.getValue());
-				    	 //available.updateValue(true);
 				    	 last.updateValue(req);
 				     } else {
-				    	 //System.out.println(" [ " + queueName + " Queue ] In coda");
 				    	 pendingQueue.add(req);
 				     }
 			     } else {
 			    	 pendingQueue.add(req);
-			    	 //available.updateValue(true);
 			    	 last.updateValue(req);
 			     }
 			 }
