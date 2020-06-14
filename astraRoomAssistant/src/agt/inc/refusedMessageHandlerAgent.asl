@@ -22,16 +22,13 @@
 	.println("A room command has an error : " , Command);
 	.wait(10000);
 	addPendingCommand(Command) [artifact_id(RoomQueue)];
-	handledError(Command) [artifact_id(RoomQueue)].
+	handledError [artifact_id(RoomQueue)].
 
 + last_wrong_command(Command) [source(TraumaQueue)] : true  <-
 	.println("A trauma command has an error : " , Command);
 	.wait(10000);
 	addPendingCommand(Command) [artifact_id(TraumaQueue)];
-	handledError(Command) [artifact_id(TraumaQueue)].
-	
-	
-	
+	handledError [artifact_id(TraumaQueue)].
 	
 +? find_room_queue(RoomQueueId) <-
 	lookupArtifact("roomCommands", RoomQueueId).

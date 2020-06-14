@@ -4,27 +4,31 @@
 
 /* Initial goals */
 
-!create_artifact.
+!createArtifact.
 
 /* Plans */
 
-+!create_artifact : true <- 
-	!setup_display(Display_id);
-	!setup_tt_source(Source_TT_id);
-	!setup_tac(Source_TAC_id);
-	!setup_mock_source(Source_id).
++!createArtifact
+	<-  !setupCommandQueue(Queue_id);
+		!setupDisplay(Display_id);
+		!setupTraumaSource(Source_TT_id);
+		!setupTac(Source_TAC_id);
+		!setupMockSource(Source_id).
 	
-+! setup_display(D) : true <-
-	makeArtifact("display_sr", "astraRoomAssistant.DisplayArtifact", [], D).
++! setupCommandQueue(Q)
+	<- makeArtifact("roomCommands", "astraRoomAssistant.RoomCommandQueueArtifact", ["room.*", "room_commands_queue"], QueueId).	
 	
-+! setup_tt_source(S) : true <-
-	makeArtifact("traumaTrackerService", "astraRoomAssistant.TraumaArtifact", [], S).
++! setupDisplay(D)
+	<- makeArtifact("display_sr", "astraRoomAssistant.DisplayArtifact", [], D).
 	
-+! setup_tac(T) : true <-
-	makeArtifact("tacPS", "astraRoomAssistant.TACArtifact", [], T).
++! setupTraumaSource(S)
+	<- makeArtifact("traumaTrackerService", "astraRoomAssistant.TraumaArtifact", [], S).
 	
-+! setup_mock_source(U) : true <-
-	makeArtifact("mockSource", "astraRoomAssistant.MockDataSourceArtifact", [], U). 
++! setupTac(T) 
+	<- makeArtifact("tacPS", "astraRoomAssistant.TACArtifact", [], T).
+	
++! setupMockSource(M)
+	<- makeArtifact("mockSource", "astraRoomAssistant.MockDataSourceArtifact", [], M). 
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

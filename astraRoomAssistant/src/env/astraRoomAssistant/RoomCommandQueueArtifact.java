@@ -31,7 +31,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 	private Queue<JSONObject> refusedQueue;
 	private Queue<JSONObject> wrongQueue;
 	
-	void init() {
+	void init(String topic, String queueName) {
 		
 		this.pendingQueue = new PriorityQueue<JSONObject>(10, new PriorityComparator());
 		this.refusedQueue = new PriorityQueue<JSONObject>(10, new PriorityComparator());
@@ -44,177 +44,33 @@ public class RoomCommandQueueArtifact extends Artifact {
 		defineObsProperty("last_refused_command", initCommand);
 		defineObsProperty("last_wrong_command", initCommand);
 		
+		this.topic = topic;
+		this.queueName = queueName;
+
+		execInternalOp("connect");
+		
 		System.out.println("Room Command Queue Artifact created");
 	}
 	
 	/**
-	 * Get the list of pending command that are waiting to be handled
+	 * Request the handling of the last pending command and return the command parameter.
 	 */
 	@OPERATION
-	void getPendingQueue(OpFeedbackParam<Queue<JSONObject>> list) {
-		list.set(this.pendingQueue);
-	}
-	
-	/**
-	 * Get the list of command that the ASTRA System cannot handle
-	 */
-	@OPERATION
-	void getRefusedQueue(OpFeedbackParam<Queue<JSONObject>> list) {
-		list.set(this.refusedQueue);
-	}
-	
-	/**
-	 * Get the list of command with an error
-	 */
-	@OPERATION
-	void getWrongQueue(OpFeedbackParam<Queue<JSONObject>> list) {
-		list.set(this.wrongQueue);
-	}
-	
-	/**
-	 * Set a command as refused and remove it from the pending list. 
-	 * This mean that the system cannot handle this type of command. 
-	 * 
-	 * @param id - The id of the command that is refused by the system
-	 */
-	@OPERATION
-	void refuseCommand(String id) {
-		ObsProperty last = getObsProperty("last_pending_command");
-		JSONObject cmd = (JSONObject) last.getValue();
-		
-		if (id.equals(cmd.getString("command_id"))) {
-			JSONObject c = this.pendingQueue.poll();
-			this.refusedQueue.add(c);
-			
-			//TODO: Aggiornare lo stato del comando nel servizio
-			
-			ObsProperty refused = getObsProperty("last_refused_command");
-			refused.updateValue(c);
-			
-			JSONObject l = this.pendingQueue.peek();
-			
-			if ( l != null) {
-				last.updateValue(l);
-			}
-			
-		}
-	}
-	
-	/**
-	 * Set a command as wrong and remove it from the pending list. 
-	 * This is used when the handling of that command generate some sort of error.
-	 * Actions may be taken by agents to remove errors and complete the command handling. 
-	 * 
-	 * @param id - The id of the command that generate the error.
-	 */
-	@OPERATION
-	void setErrorOnCommand(String id) {
-		ObsProperty last = getObsProperty("last_pending_command");
-		JSONObject cmd = (JSONObject) last.getValue();
-		
-		String commandID = cmd.getString("command_id");
-		
-		if (! commandID.equals("-1")) {
-		
-			if (id.equals(cmd.getString("command_id"))) {
-				JSONObject c = this.pendingQueue.poll();
-				
-				System.out.println(c);
-				
-				if (c != null) {
-				
-					this.wrongQueue.add(c);
-					
-					ObsProperty erroneous = getObsProperty("last_wrong_command");
-					erroneous.updateValue(c);
-					
-					JSONObject l = this.pendingQueue.peek();
-					
-					if ( l != null) {
-						last.updateValue(l);
-					}
-				
-				}
-				
-				//TODO: Aggiornare lo stato del comando nel servizio
-				
-				
-			}
-		}
-	}
-	
-	/**
-	 * Add a command to the pending command queue.
-	 * @param command - the command to be added. 
-	 */
-	@OPERATION
-	void addPendingCommand(JSONObject command) {
-		
-		ObsProperty last = getObsProperty("last_pending_command");
-		
-		if (! command.getString("command_id").equals("-1")) {
-		
-		     if (this.pendingQueue.size() > 0 ) {
-			     if (command.getInt("priority") > ((JSONObject) last.getValue()).getInt("priority")) {
-			    	 this.pendingQueue.add((JSONObject) last.getValue());
-			    	 last.updateValue(command);
-			     } else {
-			    	 this.pendingQueue.add(command);
-			     }
-		     } else {
-		    	 this.pendingQueue.add(command);
-		    	 last.updateValue(command);
-		     }
-		} 
-	}
-	
-	/**
-	 * Remove a command from the wrong command queue.
-	 */
-	@OPERATION
-	void handledError(JSONObject command) {
-		ObsProperty last = getObsProperty("last_wrong_command");
-		JSONObject cmd = (JSONObject) last.getValue();
-		
-		if (command.getString("command_id").equals(cmd.getString("command_id"))) {
-			
-			JSONObject c = this.wrongQueue.poll();
-			
-			if ( c != null) {
-				last.updateValue(c);
-			}
-			
-		}
-	}
-	
-	@OPERATION
-	void subscribeQueue(String topic, String queueName) {
-		
-		this.topic = topic;
-		this.queueName = queueName;
-		
-		execInternalOp("connect");
-	}
-	
-	@OPERATION
-	void acceptCommand(OpFeedbackParam<String> result, 
-			OpFeedbackParam<String> id,
-			OpFeedbackParam<String> type,
-			OpFeedbackParam<String> value,
-			OpFeedbackParam<String> target,
-			OpFeedbackParam<String> position) {
+	void acceptCommand() {
 		
 		ObsProperty last = getObsProperty("last_pending_command");
 		JSONObject cmd = (JSONObject) last.getValue();
 		String commandID = cmd.getString("command_id");
 		
-		System.out.println("Accepting command.");
-		System.out.println("Left pending command : " + this.pendingQueue.size());
+		//update the pending queue
+		this.pendingQueue.poll();
+		JSONObject nextCommand = this.pendingQueue.peek();
+		if ( nextCommand != null) {
+			last.updateValue(nextCommand);
+		}
 		
 		if (! commandID.equals("-1")) {
-		
-			//TODO: sospendi il piano dell'agente finchè non riceve risposta -> multistep op ?
-					
+							
 			try {
 				
 				String path = COMMAND_SERVICE_URL + "/" + commandID + "/status";
@@ -226,47 +82,37 @@ public class RoomCommandQueueArtifact extends Artifact {
 				
 				int res = NetworkManager.doPUT(path, status.toString());
 				
-				if (res == 200) {
-					// l'agente può proseguire
+				if (res == 200) {	
 					
-					System.out.println("Comando accettato");
+					System.out.println("Command Accepted !");
+					System.out.println("Left pending commands : " + this.pendingQueue.size());
 					
 					JSONObject params = cmd.getJSONObject("params");
 					
-					result.set("OK");
-					id.set(cmd.getString("command_id"));
-					type.set(cmd.getString("type"));
-					value.set(params.getString("value"));
-					target.set(cmd.getString("target"));
-					position.set("" + params.getInt("position"));
+					signal("accepted_work", cmd, cmd.getString("command_id"), cmd.getString("type"), params.getString("value"), cmd.getString("target"), "" + params.getInt("position") );
 					
 				} else {
 					System.out.println("Error : Cannot update command");
-					result.set("Error");
+					failed("command acceptance failed", "service error", "failed_update", res, commandID );
 				}
 			} catch (IOException e) {
 				System.out.println("Error : IOException [ " + e.getMessage() + " ]");
-				result.set("Error");
+				failed("command acceptance failed", "I/O error", "failed_update", "IOException", commandID);
 			}
-		} else {
-			result.set("Init OK");
 		}
 	}
 	
+	/**
+	 * Set the specified command as completed and update it on the service. 
+	 * 
+	 * @param command - the completed command.
+	 */
 	@OPERATION
-	void completeCommand(String commandID) {
+	void completeCommand(JSONObject command) {
 		
-		ObsProperty last = getObsProperty("last_pending_command");
+		String commandID = command.getString("command_id");
 	
-		try {
-			
-			this.pendingQueue.poll();
-			
-			JSONObject nextCommand = this.pendingQueue.peek();
-			
-			if ( nextCommand != null) {
-				last.updateValue(nextCommand);
-			}
+		try {			
 			
 			String path = COMMAND_SERVICE_URL + "/" + commandID + "/status";
 			
@@ -276,43 +122,112 @@ public class RoomCommandQueueArtifact extends Artifact {
 			int res = NetworkManager.doPUT(path, status.toString());
 			
 			if (res == 200) {
-				signal("command_completed", commandID);
+				signal("command_handle_completed");
+				
 			} else {
-				System.out.println("Error : Cannot complete command");
-				signal("command_status_error", commandID);
+				System.out.println("Error : Cannot update command");
+				failed("command acceptance failed", "service error", "failed_update", res, commandID);
 			}
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
-			signal("command_status_error", commandID);
-		}
-		
+			failed("command acceptance failed", "I/O error", "failed_update", "IOException", commandID);
+		}	
 	}
-
-	/*
+	
+	/**
+	 * Set a command as refused. This means that the system cannot handle this type of command. 
+	 * 
+	 * @param command - The command that is refused by the system
+	 */
 	@OPERATION
-	void setCommandError(String commandID) {
-				
+	void refuseCommand(JSONObject command) {
+		
+		this.refusedQueue.add(command);
+		
+		String commandID = command.getString("command_id");
+		
 		try {
-			
+							
 			String path = COMMAND_SERVICE_URL + "/" + commandID + "/status";
-			
+							
 			JSONObject status = new JSONObject();
 			status.put("status", CommandStatus.error.getStatusCode());
 			
 			int res = NetworkManager.doPUT(path, status.toString());
 			
 			if (res == 200) {
-				signal("command_status_error", commandID);
+				
+				ObsProperty refused = getObsProperty("last_refused_command");
+				refused.updateValue(command);
+				this.refusedQueue.add(command);
+			
+				signal("command_handle_completed");
+				
+				
 			} else {
-				System.out.println("Error : Cannot complete command");
-				signal("command_status_error", commandID);
+				System.out.println("Error : Cannot update command");
+				failed("command acceptance failed", "service error", "failed_update", res, commandID);
 			}
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
-			signal("command_status_error", commandID);
-		}
+			failed("command acceptance failed", "I/O error", "failed_update", "IOException", commandID);
+		}	
+	}
+	
+	/**
+	 * Set a command as wrong. 
+	 * This is used when the handling of that command generate some sort of error.
+	 * Actions may be taken by agents to remove errors and complete the command handling. 
+	 * 
+	 * @param command - The command that generate the error.
+	 */
+	@OPERATION
+	void setErrorOnCommand(JSONObject command) {
+				
+		this.wrongQueue.add(command);
 		
-	} */
+		ObsProperty erroneous = getObsProperty("last_wrong_command");
+		erroneous.updateValue(command);
+					
+	}
+	
+	/**
+	 * Add a command to the pending command queue.
+	 * @param command - the command to be added. 
+	 */
+	@OPERATION
+	void addPendingCommand(JSONObject command) {
+		
+		ObsProperty last = getObsProperty("last_pending_command");
+		
+	     if (this.pendingQueue.size() > 0) {
+		     if (command.getInt("priority") > ((JSONObject) last.getValue()).getInt("priority")) {
+		    	 this.pendingQueue.add((JSONObject) last.getValue());
+		    	 last.updateValue(command);
+		     } else {
+		    	 this.pendingQueue.add(command);
+		     }
+	     } else {
+	    	 this.pendingQueue.add(command);
+	    	 last.updateValue(command);
+	     }
+	}
+	
+	/**
+	 * Remove a command from the wrong command queue.
+	 */
+	@OPERATION
+	void handledError() {
+		
+		ObsProperty last = getObsProperty("last_wrong_command");
+			
+		JSONObject c = this.wrongQueue.poll();
+		
+		if ( c != null) {
+			last.updateValue(c);
+		}
+			
+	}
 		
 	
 	@INTERNAL_OPERATION
@@ -351,7 +266,9 @@ public class RoomCommandQueueArtifact extends Artifact {
 			channel.exchangeDeclare(EXCHANGE_NAME, "topic", true);
 
 			channel.queueDeclare(queueName, true, false, false, null);
+			
 			channel.queueBind(queueName, EXCHANGE_NAME, this.topic);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (TimeoutException e) {

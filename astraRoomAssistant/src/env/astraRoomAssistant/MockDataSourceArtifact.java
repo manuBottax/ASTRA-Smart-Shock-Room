@@ -11,11 +11,8 @@ public class MockDataSourceArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void getMockData(OpFeedbackParam<String> result, OpFeedbackParam<String> value) {
-				
+	void getMockData(OpFeedbackParam<String> value) {	
 		value.set("Sample Data");
-		result.set("OK");
-		
 	}
 }
 

@@ -23,25 +23,19 @@ public class TraumaArtifact extends Artifact {
 	}
 
 	@OPERATION
-	void getDataValue(String type, OpFeedbackParam<String> result, OpFeedbackParam<String> value) {
+	void getDataValue(String type, OpFeedbackParam<String> value) {
 				
 		if (type.equals("blood_pressure")) {
 			value.set(this.pressureSample);
-			result.set("OK");
 		} else if (type.equals("spO2")){
 			value.set(this.saturationSample);
-			result.set("OK");
 		} else if (type.equals("heart_rate")){
 			value.set(this.rateSample);
-			result.set("OK");
 		} else if (type.equals("temperature")){
 			value.set(this.temperatureSample);
-			result.set("OK");
 		} else {
-			value.set("");
-			result.set("Error");
+			failed("unsupported type", "unsupported type", "data_type_unsopported");
 		}
-
 	}
 }
 
