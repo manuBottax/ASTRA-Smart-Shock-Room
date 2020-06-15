@@ -1,0 +1,43 @@
+
+
+<div class="container">
+  <h1 class="row">
+    Welcome to TAC PS!
+  </h1>
+
+  <div class="row">
+    <p>Stato TAC : {{status}}</p>
+  </div>
+
+  <div class="row">
+    <p>Aggiorna Stato : </p>
+    <div class="row button-row">
+      <button class="btn btn-primary" (click)="updateStatus('unavailable')"> Non disponibile </button>
+      <button class="btn btn-primary" (click)="updateStatus('in_use')"> In Uso </button>
+      <button class="btn btn-primary" (click)="updateStatus('available')"> Disponibile </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <p>Aggiungi esame : </p>
+    <div class="row button-row">
+      <form [formGroup]="examForm" (ngSubmit)="onSubmit(examForm.value)">
+
+        <div class="form-group">
+          <label for="id">ID Paziente</label>
+          <input type="id" class="form-control" [formControl]="idForm" name="patient_id" placeholder="123456">
+        </div>
+
+        <div class="form-group">
+          <label for="path">Path Esame</label>
+          <input type="path" class="form-control" [formControl]="pathForm" name="path">
+        </div>
+
+
+        <button type="submit" class="btn btn-success"> Salva</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
