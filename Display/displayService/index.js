@@ -5,7 +5,7 @@ var jsonUtils = require("./jsonUtilities");
 
 app = express();
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded( { extended: true } ));
 
 router.get('/', (req, res) => {
   res.send('<h1>ASTRA Shock Room Display Service</h1> <p> You should not be here. </p>');
@@ -46,6 +46,10 @@ io.on('connection', (socket) => {
 
 
 http.listen(3001, () => {
-    console.log('listening on *:3001');
+    console.log(' --------------------------------------------');
+    console.log(' ----- ASTRA SHOCK ROOM DISPLAY SERVICE -----');
+    console.log(' -----        listening on *:3001       -----');
+    console.log(' --------------------------------------------');
+    console.log();
 });
 

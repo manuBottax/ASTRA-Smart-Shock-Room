@@ -1,15 +1,23 @@
 #! /bin/bash
 
-cd DisplaySample
+/c/Windows/System32/cmd.exe //c 'start cmd /c mongoLoader.sh'
 
-/c/Windows/System32/cmd.exe //c 'start cmd /c npm start'
+cd Display/displayClient
 
-cd display-client
+/c/Windows/System32/cmd.exe //c 'start cmd /c nodemon'
 
-/c/Windows/System32/cmd.exe //c 'start cmd /c npm start'
+cd ../displayService
 
-cd ../../
+/c/Windows/System32/cmd.exe //c 'start cmd /c nodemon'
 
-cd ASTRARoomManager/
+cd ../../RoomCommandManager
 
-/c/Windows/System32/cmd.exe //c 'start cmd /c java -jar ASTRARoomManager.jar'
+/c/Windows/System32/cmd.exe //c 'start cmd /c nodemon'
+
+cd ../Source/TACSourceService
+
+/c/Windows/System32/cmd.exe //c 'start cmd /c nodemon'
+
+cd ../TACSource
+
+/c/Windows/System32/cmd.exe //c 'start cmd /c nodemon'
