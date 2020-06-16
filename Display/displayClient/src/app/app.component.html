@@ -3,17 +3,17 @@
     <h1 class ="title">ASTRA Shock Room Display</h1> 
   </div>
   <div class="row data-container justify-content-around"> 
-    <div class="col-3 static-data-container"> {{dataList[0]}} </div>
-    <div class="col-4 static-data-container"> {{dataList[1]}} </div>
-    <div class="col-4 static-data-container"> {{dataList[2]}} </div>
+    <div class="col-3 static-data-container"> <app-data-container [data]=dataArray[0]></app-data-container> </div>
+    <div class="col-4 static-data-container"> <app-data-container [data]=dataArray[1]></app-data-container> </div>
+    <div class="col-4 static-data-container"> <app-data-container [data]=dataArray[0]></app-data-container> </div>
   </div>
 
   <div class="row bottom-container justify-content-around"> 
-    <div class="col-6 data-container"> {{dataList[3]}} </div>
+    <div class="col-6 data-container"> <app-data-container [data]=dataArray[0]></app-data-container> </div>
     <div class="col-6"> 
-      <div class="row single-data-container"> {{dataList[4]}} </div>
-      <div class="row single-data-container"> {{dataList[5]}} </div>
-      <div class="row single-data-container"> {{dataList[6]}} </div>
+      <div class="row single-data-container"> <app-data-container [data]=dataArray[0]></app-data-container> </div>
+      <div class="row single-data-container"> <app-data-container [data]=dataArray[0] ></app-data-container> </div>
+      <div class="row single-data-container"> <app-data-container [data]=dataArray[0]></app-data-container> </div>
     </div>
   </div>
   

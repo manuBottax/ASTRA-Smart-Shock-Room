@@ -5,47 +5,45 @@ var jsonUtils = require("./jsonUtilities");
 
 app = express();
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 router.get('/', (req, res) => {
-  res.send('<h1>ASTRA Shock Room Display Service</h1> <p> You should not be here. </p>');
+  res.send('<h1>ASTRA Shock Room Mock Data Source Service</h1> <p> You should not be here. </p>');
 });
 
-router.post('/api/display/:position',  (req, res) => {
+router.get('/api/mock_data',  (req, res) => {
 
-  if (req.params){
-
-      var position = req.params.position;
-
-      var data = req.body.type + " : " + req.body.data;
-
-      io.emit("display_data", {position : position, value : data});
-      jsonUtils.sendJsonResponse(res, 201, "OK");
-  } else {
-    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  var mockData = {
+    value : 1.0 + ( Math.random() * 250 )
   }
+
+  jsonUtils.sendJsonResponse(res, 200, mockData);
 
 });
 
 app.use('/', router);
 
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+// const io = require('socket.io')(http);
 
-io.on('connection', (socket) => {
-    console.log('Display connected');
+// io.on('connection', (socket) => {
+//     console.log('data connected');
     
-    socket.on('disconnect', () => {
-      console.log('Display disconnected');
-    });
+//     socket.on('disconnect', () => {
+//       console.log('data disconnected');
+//     });
 
-    socket.on('display_message', (msg) => {
-        console.log('message: ' + msg);
-    });
-});
+//     socket.on('mock_source_message', (msg) => {
+//         console.log('message: ' + msg);
+//     });
+// });
 
 
-http.listen(3001, () => {
-    console.log('listening on *:3001');
+http.listen(3007, () => {
+  console.log(' --------------------------------------------');
+  console.log(' -----  ASTRA SHOCK ROOM MOCK SERVICE   -----');
+  console.log(' -----     listening on *:3007          -----');
+  console.log(' --------------------------------------------');
+  console.log();
 });
 

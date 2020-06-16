@@ -21,3 +21,7 @@ cd ../Source/TACSourceService
 cd ../TACSource
 
 /c/Windows/System32/cmd.exe //c 'start cmd /c nodemon'
+
+cd ../MockSourceService
+
+/c/Windows/System32/cmd.exe //c 'start cmd /c nodemon'
