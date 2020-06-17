@@ -17,9 +17,9 @@ router.post('/api/display/:position',  (req, res) => {
 
       var position = req.params.position;
 
-      var data = req.body.type + " : " + req.body.data;
+      var data_type = (req.body.type  === "tac") ? "image" : "text"
 
-      io.emit("display_data", {position : position, value : data});
+      io.emit("display_data", {position : position, name : req.body.type, type: data_type, value : req.body.data});
       jsonUtils.sendJsonResponse(res, 201, "OK");
   } else {
     jsonUtils.sendJsonResponse(res, 400, "Invalid Params");

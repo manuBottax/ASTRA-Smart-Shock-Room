@@ -34,7 +34,6 @@ export class DataContainerComponent implements OnInit {
     (<DataInterface> this.componentRef.instance).data = this.data;
 
     this.bindedComponent.emit(this);
-    // this.bindedComponent.emit(this.componentRef);
   }
 
   updateValue(updatedValue: DataItem) {
@@ -49,7 +48,6 @@ export class DataContainerComponent implements OnInit {
     this.componentRef = viewContainerRef.createComponent(componentFactory);
     (<DataInterface> this.componentRef.instance).data = this.data;
     this.bindedComponent.emit(this);
-    // this.bindedComponent.emit(this.componentRef);
   }
 
 }

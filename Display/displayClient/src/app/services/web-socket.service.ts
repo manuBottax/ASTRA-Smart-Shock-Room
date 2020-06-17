@@ -7,6 +7,8 @@ import { Subject }    from 'rxjs';
 
 export interface PatientData {
   position : string,
+  type: string,
+  name: string,
   value : string
 }
 
