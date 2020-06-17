@@ -13,11 +13,9 @@ router.get('/', (req, res) => {
 
 router.get('/api/mock_data',  (req, res) => {
 
-  var mockData = {
-    value : 1.0 + ( Math.random() * 250 )
-  }
+  var mockData = 1.0 + ( Math.random() * 250 )
 
-  jsonUtils.sendJsonResponse(res, 200, mockData);
+  jsonUtils.sendJsonResponse(res, 200, {value : "" + mockData});
 
 });
 
