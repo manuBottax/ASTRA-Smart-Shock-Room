@@ -19,6 +19,14 @@ router.get('/api/mock_data',  (req, res) => {
 
 });
 
+router.get('/api/mock_data/image',  (req, res) => {
+
+  var p = "https://drive.google.com/uc?id=1CdblsZT_bOAV7SAwC7-y8XVup0CKBrAg"
+
+  jsonUtils.sendJsonResponse(res, 200, {path : p});
+
+});
+
 app.use('/', router);
 
 const http = require('http').createServer(app);
