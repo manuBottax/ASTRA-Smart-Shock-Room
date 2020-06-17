@@ -2,7 +2,7 @@
 
 /* Initial beliefs and rules */
 
-//free_agent(true).
+current_patient("123459").
 
 /* Initial goals */
 
@@ -21,7 +21,7 @@
 		focus(Queue)
 		focus(Display).
 	
-+ last_pending_command(Command)
++ last_pending_command(Command) 
 	<-	-+current_command(Command);
 		acceptCommand [artifact_id(QueueId)].
 	
@@ -51,34 +51,54 @@
 	
 /* ----------- DATA REQUEST  ----------- */
 	
-+! requestData("patient_details", Value)
++! requestData("patient_details", Value) :  current_patient(P_ID)
 	<-	.println("Searching for Patient Personal Data ");
-		getMockData(Value) [artifact_id(MockSourceId)];
+		/*getMockData(Value) [artifact_id(MockSourceId)];*/
+		Value = P_ID;
 		+available_data(true).
 	
 /* Vital Parameters request */
-+! requestData(DataType, Value) 
-	: DataType = "blood_pressure" |/* DataType = "spO2" | 
-	  DataType = "heart_rate" |*/ DataType = "temperature" 
-	<-	.println("Searching for Vital Parameter data : ", DataType);
-		getDataValue(DataType, Value) [artifact_id(TTSourceId)];
++! requestData("blood_pressure", Value)  
+	<-	.println("Searching for blood_pressure data");
+		getBloodPressureValue(Value) [artifact_id(TTSourceId)];
 		+available_data(true).
-	
-/* Biometrical Data request */
+		
++! requestData("spO2", Value)
+	<-	.println("Searching for saturation data");
+		getSaturationValue(Value) [artifact_id(TTSourceId)];
+		+available_data(true).
+		
++! requestData("heart_rate", Value)
+	<-	.println("Searching for heart rate data");
+		getHeartRateValue(Value) [artifact_id(TTSourceId)];
+		+available_data(true).
+		
++! requestData("temperature", Value)
+	<-	.println("Searching for temperature data");
+		getTemperatureValue(Value) [artifact_id(TTSourceId)];
+		+available_data(true).
+		
+// this is removed for testing behaviour with unsupported data type
+/*
 +! requestData(DataType, Value) : DataType = "CO2_level" | DataType = "ega" | DataType = "rotem" 
 	<-	.println("Searching for Biometrical Data : ", DataType);
 		getMockData(Value) [artifact_id(MockSourceId)];
-		+available_data(true).
+		+available_data(true). */
 
 /* Diagnostic data */
-+! requestData(DataType, Value) : DataType = "chest_rx" | DataType = "blood_tests" | DataType = "ecg" 
++! requestData(DataType, Value) : DataType = "blood_tests" | DataType = "ecg" 
 	<-	.println("Searching for Diagnostic Data : ", DataType);
 		getMockData(Value) [artifact_id(MockSourceId)];
 		+available_data(true).
+		
++! requestData("chest_rx", Value)
+	<-	.println("Searching for RX Data");
+		getMockImage(Value) [artifact_id(MockSourceId)];
+		+available_data(true).
 	
-+! requestData("tac", Value) 
++! requestData("tac", Value) : current_patient(P_ID)
 	<-	.println("Searching for TAC data ");
-		getTACData(Value) [artifact_id(TacSourceId)];
+		getTACData(P_ID, Value) [artifact_id(TacSourceId)];
 		+available_data(true). 
 
 /* Temporal data */
@@ -89,8 +109,8 @@
 		/* TODO: gestione degli aspetti temporali */
 	
 /* Environment data */
-+! requestData(DataType, Value) : DataType = "used_blood_unit" 
-	<-	.println("Searching for Environmental Data : ", DataType);
++! requestData("used_blood_unit", Value) 
+	<-	.println("Searching for Blood Unit Data");
 		getMockData(Value) [artifact_id(MockSourceId)];
 		+available_data(true).
 	
@@ -100,6 +120,9 @@
 		refuseCommand(Command) [artifact_id(QueueId)];
 		+available_data(false).
 
+-! requestData(DataType, Value)
+	<- .println("Error, data unavailable").
+
 + data_type_unsopported : current_command(Command)
 	<- .println("Unsupported type")
 		refuseCommand(Command) [artifact_id(QueueId)];
@@ -108,12 +131,47 @@
 /* -------------------------------------------------------------------------------------- */
 	
 /* Display data in Shock Room Display using related artifact*/
-+! displayData(CommandId, DataType, Value, Target, Position) : available_data(true)
++! displayData(CommandId, "patient_details", Value, Target, Position) : available_data(true)
+	<-	.println("Got ", DataType, " value : ", Value);
+		.println("Displaying patient data " , Value, " in ", Target, " on ", Position);
+		-available_data(_)
+		showPatientInfo(Value, Position) [artifact_id(Target)].
+		
++! displayData(CommandId, DataType, Value, Target, Position) : available_data(true) & (DataType = "blood_pressure" | DataType = "spO2" | DataType = "heart_rate" | DataType = "temperature")
 	<-	.println("Got ", DataType, " value : ", Value);
 		.println("Displaying ", DataType, " data " , Value, " in ", Target, " on ", Position);
 		-available_data(_)
-		printData(DataType, Value, Position) [artifact_id(Target)].
+		showBiometricData(Value, DataType, Position) [artifact_id(Target)].	
 		
++! displayData(CommandId, DataType, Value, Target, Position) : available_data(true) & (DataType = "blood_tests" | DataType = "ecg")
+	<-	.println("Got ", DataType, " value : ", Value);
+		.println("Displaying ", DataType, " data " , Value, " in ", Target, " on ", Position);
+		-available_data(_)
+		showDiagnosticData(Value, DataType, Position) [artifact_id(Target)].
+		
++! displayData(CommandId, "tac", Value, Target, Position) : available_data(true)
+	<-	.println("Got TAC value");
+		.println("Displaying TAC in ", Target, " on ", Position);
+		-available_data(_)
+		showTAC(Value, Position) [artifact_id(Target)].
+		
++! displayData(CommandId, "chest_rx", Value, Target, Position) : available_data(true)
+	<-	.println("Got RX value");
+		.println("Displaying RX in ", Target, " on ", Position);
+		-available_data(_)
+		showRX(Value, Position) [artifact_id(Target)].
+		
++! displayData(CommandId, DataType, Value, Target, Position) : available_data(true) & (DataType = "eta" | DataType = "total_time")
+	<-	.println("Got ", DataType, " value : ", Value);
+		.println("Displaying ", DataType, " data " , Value, " in ", Target, " on ", Position);
+		-available_data(_)
+		showTemporalData(Value, DataType, Position) [artifact_id(Target)].
+		
++! displayData(CommandId, "used_blood_unit", Value, Target, Position) : available_data(true)
+	<-	.println("Got blood unit value : ", Value);
+		.println("Displaying blood unit data " , Value, " in ", Target, " on ", Position);
+		-available_data(_)
+		showEnvironmentalData(Value, DataType, Position) [artifact_id(Target)].
 
 +! displayData(CommandId, DataType, Value, Target, Position) : available_data(false)
 	<-	.println("invalid data, not print");
@@ -121,6 +179,7 @@
 		
 -! displayData(CommandId, DataType, Value, Target, Position) : current_command(Command)
 	<-	.println("Error on command display");
+		.println("ID : ", CommandId , " type : ", DataType, " value : ", Value, " Target :", Target, " Position : ", Position);
 		setErrorOnCommand(Command) [artifact_id(QueueId)].
 		
 + completed_display
@@ -130,10 +189,8 @@
 +! completeCommand : current_command(Command)
 	<- completeCommand(Command) [artifact_id(QueueId)].
 
-
 + command_handle_completed
 	<- .println("Command Handling completed, waiting for a new command.").
-	
 	
 +? find_queue(QueueId) 
 	<- lookupArtifact("roomCommands", QueueId).

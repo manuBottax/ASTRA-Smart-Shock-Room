@@ -1,31 +1,69 @@
 const express = require('express');
 
 var router = express.Router();
+
 var jsonUtils = require("./jsonUtilities");
 
 app = express();
 app.use(express.json());
 app.use(express.urlencoded( { extended: true } ));
 
+var displayTextData = function (req, res) {
+
+  if (req.params){
+
+      io.emit("display_data", {position : req.params.position, name : req.body.name, type: "text", value : req.body.data});
+      jsonUtils.sendJsonResponse(res, 201, "OK");
+
+  } else {
+    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  }
+}
+
+var displayImageData =  function (req, res) {
+
+  if (req.params){
+
+      io.emit("display_data", {position : req.params.position, type: "image", value : req.body.data});
+      jsonUtils.sendJsonResponse(res, 201, "OK");
+
+  } else {
+    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  }
+}
+
 router.get('/', (req, res) => {
   res.send('<h1>ASTRA Shock Room Display Service</h1> <p> You should not be here. </p>');
 });
 
-router.post('/api/display/:position',  (req, res) => {
+router.post('/api/display/:position/patient_data', displayTextData)
 
-  if (req.params){
+router.post('/api/display/:position/biometric_data', displayTextData)
 
-      var position = req.params.position;
+router.post('/api/display/:position/diagnostic_data', displayTextData)
 
-      var data_type = (req.body.type  === "tac" || req.body.type  === "chest_rx") ? "image" : "text"
+router.post('/api/display/:position/tac', displayImageData)
+router.post('/api/display/:position/rx', displayImageData)
 
-      io.emit("display_data", {position : position, name : req.body.type, type: data_type, value : req.body.data});
-      jsonUtils.sendJsonResponse(res, 201, "OK");
-  } else {
-    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
-  }
+router.post('/api/display/:position/temporal_data', displayTextData)
 
-});
+router.post('/api/display/:position/env_data', displayTextData)
+
+// router.post('/api/display/:position',  (req, res) => {
+
+//   if (req.params){
+
+//       var position = req.params.position;
+
+//       var data_type = (req.body.type  === "tac" || req.body.type  === "chest_rx") ? "image" : "text"
+
+//       io.emit("display_data", {position : position, name : req.body.type, type: data_type, value : req.body.data});
+//       jsonUtils.sendJsonResponse(res, 201, "OK");
+//   } else {
+//     jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+//   }
+
+// });
 
 app.use('/', router);
 

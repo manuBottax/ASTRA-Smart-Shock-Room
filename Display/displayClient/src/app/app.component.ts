@@ -10,10 +10,11 @@ import { ImageDataComponent } from './image-data-component/image-data-component.
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
 
   subscription: Subscription;
-
+  
   dataArray : Array<DataItem> = new Array();
 
   componentArray : Array<any> = new Array(7);

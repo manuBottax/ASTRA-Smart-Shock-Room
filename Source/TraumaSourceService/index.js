@@ -19,7 +19,7 @@ router.get('/api/data/blood_pressure',  (req, res) => {
   var maxPressure = parseInt( (70 + ( Math.random() * 150 )) )
 
   var data = {
-    value :  minPressure + " | " + maxPressure 
+    value :  maxPressure + " | " +  minPressure
   }
 
   jsonUtils.sendJsonResponse(res, 200, data);

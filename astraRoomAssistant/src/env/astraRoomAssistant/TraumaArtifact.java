@@ -2,40 +2,133 @@
 
 package astraRoomAssistant;
 
+import java.io.IOException;
+
+import org.json.JSONObject;
+
 import cartago.*;
+import javafx.util.Pair;
+import utils.NetworkManager;
 
 public class TraumaArtifact extends Artifact {
 	
-	private String pressureSample;
-	private String saturationSample;
-	private String rateSample;
-	private String temperatureSample;
+	private static final String BASE_SERVICE_URL = "http://192.168.1.120:3005/api/data/";
 	
-	void init() {
-			
-		this.pressureSample = " 80 | 120 ";
-		this.saturationSample = " 98 ";
-		this.rateSample = " 75 ";
-		this.temperatureSample = " 36.7 °C ";
-		
-		System.out.println("TraumaTrackerService Artifact created");
-		
+	void init() {	
+		System.out.println("TraumaService Artifact created");	
 	}
-
+	
 	@OPERATION
-	void getDataValue(String type, OpFeedbackParam<String> value) {
+	void getBloodPressureValue(OpFeedbackParam<String> value) {
+		
+		String path = BASE_SERVICE_URL + "blood_pressure";
+		
+		try {
+			
+			Pair<Integer, String> res = NetworkManager.doGET(path);
+			
+			if (res.getKey() == 200) {	
 				
-		if (type.equals("blood_pressure")) {
-			value.set(this.pressureSample);
-		} else if (type.equals("spO2")){
-			value.set(this.saturationSample);
-		} else if (type.equals("heart_rate")){
-			value.set(this.rateSample);
-		} else if (type.equals("temperature")){
-			value.set(this.temperatureSample);
-		} else {
-			failed("unsupported type", "unsupported type", "data_type_unsopported");
-		}
+				
+				JSONObject json = new JSONObject(res.getValue());
+				
+				String val = json.getString("value");
+				
+				value.set(val);
+				
+			} else {
+				System.out.println("Error : Cannot GET Blood Pressure Data");
+				failed("Data retrieve failed", "service error", "failed_data_retrieve" );
+			}
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
+		}		
 	}
+	
+	@OPERATION
+	void getSaturationValue(OpFeedbackParam<String> value) {
+		
+		String path = BASE_SERVICE_URL + "spO2";
+		
+		try {
+			
+			Pair<Integer, String> res = NetworkManager.doGET(path);
+			
+			if (res.getKey() == 200) {	
+				
+				
+				JSONObject json = new JSONObject(res.getValue());
+				
+				String val = json.getString("value");
+				
+				value.set(val);
+				
+			} else {
+				System.out.println("Error : Cannot GET Saturation Data");
+				failed("Data retrieve failed", "service error", "failed_data_retrieve" );
+			}
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
+		}			
+	}
+	
+	@OPERATION
+	void getHeartRateValue(OpFeedbackParam<String> value) {
+		
+		String path = BASE_SERVICE_URL + "heart_rate";
+		
+		try {
+			
+			Pair<Integer, String> res = NetworkManager.doGET(path);
+			
+			if (res.getKey() == 200) {	
+				
+				
+				JSONObject json = new JSONObject(res.getValue());
+				
+				String val = json.getString("value");
+				
+				value.set(val);
+				
+			} else {
+				System.out.println("Error : Cannot GET Heart Rate Data");
+				failed("Data retrieve failed", "service error", "failed_data_retrieve" );
+			}
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
+		}			
+	}
+	
+	@OPERATION
+	void getTemperatureValue(OpFeedbackParam<String> value) {
+		
+		String path = BASE_SERVICE_URL + "temperature";
+		
+		try {
+			
+			Pair<Integer, String> res = NetworkManager.doGET(path);
+			
+			if (res.getKey() == 200) {	
+				
+				
+				JSONObject json = new JSONObject(res.getValue());
+				
+				String val = json.getString("value");
+				
+				value.set(val);
+				
+			} else {
+				System.out.println("Error : Cannot GET Temperature Data");
+				failed("Data retrieve failed", "service error", "failed_data_retrieve" );
+			}
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
+		}			
+	}
+	
 }
 

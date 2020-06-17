@@ -58,6 +58,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 	@OPERATION
 	void acceptCommand() {
 		
+		
 		ObsProperty last = getObsProperty("last_pending_command");
 		JSONObject cmd = (JSONObject) last.getValue();
 		String commandID = cmd.getString("command_id");
@@ -81,7 +82,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 				status.put("status", CommandStatus.in_processing.getStatusCode());
 				
 				int res = NetworkManager.doPUT(path, status.toString());
-				
+								
 				if (res == 200) {	
 					
 					System.out.println("Command Accepted !");
@@ -109,7 +110,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 	 */
 	@OPERATION
 	void completeCommand(JSONObject command) {
-		
+				
 		String commandID = command.getString("command_id");
 	
 		try {			
@@ -120,10 +121,9 @@ public class RoomCommandQueueArtifact extends Artifact {
 			status.put("status", CommandStatus.completed.getStatusCode());
 			
 			int res = NetworkManager.doPUT(path, status.toString());
-			
+						
 			if (res == 200) {
 				signal("command_handle_completed");
-				
 			} else {
 				System.out.println("Error : Cannot update command");
 				failed("command acceptance failed", "service error", "failed_update", res, commandID);
@@ -141,7 +141,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 	 */
 	@OPERATION
 	void refuseCommand(JSONObject command) {
-		
+				
 		this.refusedQueue.add(command);
 		
 		String commandID = command.getString("command_id");
