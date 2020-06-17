@@ -25,3 +25,7 @@ cd ../TACSource
 cd ../MockSourceService
 
 /c/Windows/System32/cmd.exe //c 'start cmd /c nodemon'
+
+cd ../TraumaSourceService
+
+/c/Windows/System32/cmd.exe //c 'start cmd /c nodemon'

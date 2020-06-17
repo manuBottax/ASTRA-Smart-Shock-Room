@@ -1,3 +1,8 @@
-<p>
-  image-data-component works with {{data.test}} , {{data.name}}!
-</p>
+<!-- <p>
+  image-data-component works with {{data.data.test}} , {{data.data.name}}!
+</p> -->
+
+<div *ngIf="data.data.available">
+  <img [src]="data.data.path" alt="data_img">
+</div>
+

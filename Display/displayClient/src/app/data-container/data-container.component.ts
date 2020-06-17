@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ComponentFactoryResolver } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ComponentFactoryResolver, Output, EventEmitter } from '@angular/core';
 import { DataDirective } from '../data.directive';
 import { DataInterface } from 'src/data.interface';
 import { DataItem } from '../data-item';
@@ -12,6 +12,7 @@ export class DataContainerComponent implements OnInit {
 
   @Input() data: DataItem;
   @ViewChild(DataDirective, {static: true}) host: DataDirective;
+  @Output() bindedComponent: EventEmitter<any> = new EventEmitter();
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
 
@@ -20,6 +21,7 @@ export class DataContainerComponent implements OnInit {
     console.log(this.data);
   }
 
+  componentRef;
 
   loadComponent() {
 
@@ -28,8 +30,26 @@ export class DataContainerComponent implements OnInit {
     const viewContainerRef = this.host.viewContainerRef;
     viewContainerRef.clear();
 
-    const componentRef = viewContainerRef.createComponent(componentFactory);
-    (<DataInterface>componentRef.instance).data = this.data;
+    this.componentRef = viewContainerRef.createComponent(componentFactory);
+    (<DataInterface> this.componentRef.instance).data = this.data;
+
+    this.bindedComponent.emit(this);
+    // this.bindedComponent.emit(this.componentRef);
+  }
+
+  updateValue(updatedValue: DataItem) {
+
+    this.data = updatedValue;
+
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.data.component);
+
+    const viewContainerRef = this.host.viewContainerRef;
+    viewContainerRef.clear();
+
+    this.componentRef = viewContainerRef.createComponent(componentFactory);
+    (<DataInterface> this.componentRef.instance).data = this.data;
+    this.bindedComponent.emit(this);
+    // this.bindedComponent.emit(this.componentRef);
   }
 
 }
