@@ -41,8 +41,8 @@ public class RoomCommandQueueArtifact extends Artifact {
 		initCommand.put("command_id", "-1");
 		
 		defineObsProperty("last_pending_command", initCommand);
-		defineObsProperty("last_refused_command", initCommand);
-		defineObsProperty("last_wrong_command", initCommand);
+		defineObsProperty("last_refused_command", initCommand, "-1");
+		defineObsProperty("last_wrong_command", initCommand, "-1");
 		
 		this.topic = topic;
 		this.queueName = queueName;
@@ -158,7 +158,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 			if (res == 200) {
 				
 				ObsProperty refused = getObsProperty("last_refused_command");
-				refused.updateValue(command);
+				refused.updateValues(command, commandID);
 				this.refusedQueue.add(command);
 			
 				signal("command_handle_completed");
@@ -187,7 +187,9 @@ public class RoomCommandQueueArtifact extends Artifact {
 		this.wrongQueue.add(command);
 		
 		ObsProperty erroneous = getObsProperty("last_wrong_command");
-		erroneous.updateValue(command);
+		erroneous.updateValues(command, command.getString("command_id"));
+		
+		System.out.println("Error on " + erroneous.getValues()[1] + " - " + erroneous.getValues()[0]);
 					
 	}
 	
@@ -198,19 +200,24 @@ public class RoomCommandQueueArtifact extends Artifact {
 	@OPERATION
 	void addPendingCommand(JSONObject command) {
 		
+		System.out.println("Adding new pending command : " + command.getString("command_id"));
+		
 		ObsProperty last = getObsProperty("last_pending_command");
 		
-	     if (this.pendingQueue.size() > 0) {
-		     if (command.getInt("priority") > ((JSONObject) last.getValue()).getInt("priority")) {
-		    	 this.pendingQueue.add((JSONObject) last.getValue());
-		    	 last.updateValue(command);
-		     } else {
-		    	 this.pendingQueue.add(command);
-		     }
-	     } else {
-	    	 this.pendingQueue.add(command);
-	    	 last.updateValue(command);
-	     }
+		if (! ((JSONObject) last.getValue()).getString("command_id").equals("-1")) {
+		
+		    if (this.pendingQueue.size() > 0) {
+			    if (command.getInt("priority") > ((JSONObject) last.getValue()).getInt("priority")) {
+			    	this.pendingQueue.add((JSONObject) last.getValue());
+			    	last.updateValue(command);
+			    } else {
+			    	this.pendingQueue.add(command);
+			    }
+		    } else {
+		    	this.pendingQueue.add(command);
+		    	last.updateValue(command);
+		    }
+		}
 	}
 	
 	/**
@@ -224,7 +231,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 		JSONObject c = this.wrongQueue.poll();
 		
 		if ( c != null) {
-			last.updateValue(c);
+			last.updateValues(c, c.getString("command_id"));
 		}
 			
 	}

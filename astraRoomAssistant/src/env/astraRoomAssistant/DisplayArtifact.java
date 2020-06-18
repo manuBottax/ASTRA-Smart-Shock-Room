@@ -188,7 +188,7 @@ public class DisplayArtifact extends Artifact {
 			String name = "";
 			
 			if (type.equals("eta")) {
-				name = "Stima tempo mancante";		
+				name = "Tempo All'Arrivo";		
 			} else if (type.equals("total_time")) {
 				name = "Tempo totale";
 			}
