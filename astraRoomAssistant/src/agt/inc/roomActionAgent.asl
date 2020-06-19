@@ -37,9 +37,17 @@ current_patient("123459").
 		.println("Want an action on ", Target);
 		!doAction(CommandID, DataType, Target).
 
-+! doAction(CommandID, "set_arrived_patient", Target) 
-	<-  .println("Monitoring")
++! doAction(CommandID, "start_trauma", Target) 
+	<-  .println("Inizio Gestione Trauma").
+		//setArrivalTime(CommandID) [artifact_id(Target)].
+		
++! doAction(CommandID, "patient_arrived", Target) 
+	<-  .println("Inizio Gestione Trauma")
 		setArrivalTime(CommandID) [artifact_id(Target)].
+		
++! doAction(CommandID, "end_trauma", Target) 
+	<-  .println("Termine Gestione Trauma").
+		//setArrivalTime(CommandID) [artifact_id(Target)].
 		
 /* -------------------------------------------------- */
 

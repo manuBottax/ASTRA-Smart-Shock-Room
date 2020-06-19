@@ -53,11 +53,20 @@ public class TimeMonitorArtifact extends Artifact {
 				
 				Map<TimeUnit,Long> time = getDateDiff(new Date(), this.eta);
 				
-				String leftTime = time.get(TimeUnit.HOURS) + ":" + time.get(TimeUnit.MINUTES) + ":" + time.get(TimeUnit.SECONDS);
+				long hours = time.get(TimeUnit.HOURS);
+				long minute = time.get(TimeUnit.MINUTES);
+				long seconds = time.get(TimeUnit.SECONDS);
 				
-				signal("new_monitoring_value", commandId, leftTime, "eta", target, position);
+				if (hours > 0 && minute > 0 && seconds > 0) {
 				
-				await_time(tickTime);
+					String elapsedTime = hours + ":" + minute + ":" + seconds;
+					
+					signal("new_monitoring_value", commandId, elapsedTime, "total_time", target, position);
+					
+					await_time(tickTime);
+				} else {
+					this.etaMonitor = false;
+				}
 				
 	        }
 		} else {
@@ -77,11 +86,20 @@ public class TimeMonitorArtifact extends Artifact {
 				
 				Map<TimeUnit,Long> time = getDateDiff(this.arrivalTime, new Date());
 				
-				String elapsedTime = time.get(TimeUnit.HOURS) + ":" + time.get(TimeUnit.MINUTES) + ":" + time.get(TimeUnit.SECONDS);
+				long hours = time.get(TimeUnit.HOURS);
+				long minute = time.get(TimeUnit.MINUTES);
+				long seconds = time.get(TimeUnit.SECONDS);
 				
-				signal("new_monitoring_value", commandId, elapsedTime, "total_time", target, position);
+				if (hours > 0 && minute > 0 && seconds > 0) {
 				
-				await_time(tickTime);
+					String elapsedTime = hours + ":" + minute + ":" + seconds;
+					
+					signal("new_monitoring_value", commandId, elapsedTime, "total_time", target, position);
+					
+					await_time(tickTime);
+				} else {
+					this.totalTimeMonitor = false;
+				}
 				
 	        }
 		} else {
