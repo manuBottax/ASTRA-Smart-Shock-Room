@@ -14,7 +14,6 @@ current_patient("123459").
 	<-	?find_queue(Queue)
 		?find_timer_artifact(TimeMonitor)
 	
-		focus(TimeMonitor)
 		focus(Queue).
 
 
@@ -38,22 +37,19 @@ current_patient("123459").
 		!doAction(CommandID, DataType, Target).
 
 +! doAction(CommandID, "start_trauma", Target) 
-	<-  .println("Inizio Gestione Trauma").
-		//setArrivalTime(CommandID) [artifact_id(Target)].
+	<-  .println("Inizio Gestione Trauma");
+		completeCommand(CommandId) [artifact_id(QueueId)].
 		
 +! doAction(CommandID, "patient_arrived", Target) 
 	<-  .println("Inizio Gestione Trauma")
-		setArrivalTime(CommandID) [artifact_id(Target)].
+		setArrivalTime(CommandID) [artifact_id(Target)];
+		completeCommand(CommandId) [artifact_id(QueueId)].
 		
 +! doAction(CommandID, "end_trauma", Target) 
-	<-  .println("Termine Gestione Trauma").
-		//setArrivalTime(CommandID) [artifact_id(Target)].
+	<-  .println("Termine Gestione Trauma");
+		completeCommand(CommandId) [artifact_id(QueueId)].
 		
-/* -------------------------------------------------- */
-
-+ completed_action(CommandId)
-	<-  completeCommand(CommandId) [artifact_id(QueueId)].
-	
+/* -------------------------------------------------- */	
 		
 +? find_queue(QueueId) 
 	<- lookupArtifact("roomActionCommands", QueueId).

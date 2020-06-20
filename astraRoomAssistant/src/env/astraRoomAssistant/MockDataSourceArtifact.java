@@ -29,11 +29,7 @@ public class MockDataSourceArtifact extends Artifact {
 				
 				
 				JSONObject json = new JSONObject(res.getValue());
-				
 				String val = json.getString("value");
-				
-				System.out.println(val);
-				
 				value.set(val);
 				
 			} else {
@@ -57,11 +53,7 @@ public class MockDataSourceArtifact extends Artifact {
 				
 				
 				JSONObject json = new JSONObject(res.getValue());
-				
 				String val = json.getString("path");
-				
-				System.out.println(val);
-				
 				path.set(val);
 				
 			} else {

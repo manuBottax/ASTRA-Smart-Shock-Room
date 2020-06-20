@@ -31,14 +31,11 @@ public class DisplayArtifact extends Artifact {
 			
 			int res = NetworkManager.doPOST(path, body.toString());
 			
-			if (res == 201) {	
-				
-				signal("completed_display");
-				
-			} else {
+			if (res != 201) {
 				System.out.println("Error : cannot complete display");
 				failed("command display failed", "service error", "failed_display", res );
 			}
+			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
 			failed("command display failed", "I/O error", "failed_display", "IOException");
@@ -71,14 +68,11 @@ public class DisplayArtifact extends Artifact {
 			
 			int res = NetworkManager.doPOST(path, body.toString());
 						
-			if (res == 201) {	
-				
-				signal("completed_display");
-				
-			} else {
+			if (res != 201) {
 				System.out.println("Error : cannot complete display");
 				failed("command display failed", "service error", "failed_display", res );
 			}
+			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
 			failed("command display failed", "I/O error", "failed_display", "IOException");
@@ -107,14 +101,11 @@ public class DisplayArtifact extends Artifact {
 			
 			int res = NetworkManager.doPOST(path, body.toString());
 			
-			if (res == 201) {	
-				
-				signal("completed_display");
-				
-			} else {
+			if (res != 201) {
 				System.out.println("Error : cannot complete display");
 				failed("command display failed", "service error", "failed_display", res );
 			}
+			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
 			failed("command display failed", "I/O error", "failed_display", "IOException");
@@ -135,14 +126,11 @@ public class DisplayArtifact extends Artifact {
 			
 			int res = NetworkManager.doPOST(path, body.toString());
 			
-			if (res == 201) {	
-				
-				signal("completed_display");
-				
-			} else {
+			if (res != 201) {
 				System.out.println("Error : cannot complete display");
 				failed("command display failed", "service error", "failed_display", res );
 			}
+			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
 			failed("command display failed", "I/O error", "failed_display", "IOException");
@@ -162,14 +150,11 @@ public class DisplayArtifact extends Artifact {
 			
 			int res = NetworkManager.doPOST(path, body.toString());
 			
-			if (res == 201) {	
-				
-				signal("completed_display");
-				
-			} else {
+			if (res != 201) {
 				System.out.println("Error : cannot complete display");
 				failed("command display failed", "service error", "failed_display", res );
 			}
+			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
 			failed("command display failed", "I/O error", "failed_display", "IOException");
@@ -198,14 +183,11 @@ public class DisplayArtifact extends Artifact {
 			
 			int res = NetworkManager.doPOST(path, body.toString());
 			
-			if (res == 201) {	
-				
-				signal("completed_display");
-				
-			} else {
+			if (res != 201) {
 				System.out.println("Error : cannot complete display");
 				failed("command display failed", "service error", "failed_display", res );
 			}
+			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
 			failed("command display failed", "I/O error", "failed_display", "IOException");
@@ -231,17 +213,12 @@ public class DisplayArtifact extends Artifact {
 			body.put("data", data);
 			
 			int res = NetworkManager.doPOST(path, body.toString());
-			
-			System.out.println(res);
-			
-			if (res == 201) {	
-				
-				signal("completed_display");
-				
-			} else {
+						
+			if (res != 201) {
 				System.out.println("Error : cannot complete display");
 				failed("command display failed", "service error", "failed_display", res );
 			}
+			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
 			failed("command display failed", "I/O error", "failed_display", "IOException");

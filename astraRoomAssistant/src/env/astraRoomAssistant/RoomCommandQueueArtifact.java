@@ -123,7 +123,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 			int res = NetworkManager.doPUT(path, status.toString());
 						
 			if (res == 200) {
-				signal("command_handle_completed");
+				System.out.println("Command updated successfully");
 			} else {
 				System.out.println("Error : Cannot update command");
 				failed("command acceptance failed", "service error", "failed_update", res, commandID);
@@ -141,8 +141,6 @@ public class RoomCommandQueueArtifact extends Artifact {
 	 */
 	@OPERATION
 	void refuseCommand(JSONObject command) {
-				
-		this.refusedQueue.add(command);
 		
 		String commandID = command.getString("command_id");
 		
@@ -161,8 +159,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 				refused.updateValues(command, commandID);
 				this.refusedQueue.add(command);
 			
-				signal("command_handle_completed");
-				
+				System.out.println("Command updated successfully");
 				
 			} else {
 				System.out.println("Error : Cannot update command");
@@ -200,11 +197,13 @@ public class RoomCommandQueueArtifact extends Artifact {
 	@OPERATION
 	void addPendingCommand(JSONObject command) {
 		
-		System.out.println("Adding new pending command : " + command.getString("command_id"));
-		
 		ObsProperty last = getObsProperty("last_pending_command");
 		
-		if (! ((JSONObject) last.getValue()).getString("command_id").equals("-1")) {
+		System.out.println("Command ID : " +  command.getString("command_id"));
+		
+		if (! command.getString("command_id").equals("-1")) {
+			
+			System.out.println("Adding new pending command : " + command.getString("command_id"));
 		
 		    if (this.pendingQueue.size() > 0) {
 			    if (command.getInt("priority") > ((JSONObject) last.getValue()).getInt("priority")) {
@@ -229,6 +228,8 @@ public class RoomCommandQueueArtifact extends Artifact {
 		ObsProperty last = getObsProperty("last_wrong_command");
 			
 		JSONObject c = this.wrongQueue.poll();
+		
+		System.out.println("Error handled. Error left : " + this.wrongQueue.size());
 		
 		if ( c != null) {
 			last.updateValues(c, c.getString("command_id"));

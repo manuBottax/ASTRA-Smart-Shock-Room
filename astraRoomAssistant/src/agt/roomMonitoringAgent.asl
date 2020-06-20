@@ -13,13 +13,13 @@ current_patient("123459").
 +! observe : true 
 	<-	?find_queue(Queue)
 		?find_display(Display)
-		?find_tt_source(TTSource)
+		?find_active_trauma(TraumaSource)
 		?find_tac_source(TacSource)
 		?find_mock_source(MockSource)
 		?find_timer_artifact(TimeMonitor)
 	
 		focus(Queue)
-		focus(TTSource)
+		focus(TraumaSource)
 		focus(TimeMonitor)
 		focus(Display).
 
@@ -35,28 +35,36 @@ current_patient("123459").
 	<-	.println("Error ( " , Error , " ) on command update");
 		setErrorOnCommand(Command) [artifact_id(QueueId)].
 		
-/* ---------- Biometric Data Monitoring ------------------------ */
-		
 +! processCommand(CommandId, "monitoring", DataType, Target, Position)
 	<-	.println("Working on Command ", CommandId);
 		.println("Want to monitor ", DataType);
 		!monitorData(CommandId, DataType, Target, Position).
+		
+/* ---------- Biometric Data Monitoring ------------------------ */
 
 +! monitorData(CommandId, "blood_pressure", Target, Position) 
 	<-  .println("Monitoring")
-		monitorBloodPressure(CommandId, Target, Position) [artifact_id(TTSourceId)].
+		monitorBloodPressure(CommandId, Target, Position) [artifact_id(TraumaSourceId)]
+		completeCommand(Command) [artifact_id(QueueId)]
+		.println("Command Handling completed, waiting for a new command.").
 
 +! monitorData(CommandId, "spO2", Target, Position) 
 	<-  .println("Monitoring")
-		monitorSaturation(CommandId, Target, Position) [artifact_id(TTSourceId)].
+		monitorSaturation(CommandId, Target, Position) [artifact_id(TraumaSourceId)]
+		completeCommand(Command) [artifact_id(QueueId)]
+		.println("Command Handling completed, waiting for a new command.").
 		
 +! monitorData(CommandId, "heart_rate", Target, Position) 
 	<-  .println("Monitoring")
-		monitorHeartRate(CommandId, Target, Position) [artifact_id(TTSourceId)].
+		monitorHeartRate(CommandId, Target, Position) [artifact_id(TraumaSourceId)]
+		completeCommand(Command) [artifact_id(QueueId)]
+		.println("Command Handling completed, waiting for a new command.").
 		
 +! monitorData(CommandId, "temperature", Target, Position) 
 	<-  .println("Monitoring")
-		monitorTemperature(CommandId, Target, Position) [artifact_id(TTSourceId)].
+		monitorTemperature(CommandId, Target, Position) [artifact_id(TraumaSourceId)]
+		completeCommand(Command) [artifact_id(QueueId)]
+		.println("Command Handling completed, waiting for a new command.").
 		
 // TODO: è da implementare il monitoraggio di CO2, EGA e ROTEM che al momento sono disabilitati per motivi di test
 		
@@ -64,11 +72,23 @@ current_patient("123459").
 		
 +! monitorData(CommandId, "eta", Target, Position) 
 	<-  .println("Monitoring")
-		monitorETA(CommandId, Target, Position) [artifact_id(TimeMonitor)].
+		monitorETA(CommandId, Target, Position) [artifact_id(TimeMonitor)]
+		completeCommand(Command) [artifact_id(QueueId)]
+		.println("Command Handling completed, waiting for a new command.").
 		
 +! monitorData(CommandId, "total_time", Target, Position) 
 	<-  .println("Monitoring")
-		monitorETA(CommandId, Target, Position) [artifact_id(TimeMonitor)].
+		monitorTotalTime(CommandId, Target, Position) [artifact_id(TimeMonitor)]
+		completeCommand(Command) [artifact_id(QueueId)]
+		.println("Command Handling completed, waiting for a new command.").
+		
+
+		
+-! monitorData(CommandId, DataType, Target, Position) : current_command(Command)
+	<-  .println("Cannot complete Monitoring")
+		/* TODO : Stop monitoring in base al tipo 
+		monitorTotalTime(CommandId, Target, Position) [artifact_id(TimeMonitor)] */
+		setErrorOnCommand(Command) [artifact_id(QueueId)].
 		
 /* -------------------------------------------------- */
 
@@ -92,12 +112,12 @@ current_patient("123459").
 	<-	.wait(200);
 		?find_display(DisplayId).
 	
-+? find_tt_source(TTSourceId) 
-	<-	lookupArtifact("traumaTrackerService", TTSourceId).
++? find_active_trauma(TraumaSourceId) 
+	<-	lookupArtifact("activeTraumaService", TraumaSourceId).
 
--? find_tt_source(TTSourceId) 
+-? find_active_trauma(TraumaSourceId) 
 	<-	.wait(200);
-		?find_tt_source(TTSourceId).
+		?find_active_trauma(TraumaSourceId).
 	
 +? find_tac_source(TacSourceId) 
 	<-	lookupArtifact("tacPS", TacSourceId).

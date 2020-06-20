@@ -36,9 +36,7 @@ public class TraumaArtifact extends Artifact {
 				
 				
 				JSONObject json = new JSONObject(res.getValue());
-				
 				String val = json.getString("value");
-				
 				value.set(val);
 				
 			} else {
@@ -64,9 +62,7 @@ public class TraumaArtifact extends Artifact {
 				
 				
 				JSONObject json = new JSONObject(res.getValue());
-				
 				String val = json.getString("value");
-				
 				value.set(val);
 				
 			} else {
@@ -92,9 +88,7 @@ public class TraumaArtifact extends Artifact {
 				
 				
 				JSONObject json = new JSONObject(res.getValue());
-				
 				String val = json.getString("value");
-				
 				value.set(val);
 				
 			} else {
@@ -120,9 +114,7 @@ public class TraumaArtifact extends Artifact {
 				
 				
 				JSONObject json = new JSONObject(res.getValue());
-				
 				String val = json.getString("value");
-				
 				value.set(val);
 				
 			} else {
@@ -155,9 +147,7 @@ public class TraumaArtifact extends Artifact {
 					
 					
 					JSONObject json = new JSONObject(res.getValue());
-					
 					String val = json.getString("value");
-					
 					signal("new_monitoring_value", id, val, "blood_pressure", target, position);
 					
 				} else {
@@ -191,9 +181,7 @@ public class TraumaArtifact extends Artifact {
 					
 					
 					JSONObject json = new JSONObject(res.getValue());
-					
 					String val = json.getString("value");
-					
 					signal("new_monitoring_value", id, val, "spO2", target, position);
 					
 				} else {
@@ -228,9 +216,7 @@ public class TraumaArtifact extends Artifact {
 					
 					
 					JSONObject json = new JSONObject(res.getValue());
-					
 					String val = json.getString("value");
-					
 					signal("new_monitoring_value", id, val, "heart_rate", target, position);
 					
 				} else {
@@ -264,9 +250,7 @@ public class TraumaArtifact extends Artifact {
 					
 					
 					JSONObject json = new JSONObject(res.getValue());
-					
 					String val = json.getString("value");
-					
 					signal("new_monitoring_value", id, val, "temperature", target, position);
 					
 				} else {

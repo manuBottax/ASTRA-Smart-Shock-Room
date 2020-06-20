@@ -13,7 +13,7 @@
 		!setupMonitorQueue(QueueMonitorId);
 		!setupActionQueue(QueueActionId);
 		!setupDisplay(Display_id);
-		!setupTraumaSource(Source_TT_id);
+		!setupTraumaSource(Source_Trauma_id);
 		!setupTac(Source_TAC_id);
 		!setupTimer(Timer_id);
 		!setupMockSource(Source_id).
@@ -31,7 +31,7 @@
 	<- makeArtifact("display_sr", "astraRoomAssistant.DisplayArtifact", [], D).
 	
 +! setupTraumaSource(S)
-	<- makeArtifact("traumaTrackerService", "astraRoomAssistant.TraumaArtifact", [], S).
+	<- makeArtifact("activeTraumaService", "astraRoomAssistant.TraumaArtifact", [], S).
 	
 +! setupTac(T) 
 	<- makeArtifact("tacPS", "astraRoomAssistant.TACArtifact", [], T).

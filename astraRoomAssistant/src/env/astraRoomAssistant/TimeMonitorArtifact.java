@@ -28,8 +28,6 @@ public class TimeMonitorArtifact extends Artifact {
 		long nowTime = new Date().getTime() ;				
 		this.eta.setTime(nowTime + 1234567L);
 		
-		System.out.println("ETA : " + this.eta);
-		
 		System.out.println(" Time monitor initialized !");
 	}
 	
@@ -38,7 +36,7 @@ public class TimeMonitorArtifact extends Artifact {
 		this.arrivalTime = new Date();
 		this.isPatientArrived = true;
 		
-		signal("completed_action", id);
+		//signal("completed_action", id);
 	}
 	
 	@OPERATION
@@ -49,7 +47,7 @@ public class TimeMonitorArtifact extends Artifact {
 			this.etaMonitor = true;
 			int tickTime = 1000;
 		
-			while(this.etaMonitor) {
+			while(this.etaMonitor) {	
 				
 				Map<TimeUnit,Long> time = getDateDiff(new Date(), this.eta);
 				
@@ -57,11 +55,11 @@ public class TimeMonitorArtifact extends Artifact {
 				long minute = time.get(TimeUnit.MINUTES);
 				long seconds = time.get(TimeUnit.SECONDS);
 				
-				if (hours > 0 && minute > 0 && seconds > 0) {
+				if (hours >= 0 && minute >= 0 && seconds >= 0) {
 				
-					String elapsedTime = hours + ":" + minute + ":" + seconds;
+					String etaTime = hours + ":" + minute + ":" + seconds;
 					
-					signal("new_monitoring_value", commandId, elapsedTime, "total_time", target, position);
+					signal("new_monitoring_value", commandId, etaTime, "total_time", target, position);
 					
 					await_time(tickTime);
 				} else {
@@ -90,7 +88,7 @@ public class TimeMonitorArtifact extends Artifact {
 				long minute = time.get(TimeUnit.MINUTES);
 				long seconds = time.get(TimeUnit.SECONDS);
 				
-				if (hours > 0 && minute > 0 && seconds > 0) {
+				if (hours >= 0 && minute >= 0 && seconds >= 0) {
 				
 					String elapsedTime = hours + ":" + minute + ":" + seconds;
 					

@@ -61,9 +61,8 @@ public class TACArtifact extends Artifact {
 				
 				if (! json.isEmpty()) {
 				
-				String tacPath = json.getJSONObject(0).getString("path");
-				
-				path.set(tacPath);
+					String tacPath = json.getJSONObject(0).getString("path");
+					path.set(tacPath);
 				
 				} else {
 					System.out.println("Error : TAC unavailable for that patient");
@@ -86,7 +85,7 @@ public class TACArtifact extends Artifact {
 		ObsProperty status = getObsProperty("tac_status");
 		String requestPath = BASE_TAC_SERVICE_URL + "/status";
 		
-		System.out.println("path : " + requestPath);
+		//System.out.println("path : " + requestPath);
 		
 		while(true) {
 
