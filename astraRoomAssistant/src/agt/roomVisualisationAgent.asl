@@ -10,7 +10,7 @@ current_patient("123459").
 
 /* Plans */
 
-+! observe : true 
++! observe 
 	<-	?find_queue(Queue)
 		?find_display(Display)
 		?find_active_trauma(TraumaSource)

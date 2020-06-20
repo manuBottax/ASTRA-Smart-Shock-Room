@@ -86,8 +86,7 @@ current_patient("123459").
 		
 -! monitorData(CommandId, DataType, Target, Position) : current_command(Command)
 	<-  .println("Cannot complete Monitoring")
-		/* TODO : Stop monitoring in base al tipo 
-		monitorTotalTime(CommandId, Target, Position) [artifact_id(TimeMonitor)] */
+		/* TODO : Stop monitoring in base al tipo */
 		setErrorOnCommand(Command) [artifact_id(QueueId)].
 		
 /* -------------------------------------------------- */

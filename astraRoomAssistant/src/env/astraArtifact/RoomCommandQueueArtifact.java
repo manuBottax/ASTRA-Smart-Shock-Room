@@ -1,8 +1,9 @@
 // CArtAgO artifact code for project astraRoomAssistant
 
-package astraRoomAssistant;
+package astraArtifact;
 
 import cartago.*;
+import utils.ArtifactStatus;
 import utils.CommandStatus;
 import utils.NetworkManager;
 import utils.PriorityComparator;
@@ -32,6 +33,8 @@ public class RoomCommandQueueArtifact extends Artifact {
 	private Queue<JSONObject> wrongQueue;
 	
 	void init(String topic, String queueName) {
+		
+		defineObsProperty("queue_artifact_status", ArtifactStatus.ARTIFACT_CREATED.getStatus());
 		
 		this.pendingQueue = new PriorityQueue<JSONObject>(10, new PriorityComparator());
 		this.refusedQueue = new PriorityQueue<JSONObject>(10, new PriorityComparator());
@@ -94,10 +97,12 @@ public class RoomCommandQueueArtifact extends Artifact {
 					
 				} else {
 					System.out.println("Error : Cannot update command");
+					getObsProperty("queue_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 					failed("command acceptance failed", "service error", "failed_update", res, commandID );
 				}
 			} catch (IOException e) {
 				System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+				getObsProperty("queue_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 				failed("command acceptance failed", "I/O error", "failed_update", "IOException", commandID);
 			}
 		}
@@ -126,10 +131,12 @@ public class RoomCommandQueueArtifact extends Artifact {
 				System.out.println("Command updated successfully");
 			} else {
 				System.out.println("Error : Cannot update command");
+				getObsProperty("queue_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("command acceptance failed", "service error", "failed_update", res, commandID);
 			}
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("queue_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("command acceptance failed", "I/O error", "failed_update", "IOException", commandID);
 		}	
 	}
@@ -163,10 +170,12 @@ public class RoomCommandQueueArtifact extends Artifact {
 				
 			} else {
 				System.out.println("Error : Cannot update command");
+				getObsProperty("queue_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("command acceptance failed", "service error", "failed_update", res, commandID);
 			}
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("queue_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("command acceptance failed", "I/O error", "failed_update", "IOException", commandID);
 		}	
 	}
@@ -199,7 +208,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 		
 		ObsProperty last = getObsProperty("last_pending_command");
 		
-		System.out.println("Command ID : " +  command.getString("command_id"));
+		//System.out.println("Command ID : " +  command.getString("command_id"));
 		
 		if (! command.getString("command_id").equals("-1")) {
 			
@@ -229,7 +238,7 @@ public class RoomCommandQueueArtifact extends Artifact {
 			
 		JSONObject c = this.wrongQueue.poll();
 		
-		System.out.println("Error handled. Error left : " + this.wrongQueue.size());
+		//System.out.println("Error handled. Error left : " + this.wrongQueue.size());
 		
 		if ( c != null) {
 			last.updateValues(c, c.getString("command_id"));
@@ -279,11 +288,15 @@ public class RoomCommandQueueArtifact extends Artifact {
 			
 		} catch (IOException e) {
 			e.printStackTrace();
+			getObsProperty("queue_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 		} catch (TimeoutException e) {
 			e.printStackTrace();
+			getObsProperty("queue_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 		}
         
-        System.out.println(" [ " + queueName + " Queue ] Waiting for messages. To exit press CTRL+C");
+        System.out.println(" [ " + queueName + " Queue ] Waiting for messages.");
+        
+        getObsProperty("queue_artifact_status").updateValue(ArtifactStatus.SERVICE_CONNECTED.getStatus());
         
         while(true) {
 

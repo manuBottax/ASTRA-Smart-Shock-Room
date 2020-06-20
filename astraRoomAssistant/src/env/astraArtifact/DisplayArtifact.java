@@ -1,12 +1,13 @@
 // CArtAgO artifact code for project astraRoomAssistant
 
-package astraRoomAssistant;
+package astraArtifact;
 
 import java.io.IOException;
 
 import org.json.JSONObject;
 
 import cartago.*;
+import utils.ArtifactStatus;
 import utils.NetworkManager;
 
 public class DisplayArtifact extends Artifact {
@@ -14,6 +15,8 @@ public class DisplayArtifact extends Artifact {
 	private static final String DISPLAY_SERVICE_URL = "http://192.168.1.120:3001/api/display";
 	
 	void init() {
+		
+		defineObsProperty("display_artifact_status", ArtifactStatus.ARTIFACT_CREATED.getStatus());
 		System.out.println("Display Artifact created");
 	}
 	
@@ -33,11 +36,13 @@ public class DisplayArtifact extends Artifact {
 			
 			if (res != 201) {
 				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("command display failed", "service error", "failed_display", res );
 			}
 			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("command display failed", "I/O error", "failed_display", "IOException");
 		}
 	}
@@ -70,11 +75,13 @@ public class DisplayArtifact extends Artifact {
 						
 			if (res != 201) {
 				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("command display failed", "service error", "failed_display", res );
 			}
 			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("command display failed", "I/O error", "failed_display", "IOException");
 		}
 	}
@@ -103,11 +110,13 @@ public class DisplayArtifact extends Artifact {
 			
 			if (res != 201) {
 				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("command display failed", "service error", "failed_display", res );
 			}
 			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("command display failed", "I/O error", "failed_display", "IOException");
 		}
 	}
@@ -128,11 +137,13 @@ public class DisplayArtifact extends Artifact {
 			
 			if (res != 201) {
 				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("command display failed", "service error", "failed_display", res );
 			}
 			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("command display failed", "I/O error", "failed_display", "IOException");
 		}
 	}
@@ -152,11 +163,13 @@ public class DisplayArtifact extends Artifact {
 			
 			if (res != 201) {
 				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("command display failed", "service error", "failed_display", res );
 			}
 			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("command display failed", "I/O error", "failed_display", "IOException");
 		}
 	}
@@ -185,11 +198,13 @@ public class DisplayArtifact extends Artifact {
 			
 			if (res != 201) {
 				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("command display failed", "service error", "failed_display", res );
 			}
 			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("command display failed", "I/O error", "failed_display", "IOException");
 		}
 	}
@@ -216,13 +231,42 @@ public class DisplayArtifact extends Artifact {
 						
 			if (res != 201) {
 				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("command display failed", "service error", "failed_display", res );
 			}
 			
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("command display failed", "I/O error", "failed_display", "IOException");
 		}
-	}		
+	}
+	
+	@OPERATION
+	void showError (String error, String position) {
+		
+		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "error";
+		
+		try {
+			
+			JSONObject body = new JSONObject();
+			
+			body.put("name", "Errore");
+			body.put("data", error);
+			
+			int res = NetworkManager.doPOST(path, body.toString());
+						
+			if (res != 201) {
+				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("command display failed", "service error", "failed_display", res );
+			}
+			
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("command display failed", "I/O error", "failed_display", "IOException");
+		}
+	}
 }
 

@@ -14,10 +14,15 @@
 
 mas astraRoomAssistant {
 	
-	agent roomArtifactManager
-    agent parameterRequestHandler
-
+	agent roomInitAgent
+	agent systemStatusMonitorAgent
+	
+	agent errorHandlerAgent
+    agent roomVisualisationAgent
+    agent roomMonitoringAgent
+    agent roomActionAgent
     
+
 
 }
 

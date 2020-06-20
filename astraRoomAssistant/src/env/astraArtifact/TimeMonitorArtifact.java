@@ -1,6 +1,6 @@
 // CArtAgO artifact code for project astraRoomAssistant
 
-package astraRoomAssistant;
+package astraArtifact;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cartago.*;
+import utils.ArtifactStatus;
 
 public class TimeMonitorArtifact extends Artifact {
 	
@@ -27,6 +28,8 @@ public class TimeMonitorArtifact extends Artifact {
 		
 		long nowTime = new Date().getTime() ;				
 		this.eta.setTime(nowTime + 1234567L);
+		
+		defineObsProperty("time_artifact_status", ArtifactStatus.ARTIFACT_CREATED.getStatus());
 		
 		System.out.println(" Time monitor initialized !");
 	}
@@ -131,42 +134,5 @@ public class TimeMonitorArtifact extends Artifact {
 
 	    return result;		
 	}
-	
-	
-	/*@OPERATION
-	void monitorBloodPressure(String id, String target, String position) {
-		
-		this.pressureMonitoring = true;
-		int tickTime = 5000;
-		
-		while(this.pressureMonitoring) {
-			
-			String path = BASE_SERVICE_URL + "blood_pressure";
-			
-			try {
-				
-				await_time(tickTime);
-				
-				Pair<Integer, String> res = NetworkManager.doGET(path);
-				
-				if (res.getKey() == 200) {	
-					
-					
-					JSONObject json = new JSONObject(res.getValue());
-					
-					String val = json.getString("value");
-					
-					signal("new_monitoring_value", id, val, "blood_pressure", target, position);
-					
-				} else {
-					System.out.println("Error : Cannot GET Blood Pressure Data");
-					failed("Data retrieve failed", "service error", "failed_data_retrieve" );
-				}
-			} catch (IOException e) {
-				System.out.println("Error : IOException [ " + e.getMessage() + " ]");
-				failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
-			}
-        }
-	} */
 }
 

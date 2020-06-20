@@ -1,7 +1,5 @@
 #! /bin/bash
 
-/c/Windows/System32/cmd.exe //c 'start cmd /c mongoLoader.sh'
-
 cd Display/displayClient
 
 /c/Windows/System32/cmd.exe //c 'start cmd /c nodemon'

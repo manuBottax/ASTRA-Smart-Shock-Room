@@ -1,4 +1,4 @@
-// Agent parameterRequestHandler in project astraRoomAssistant
+// Agent roomInitAgent in project astraRoomAssistant
 
 /* Initial beliefs and rules */
 
@@ -19,28 +19,28 @@
 		!setupMockSource(Source_id).
 	
 +! setupCommandQueue(Q)
-	<- makeArtifact("roomVisualisationCommands", "astraRoomAssistant.RoomCommandQueueArtifact", ["room.visualisation", "room_visualisation_commands_queue"], Q).	
+	<- makeArtifact("roomVisualisationCommands", "astraArtifact.RoomCommandQueueArtifact", ["room.visualisation", "room_visualisation_commands_queue"], Q).	
 	
 +! setupMonitorQueue(M)
-	<- makeArtifact("roomMonitorCommands", "astraRoomAssistant.RoomCommandQueueArtifact", ["room.monitoring", "room_monitor_commands_queue"], M).
+	<- makeArtifact("roomMonitorCommands", "astraArtifact.RoomCommandQueueArtifact", ["room.monitoring", "room_monitor_commands_queue"], M).
 
 +! setupActionQueue(A)
-	<- makeArtifact("roomActionCommands", "astraRoomAssistant.RoomCommandQueueArtifact", ["room.action", "room_action_commands_queue"], A).
+	<- makeArtifact("roomActionCommands", "astraArtifact.RoomCommandQueueArtifact", ["room.action", "room_action_commands_queue"], A).
 
 +! setupDisplay(D)
-	<- makeArtifact("display_sr", "astraRoomAssistant.DisplayArtifact", [], D).
+	<- makeArtifact("display_sr", "astraArtifact.DisplayArtifact", [], D).
 	
 +! setupTraumaSource(S)
-	<- makeArtifact("activeTraumaService", "astraRoomAssistant.TraumaArtifact", [], S).
+	<- makeArtifact("activeTraumaService", "astraArtifact.TraumaArtifact", [], S).
 	
 +! setupTac(T) 
-	<- makeArtifact("tacPS", "astraRoomAssistant.TACArtifact", [], T).
+	<- makeArtifact("tacPS", "astraArtifact.TACArtifact", [], T).
 	
 +! setupTimer(Timer)
-	<-	makeArtifact("roomTimeMonitor", "astraRoomAssistant.TimeMonitorArtifact", [], Timer).
+	<-	makeArtifact("roomTimeMonitor", "astraArtifact.TimeMonitorArtifact", [], Timer).
 	
 +! setupMockSource(Mock)
-	<- makeArtifact("mockSource", "astraRoomAssistant.MockDataSourceArtifact", [], Mock). 
+	<- makeArtifact("mockSource", "astraArtifact.MockDataSourceArtifact", [], Mock). 
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

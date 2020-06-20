@@ -1,6 +1,6 @@
 // CArtAgO artifact code for project astraRoomAssistant
 
-package astraRoomAssistant;
+package astraArtifact;
 
 import java.io.IOException;
 
@@ -9,18 +9,21 @@ import org.json.JSONObject;
 
 import cartago.*;
 import javafx.util.Pair;
+import utils.ArtifactStatus;
 import utils.NetworkManager;
 
 public class TACArtifact extends Artifact {
 	
 	private static final String BASE_TAC_SERVICE_URL = "http://192.168.1.120:3003/api";
-	private static final int POLLING_TIME = 1000;
+	private static final int POLLING_TIME = 10000;
 	
 	void init() {
-		System.out.println("TAC Artifact created");
-		defineObsProperty("tac_status", "unavailable");
 		
+		defineObsProperty("tac_artifact_status", ArtifactStatus.SERVICE_CONNECTED.getStatus());
+		defineObsProperty("tac_status", "unavailable");
 		execInternalOp("monitorStatus");
+		
+		System.out.println("TAC Artifact created");
 	}
 	
 	/**
@@ -44,7 +47,7 @@ public class TACArtifact extends Artifact {
 	 */
 	@OPERATION
 	void getTACData(String patient_id, OpFeedbackParam<String> path) {	
-		
+				
 		try {
 			
 			String requestPath = BASE_TAC_SERVICE_URL + "/tac_data/" + patient_id;
@@ -71,10 +74,12 @@ public class TACArtifact extends Artifact {
 				
 			} else {
 				System.out.println("Error : Cannot GET TAC");
+				getObsProperty("tac_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("TAC retrieve failed", "service error", "failed_data_retrieve" );
 			}
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("tac_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("TAC retrieve failed", "I/O error", "failed_data_retrieve" );
 		}
 	}
@@ -83,6 +88,7 @@ public class TACArtifact extends Artifact {
 	void monitorStatus() {
 		
 		ObsProperty status = getObsProperty("tac_status");
+		
 		String requestPath = BASE_TAC_SERVICE_URL + "/status";
 		
 		//System.out.println("path : " + requestPath);
@@ -105,13 +111,15 @@ public class TACArtifact extends Artifact {
     				
     			} else {
     				System.out.println("Error : Cannot GET TAC STATUS");
-    				status.updateValue("error");
+    				status.updateValue("unavailable");
+    				getObsProperty("tac_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
     			} 
             	
             } catch (IOException ex){
                 //ex.printStackTrace();
                 System.out.println("Error : Cannot GET TAC STATUS");
-				status.updateValue("error");
+				status.updateValue("unavailable");
+				getObsProperty("tac_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
             }
             
             await_time(POLLING_TIME);

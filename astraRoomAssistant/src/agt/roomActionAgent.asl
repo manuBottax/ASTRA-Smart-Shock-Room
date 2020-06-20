@@ -49,6 +49,10 @@ current_patient("123459").
 	<-  .println("Termine Gestione Trauma");
 		completeCommand(CommandId) [artifact_id(QueueId)].
 		
+-! doAction(CommandId, DataType, Target) : current_command(Command)
+	<-  .println("Cannot complete Action");
+		setErrorOnCommand(Command) [artifact_id(QueueId)].
+		
 /* -------------------------------------------------- */	
 		
 +? find_queue(QueueId) 
