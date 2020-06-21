@@ -1,4 +1,4 @@
-// Agent roomInitAgent in project astraRoomAssistant
+// Agent systemInitAgent in project astraRoomAssistant
 
 /* Initial beliefs and rules */
 

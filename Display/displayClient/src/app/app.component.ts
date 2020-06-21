@@ -13,42 +13,50 @@ import { ImageDataComponent } from './image-data-component/image-data-component.
 
 export class AppComponent {
 
-  subscription: Subscription;
+  dataSubscription: Subscription;
+  statusSubscription : Subscription;
   
   dataArray : Array<DataItem> = new Array();
 
   componentArray : Array<any> = new Array(7);
 
+  displayStatus: String = "idle"
+
   constructor(private socketService: WebSocketService){
     console.log(this.dataArray.length);
     
-    this.subscription = socketService.dataStream.subscribe(
-      data => {
-        var position = parseInt(data.position) - 1 ;
+    this.dataSubscription = socketService.dataStream.subscribe( data => {
+      var position = parseInt(data.position) - 1 ;
 
-        if (position < 0 ) {position = 0};
-        if (position > 6 ) {position = 6}
+      if (position < 0 ) {position = 0};
+      if (position > 6 ) {position = 6}
 
-        console.log(data.value)
+      console.log(data.value)
 
-        if (data.type == 'text'){
-          var v = data.name + " : " + data.value;
-          this.dataArray[position] = new DataItem(TextDataComponent, {value: v});
-        } else if (data.type == 'image'){
-          //In this development state you can visualise image only in the big slot for layout management reason.
-          position = 3 ; 
-          this.dataArray[position] = new DataItem(ImageDataComponent, {available : true, path: data.value});
-        }
+      if (data.type == 'text'){
+        var v = data.name + " : " + data.value;
+        this.dataArray[position] = new DataItem(TextDataComponent, {value: v});
+      } else if (data.type == 'image'){
+        //In this development state you can visualise image only in the big slot for layout management reason.
+        position = 3 ; 
+        this.dataArray[position] = new DataItem(ImageDataComponent, {available : true, path: data.value});
+      }
 
 
-        console.log("Updated Data Array Value")
-        console.log(this.dataArray[position])
+      console.log("Updated Data Array Value")
+      console.log(this.dataArray[position])
 
-        console.log(this.componentArray[position]);
+      console.log(this.componentArray[position]);
 
-        this.componentArray[position].updateValue(this.dataArray[position]);
+      this.componentArray[position].updateValue(this.dataArray[position]);
 
     });
+
+    this.statusSubscription = socketService.statusStream.subscribe( status => {
+        console.log("status : " + status);
+        this.displayStatus = status;
+      }
+    )
   }
 
   ngOnInit() {
@@ -63,7 +71,8 @@ export class AppComponent {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.dataSubscription.unsubscribe();
+    this.statusSubscription.unsubscribe();
   }
 
   onBindedComponent(position, component) {

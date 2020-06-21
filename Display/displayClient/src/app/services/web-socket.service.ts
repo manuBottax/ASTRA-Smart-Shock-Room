@@ -21,7 +21,10 @@ export class WebSocketService {
   socket;
 
   private dataSource = new Subject<PatientData>();
+  private statusSource = new Subject<String>();
+
   dataStream = this.dataSource.asObservable();
+  statusStream = this.statusSource.asObservable();
 
   constructor () {}
 
@@ -36,6 +39,10 @@ export class WebSocketService {
       this.dataSource.next(data);
 
     });
+
+    this.socket.on('update_status', data => {
+      this.statusSource.next(data.status);
+    })
   }
 
   emitMessage(message : string) {

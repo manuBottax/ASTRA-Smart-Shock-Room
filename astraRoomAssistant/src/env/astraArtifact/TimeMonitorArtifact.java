@@ -35,7 +35,7 @@ public class TimeMonitorArtifact extends Artifact {
 	}
 	
 	@OPERATION
-	void setArrivalTime(String id) {			
+	void setArrivalTime() {			
 		this.arrivalTime = new Date();
 		this.isPatientArrived = true;
 		
@@ -62,7 +62,44 @@ public class TimeMonitorArtifact extends Artifact {
 				
 					String etaTime = hours + ":" + minute + ":" + seconds;
 					
-					signal("new_monitoring_value", commandId, etaTime, "total_time", target, position);
+					signal("new_monitoring_value", commandId, etaTime, "eta", target, position);
+					
+					await_time(tickTime);
+				} else {
+					this.etaMonitor = false;
+				}
+				
+	        }
+		} else {
+			this.etaMonitor = false;
+		}
+	}
+	
+	@OPERATION
+	void monitorETAWithTimer(String commandId, String target, String position, int timer) {
+		
+		if (! this.isPatientArrived) {
+			
+			this.etaMonitor = true;
+			int tickTime = 1000;
+			
+			int currentTick = 0;
+		
+			while(this.etaMonitor && currentTick < timer ) {	
+				
+				currentTick ++;
+				
+				Map<TimeUnit,Long> time = getDateDiff(new Date(), this.eta);
+				
+				long hours = time.get(TimeUnit.HOURS);
+				long minute = time.get(TimeUnit.MINUTES);
+				long seconds = time.get(TimeUnit.SECONDS);
+				
+				if (hours >= 0 && minute >= 0 && seconds >= 0) {
+				
+					String etaTime = hours + ":" + minute + ":" + seconds;
+					
+					signal("new_monitoring_value", commandId, etaTime, "eta", target, position);
 					
 					await_time(tickTime);
 				} else {

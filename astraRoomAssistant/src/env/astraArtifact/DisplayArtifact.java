@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.json.JSONObject;
 
 import cartago.*;
+import javafx.util.Pair;
 import utils.ArtifactStatus;
 import utils.NetworkManager;
 
@@ -14,9 +15,15 @@ public class DisplayArtifact extends Artifact {
 	
 	private static final String DISPLAY_SERVICE_URL = "http://192.168.1.120:3001/api/display";
 	
+	private static final int POLLING_TIME = 10000;
+	
 	void init() {
 		
 		defineObsProperty("display_artifact_status", ArtifactStatus.ARTIFACT_CREATED.getStatus());
+		defineObsProperty("display_status", "idle");
+		
+		execInternalOp("monitorStatus");
+		
 		System.out.println("Display Artifact created");
 	}
 	
@@ -31,6 +38,33 @@ public class DisplayArtifact extends Artifact {
 			
 			body.put("name", "ID paziente");
 			body.put("data", data);
+			
+			int res = NetworkManager.doPOST(path, body.toString());
+			
+			if (res != 201) {
+				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("command display failed", "service error", "failed_display", res );
+			}
+			
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("command display failed", "I/O error", "failed_display", "IOException");
+		}
+	}
+	
+	@OPERATION
+	void showTraumaLeaderInfo (String teamLeaderName, String position) {
+		
+		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "tl_data";
+		
+		try {
+			
+			JSONObject body = new JSONObject();
+			
+			body.put("name", "Trauma Leader");
+			body.put("data", teamLeaderName);
 			
 			int res = NetworkManager.doPOST(path, body.toString());
 			
@@ -267,6 +301,70 @@ public class DisplayArtifact extends Artifact {
 			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("command display failed", "I/O error", "failed_display", "IOException");
 		}
+	}
+	
+	@OPERATION
+	void setDisplayStatus (String status) {
+		
+		String path = DISPLAY_SERVICE_URL + "/status" ;
+		
+		try {
+			
+			JSONObject body = new JSONObject();
+			
+			body.put("status", status);
+			
+			int res = NetworkManager.doPUT(path, body.toString());
+						
+			if (res != 200) {
+				System.out.println("Error : cannot update Display Status");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("display status failed", "service error", "failed_status_update", res );
+			}
+			
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("display status failed", "I/O error", "failed_status_update", "IOException");
+		}
+	}
+	
+	@INTERNAL_OPERATION
+	void monitorStatus() {
+		
+		ObsProperty status = getObsProperty("display_status");
+		
+		String path = DISPLAY_SERVICE_URL + "/status" ;
+		
+		while(true) {
+
+            try { 
+    			
+    			Pair<Integer, String> res = NetworkManager.doGET(path);		
+    			
+    			if (res.getKey() == 200) {	
+    				    				
+    				JSONObject json = new JSONObject(res.getValue());    				
+    				String st = json.getString("status");    				
+    				status.updateValue(st);
+    				
+    			} else {
+    				System.out.println("Error : Cannot GET DISPLAY STATUS");
+    				status.updateValue("unavailable");
+    				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+    			} 
+            	
+            } catch (IOException ex){
+                //ex.printStackTrace();
+                System.out.println("Error : Cannot GET DISPLAY STATUS");
+				status.updateValue("unavailable");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+            }
+            
+            await_time(POLLING_TIME);
+            
+        }
+		
 	}
 }
 

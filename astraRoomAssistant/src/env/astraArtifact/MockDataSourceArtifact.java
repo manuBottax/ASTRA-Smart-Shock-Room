@@ -15,7 +15,7 @@ public class MockDataSourceArtifact extends Artifact {
 	
 	private static final String SERVICE_URL = "http://192.168.1.120:3007/api/mock_data";
 	
-	void init(int initialValue) {
+	void init() {
 		
 		defineObsProperty("mock_source_artifact_status", ArtifactStatus.SERVICE_CONNECTED.getStatus());
 		System.out.println("Mock Data Source Artifact created");

@@ -14,10 +14,13 @@
 
 mas astraRoomAssistant {
 	
-	agent roomInitAgent
+	agent systemInitAgent
 	agent systemStatusMonitorAgent
 	
 	agent errorHandlerAgent
+	agent displayLayoutManagerAgent
+	
+	//Room Assistant Agents
     agent roomVisualisationAgent
     agent roomMonitoringAgent
     agent roomActionAgent
