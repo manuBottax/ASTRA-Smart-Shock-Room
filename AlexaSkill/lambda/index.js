@@ -1,21 +1,30 @@
 
 const Alexa = require('ask-sdk-core');
 
+const COMMAND_SERVICE_PATH = 'http://151.61.151.43:3010/api/commands'
+
+const Util = require('util.js');
+const Escape = require('lodash/escape');
+
+// const audioUrl = Util.getS3PreSignedUrl("Media/silenzio.mp3");
+
 const requestHandler = require('then-request');
 // const requestHandler = require('sync-request');
-
-const COMMAND_SERVICE_PATH = 'http://151.61.151.43:3010/api/commands'
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     
+    
     handle(handlerInput) {
-        const speakOutput = 'Benvenuto in ASTRA Room Controller. Attendo istruzioni';
+        const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
+        
+        const speakOutput = `Benvenuto in ASTRA Room Controller. Attendo istruzioni. Dì , Alexa , seguito dalla tua richiesta. <audio src="${Escape(audioUrl)}"/>`;
+        
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            .reprompt(speakOutput)
+            .reprompt(`Attendo istruzioni. Tra poco sarà necessario riaprire la Skill per continuare.`)
             .getResponse();
     }
 };
@@ -25,6 +34,8 @@ const VisualisationRequestIntentHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'VisualisationRequestIntent';
     },
+    
+    
     
     async handle(handlerInput) {
         
@@ -36,7 +47,7 @@ const VisualisationRequestIntentHandler = {
            
         const data_type = slots.data_type.value;
         var position = slots.position.value;
-        
+
         var id = slots.data_type.resolutions.resolutionsPerAuthority[0].values[0].value.id;
         
         //If position is not defined by the user use a default value;
@@ -44,10 +55,17 @@ const VisualisationRequestIntentHandler = {
             position = 4;
         }
         
-        //TODO: switch sul tipo per gestione category
+        var cat = "room";
+        
+        // switch on command type for direct command to Trauma or Room agents
+        
+        // if(id === 'tt_report' || id === 'procedure_time'){
+        //     cat = "trauma"
+        // }
+        
         var data = {json: {
             type : "visualisation",
-            category : "room",
+            category : cat,
             target : "display_sr",
             issuer : "alexa_ASTRA_controller",
             params : {
@@ -56,7 +74,9 @@ const VisualisationRequestIntentHandler = {
             }
         }}
         
-        var speechOutput = 'Richiedo la visualizzazione di ' + data_type + ' del paziente'
+        const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
+        
+        const speech =  `Richiedo la visualizzazione di ${data_type} del paziente. <audio src="${Escape(audioUrl)}"/> `
         
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -66,10 +86,9 @@ const VisualisationRequestIntentHandler = {
             });
             
         return handlerInput.responseBuilder
-                .speak(speechOutput)
-                .reprompt("Rimango in attesa di altri comandi")
-                .getResponse();
-
+            .speak(speech)
+            .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+            .getResponse();
     }
 }
 
@@ -94,12 +113,9 @@ const DrugInfoVisualisationRequestIntentHandler = {
         //If position is not defined by the user use a default value;
         const position = 5;
         
-        /////// SYNC [OK] ////////////////////////////////////////////////////////////////////////////////////
-        
-        //TODO: switch sul tipo per gestione category
         var data = {json: {
             type : "visualisation",
-            category : "room",
+            category : "trauma",
             target : "display_sr",
             issuer : "alexa_ASTRA_controller",
             params : {
@@ -109,7 +125,9 @@ const DrugInfoVisualisationRequestIntentHandler = {
             }
         }}
         
-        var speechOutput = 'Richiedo la visualizzazione della quantità di farmaco  ' + drug_name + ' somministrata al paziente' 
+        const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
+        
+        const speech =  `Richiedo la visualizzazione della quantità di farmaco ${drug_name} somministrata al paziente. <audio src="${Escape(audioUrl)}"/> `
         
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -119,8 +137,8 @@ const DrugInfoVisualisationRequestIntentHandler = {
             });
             
         return handlerInput.responseBuilder
-                .speak(speechOutput)
-                .reprompt("Rimango in attesa di altri comandi")
+                .speak(speech)
+                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .getResponse();
         
     }
@@ -140,7 +158,7 @@ const MonitorRequestIntentHandler = {
             .intent
             .slots;
            
-        const data_type = slots.data_type.id;
+        const monitor_type = slots.monitor_type.id;
         var position = slots.position.value;
         
         //If position is not defined by the user use a default value;
@@ -149,7 +167,7 @@ const MonitorRequestIntentHandler = {
         }
         
          
-        var id = slots.data_type.resolutions.resolutionsPerAuthority[0].values[0].value.id;
+        var id = slots.monitor_type.resolutions.resolutionsPerAuthority[0].values[0].value.id;
         console.log(id);
         
         
@@ -165,7 +183,9 @@ const MonitorRequestIntentHandler = {
             }
         }}
         
-        var speechOutput = 'Richiedo il monitoraggio di ' + data_type + ' del paziente'
+        const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
+        
+        var speech = `Richiedo il monitoraggio di ${monitor_type} del paziente. <audio src="${Escape(audioUrl)}"/> `
         
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -175,8 +195,8 @@ const MonitorRequestIntentHandler = {
             });
             
         return handlerInput.responseBuilder
-                .speak(speechOutput)
-                .reprompt("Rimango in attesa di altri comandi")
+                .speak(speech)
+                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .getResponse();
         
     }
@@ -211,7 +231,9 @@ const OperationAnnotationRequestIntentHandler = {
             }
         }}
         
-        var speechOutput = "Richiedo l'annotazione di " + type + " " + operation + " del paziente"
+        const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
+        
+        var speech = `Richiedo l'annotazione di ${type} ${operation} del paziente. <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -221,8 +243,8 @@ const OperationAnnotationRequestIntentHandler = {
             });
             
         return handlerInput.responseBuilder
-                .speak(speechOutput)
-                .reprompt("Rimango in attesa di altri comandi")
+                .speak(speech)
+                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .getResponse();
     }
 }
@@ -256,7 +278,9 @@ const DrugAnnotationRequestIntentHandler = {
             }
         }}
         
-        var speechOutput = "Richiedo l'annotazione della somministrazione di " + drug_quantity + " di " + drug_name + " al paziente"
+        const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
+        
+        var speech = `Richiedo l'annotazione della somministrazione di ${drug_quantity} di ${drug_name} al paziente. <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -266,8 +290,8 @@ const DrugAnnotationRequestIntentHandler = {
             });
             
         return handlerInput.responseBuilder
-                .speak(speechOutput)
-                .reprompt("Rimango in attesa di altri comandi")
+                .speak(speech)
+                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .getResponse();
     
     }
@@ -291,7 +315,9 @@ const StartActionIntentHandler = {
             }
         }}
         
-        var speechOutput = "Richiedo l'inizio della gestione di un trauma per il paziente in arrivo";
+        const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
+        
+        var speech = `Richiedo l'inizio della gestione di un trauma per il paziente in arrivo. <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -301,8 +327,45 @@ const StartActionIntentHandler = {
             });
             
         return handlerInput.responseBuilder
-                .speak(speechOutput)
-                .reprompt("Rimango in attesa di altri comandi")
+                .speak(speech)
+                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                .getResponse();
+        
+    }
+}
+
+const PatientActionIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'PatientActionIntent';
+    },
+    
+    async handle(handlerInput) {
+        
+        var data = {json: {
+            type : "action",
+            category : "room",
+            target : "",
+            issuer : "alexa_ASTRA_controller",
+            params : {
+                type : "patient_arrived"
+            }
+        }}
+        
+        const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
+        
+        var speech = `Annoto l'arrivo del paziente. <audio src="${Escape(audioUrl)}"/> `
+
+        await requestHandler('POST', COMMAND_SERVICE_PATH, data)
+            .getBody('utf-8')
+            .then(JSON.parse)
+            .done(function (res) {
+                console.log(res);
+            });
+            
+        return handlerInput.responseBuilder
+                .speak(speech)
+                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .getResponse();
         
     }
@@ -326,7 +389,9 @@ const EndActionIntentHandler = {
             }
         }}
         
-        var speechOutput = "Richiedo la fine della gestione del trauma del paziente";
+        const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
+        
+        var speech = `Richiedo la fine della gestione del trauma del paziente. <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -336,8 +401,8 @@ const EndActionIntentHandler = {
             });
             
         return handlerInput.responseBuilder
-                .speak(speechOutput)
-                .reprompt("Rimango in attesa di altri comandi")
+                .speak(speech)
+                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .getResponse();
     }
 }

@@ -13,6 +13,7 @@
     "ask-sdk-model": "^1.18.0",
     "aws-sdk": "^2.326.0",
     "then-request": "^6.0.2",
-    "sync-request": "^6.1.0"
+    "sync-request": "^6.1.0",
+    "lodash": "^4.17.11"
   }
 }

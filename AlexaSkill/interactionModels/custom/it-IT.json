@@ -56,12 +56,12 @@
           "name": "MonitorRequestIntent",
           "slots": [
             {
-              "name": "data_type",
-              "type": "data_type",
+              "name": "monitor_type",
+              "type": "monitor_type",
               "samples": [
-                "monitora {data_type}",
-                "il {data_type}",
-                "{data_type}"
+                "monitora {monitor_type}",
+                "il {monitor_type}",
+                "{monitor_type}"
               ]
             },
             {
@@ -70,10 +70,10 @@
             }
           ],
           "samples": [
-            "monitora {data_type} del paziente in {position}",
-            "monitora {data_type} in {position}",
-            "monitora {data_type}",
-            "monitora {data_type} del paziente"
+            "monitora {monitor_type} del paziente in {position}",
+            "monitora {monitor_type} in {position}",
+            "monitora {monitor_type}",
+            "monitora {monitor_type} del paziente"
           ]
         },
         {
@@ -120,9 +120,11 @@
           "name": "StartActionIntent",
           "slots": [],
           "samples": [
+            "paziente in arrivo",
+            "crea nuovo paziente",
+            "crea nuovo caso",
             "Inizia gestione trauma",
-            "nuovo paziente",
-            "Paziente in arrivo"
+            "nuovo paziente"
           ]
         },
         {
@@ -145,11 +147,26 @@
             "visualizza quantità di {drug_name}",
             "visualizza quanto {drug_name} è stato somministrato"
           ]
+        },
+        {
+          "name": "PatientActionIntent",
+          "slots": [],
+          "samples": [
+            "annota arrivo paziente",
+            "Il paziente è arrivato",
+            "Paziente arrivato"
+          ]
         }
       ],
       "types": [
         {
           "values": [
+            {
+              "id": "rotem",
+              "name": {
+                "value": "Rotem"
+              }
+            },
             {
               "id": "used_blood_unit",
               "name": {
@@ -232,12 +249,6 @@
                   "lastre torace",
                   "lastra torace"
                 ]
-              }
-            },
-            {
-              "id": "rotem",
-              "name": {
-                "value": "rotem"
               }
             },
             {
@@ -414,6 +425,119 @@
             }
           ],
           "name": "operation"
+        },
+        {
+          "values": [
+            {
+              "id": "used_blood_unit",
+              "name": {
+                "value": "Sacche di sangue utilizzate",
+                "synonyms": [
+                  "sacche di sangue",
+                  "unità di sangue utilizzate",
+                  "unità di sangue",
+                  "unità utilizzate"
+                ]
+              }
+            },
+            {
+              "id": "tt_report",
+              "name": {
+                "value": "Trauma Tracker",
+                "synonyms": [
+                  "report di trauma tracker",
+                  "report trauma tracker",
+                  "report"
+                ]
+              }
+            },
+            {
+              "id": "procedure_time",
+              "name": {
+                "value": "tempo procedura"
+              }
+            },
+            {
+              "id": "total_time",
+              "name": {
+                "value": "tempo totale",
+                "synonyms": [
+                  "tempo gestione trauma"
+                ]
+              }
+            },
+            {
+              "id": "eta",
+              "name": {
+                "value": "tempo di arrivo",
+                "synonyms": [
+                  "tempo mancante all\u0027arrivo",
+                  "tempo mancante",
+                  "eta",
+                  "tempo all\u0027arrivo"
+                ]
+              }
+            },
+            {
+              "id": "rotem",
+              "name": {
+                "value": "rotem"
+              }
+            },
+            {
+              "id": "ega",
+              "name": {
+                "value": "emogas analisi",
+                "synonyms": [
+                  "EGA"
+                ]
+              }
+            },
+            {
+              "id": "CO2_level",
+              "name": {
+                "value": "livello CO2",
+                "synonyms": [
+                  "CO2"
+                ]
+              }
+            },
+            {
+              "id": "temperature",
+              "name": {
+                "value": "temperatura"
+              }
+            },
+            {
+              "id": "spO2",
+              "name": {
+                "value": "saturazione",
+                "synonyms": [
+                  "spo2"
+                ]
+              }
+            },
+            {
+              "id": "blood_pressure",
+              "name": {
+                "value": "pressione",
+                "synonyms": [
+                  "pressione arteriosa"
+                ]
+              }
+            },
+            {
+              "id": "heart_rate",
+              "name": {
+                "value": "frequenza cardiaca",
+                "synonyms": [
+                  "polso",
+                  "battito"
+                ]
+              }
+            }
+          ],
+          "name": "monitor_type"
         }
       ]
     },
@@ -448,8 +572,8 @@
           "prompts": {},
           "slots": [
             {
-              "name": "data_type",
-              "type": "data_type",
+              "name": "monitor_type",
+              "type": "monitor_type",
               "elicitationRequired": true,
               "confirmationRequired": false,
               "prompts": {
@@ -564,5 +688,5 @@
       }
     ]
   },
-  "version": "18"
+  "version": "23"
 }
