@@ -9,21 +9,29 @@
       }
     },
     "manifestVersion": "1.0",
+    "privacyAndCompliance": {
+      "locales": {
+        "it-IT": {}
+      }
+    },
     "publishingInformation": {
-      "category": "KNOWLEDGE_AND_TRIVIA",
+      "automaticDistribution": {
+        "isActive": false
+      },
+      "category": "HEALTH_AND_FITNESS",
       "distributionCountries": [],
       "isAvailableWorldwide": true,
       "locales": {
         "it-IT": {
-          "description": "Sample Full Description",
+          "description": "Skill to generate command for the ASTRA - Augmented Space for TRauma Assistance system.",
           "examplePhrases": [
             "Alexa open hello world",
             "hello",
             "help"
           ],
           "keywords": [],
-          "name": "Test 1",
-          "summary": "Sample Short Description"
+          "name": "ASTRA Room Controller",
+          "summary": "Voice Controller for ASTRA System"
         }
       },
       "testingInstructions": "Sample Testing Instructions."
