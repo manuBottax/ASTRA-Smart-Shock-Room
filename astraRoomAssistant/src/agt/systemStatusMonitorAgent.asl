@@ -14,7 +14,7 @@
 		?find_monitor_queue(MonitorQueue)
 		?find_action_queue(ActionQueue)
 		?find_display(Display)
-		?find_active_trauma(TraumaSource)
+		?find_vital_parameter_source(VitalParameterSource)
 		?find_tac_source(TacSource)
 		?find_mock_source(MockSource)
 		?find_timer_artifact(TimeMonitor);
@@ -23,7 +23,7 @@
 		focus(MonitorQueue);
 		focus(ActionQueue);
 		focus(Display);
-		focus(TraumaSource);
+		focus(VitalParameterSource);
 		focus(TacSource);
 		focus(MockSource);
 		focus(TimeMonitor).
@@ -82,12 +82,12 @@
 	<-	.wait(200);
 		?find_display(DisplayId).
 	
-+? find_active_trauma(TraumaSourceId) 
-	<-	lookupArtifact("activeTraumaService", TraumaSourceId).
++? find_vital_parameter_source(VitalParameterSourceId) 
+	<-	lookupArtifact("activeTraumaService", VitalParameterSourceId).
 
--? find_active_trauma(TraumaSourceId) 
+-? find_vital_parameter_source(VitalParameterSourceId) 
 	<-	.wait(200);
-		?find_active_trauma(TraumaSourceId).
+		?find_vital_parameter_source(VitalParameterSourceId).
 	
 +? find_tac_source(TacSourceId) 
 	<-	lookupArtifact("tacPS", TacSourceId).

@@ -24,6 +24,6 @@ cd ../MockSourceService
 
 /c/Windows/System32/cmd.exe //c 'start cmd /c nodemon'
 
-cd ../TraumaSourceService
+cd ../ActiveTraumaService
 
 /c/Windows/System32/cmd.exe //c 'start cmd /c nodemon'

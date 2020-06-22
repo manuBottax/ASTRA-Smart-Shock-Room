@@ -11,9 +11,9 @@ import javafx.util.Pair;
 import utils.ArtifactStatus;
 import utils.NetworkManager;
 
-public class TraumaArtifact extends Artifact {
+public class VitalParameterArtifact extends Artifact {
 	
-	private static final String BASE_SERVICE_URL = "http://192.168.1.120:3005/api/data/";
+	private static final String BASE_SERVICE_URL = "http://192.168.1.120:3005/api/vital_parameter/";
 	
 	private boolean pressureMonitoring = false;
 	private boolean saturationMonitoring = false;
@@ -22,7 +22,7 @@ public class TraumaArtifact extends Artifact {
 	
 	void init() {	
 		
-		defineObsProperty("trauma_artifact_status", ArtifactStatus.SERVICE_CONNECTED.getStatus());
+		defineObsProperty("vital_parameter_artifact_status", ArtifactStatus.SERVICE_CONNECTED.getStatus());
 		
 		System.out.println("TraumaService Artifact created");	
 	}
@@ -45,13 +45,13 @@ public class TraumaArtifact extends Artifact {
 				
 			} else {
 				System.out.println("Error : Cannot GET Blood Pressure Data");
-				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("Data retrieve failed", "service error", "failed_data_retrieve" );
 				
 			}
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
-			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
 		}		
 	}
@@ -74,12 +74,12 @@ public class TraumaArtifact extends Artifact {
 				
 			} else {
 				System.out.println("Error : Cannot GET Saturation Data");
-				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("Data retrieve failed", "service error", "failed_data_retrieve" );
 			}
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
-			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
 		}			
 	}
@@ -102,12 +102,12 @@ public class TraumaArtifact extends Artifact {
 				
 			} else {
 				System.out.println("Error : Cannot GET Heart Rate Data");
-				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("Data retrieve failed", "service error", "failed_data_retrieve" );
 			}
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
-			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
 		}			
 	}
@@ -130,12 +130,12 @@ public class TraumaArtifact extends Artifact {
 				
 			} else {
 				System.out.println("Error : Cannot GET Temperature Data");
-				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 				failed("Data retrieve failed", "service error", "failed_data_retrieve" );
 			}
 		} catch (IOException e) {
 			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
-			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
 		}			
 	}
@@ -165,12 +165,12 @@ public class TraumaArtifact extends Artifact {
 					
 				} else {
 					System.out.println("Error : Cannot GET Blood Pressure Data");
-					getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+					getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 					failed("Data retrieve failed", "service error", "failed_data_retrieve" );
 				}
 			} catch (IOException e) {
 				System.out.println("Error : IOException [ " + e.getMessage() + " ]");
-				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+				getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 				failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
 			}
         }
@@ -201,12 +201,12 @@ public class TraumaArtifact extends Artifact {
 					
 				} else {
 					System.out.println("Error : Cannot GET Saturation Data");
-					getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+					getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 					failed("Data retrieve failed", "service error", "failed_data_retrieve" );
 				}
 			} catch (IOException e) {
 				System.out.println("Error : IOException [ " + e.getMessage() + " ]");
-				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+				getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 				failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
 			}
         }
@@ -238,12 +238,12 @@ public class TraumaArtifact extends Artifact {
 					
 				} else {
 					System.out.println("Error : Cannot GET Saturation Data");
-					getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+					getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 					failed("Data retrieve failed", "service error", "failed_data_retrieve" );
 				}
 			} catch (IOException e) {
 				System.out.println("Error : IOException [ " + e.getMessage() + " ]");
-				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+				getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 				failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
 			}
         }
@@ -274,12 +274,12 @@ public class TraumaArtifact extends Artifact {
 					
 				} else {
 					System.out.println("Error : Cannot GET Saturation Data");
-					getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+					getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
 					failed("Data retrieve failed", "service error", "failed_data_retrieve" );
 				}
 			} catch (IOException e) {
 				System.out.println("Error : IOException [ " + e.getMessage() + " ]");
-				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+				getObsProperty("vital_parameter_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 				failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
 			}
         }

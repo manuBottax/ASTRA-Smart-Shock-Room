@@ -34,7 +34,11 @@ export class AppComponent {
       console.log(data.value)
 
       if (data.type == 'text'){
-        var v = data.name + " : " + data.value;
+        if (data.name.length > 0){
+          var v = data.name + " : " + data.value;
+        } else {
+          var v = "";
+        }
         this.dataArray[position] = new DataItem(TextDataComponent, {value: v});
       } else if (data.type == 'image'){
         //In this development state you can visualise image only in the big slot for layout management reason.

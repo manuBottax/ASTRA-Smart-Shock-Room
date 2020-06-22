@@ -13,7 +13,8 @@ import javafx.util.Pair;
 public class NetworkManager {
 
     private static final int TIMEOUT = 10000; //ms
-    private static final int SERVER_OK_RESULT = 200;
+    private static final int SERVER_GET_OK_RESULT = 200;
+    private static final int SERVER_POST_OK_RESULT = 201;
 
     public static Pair<Integer, String> doGET(String url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
@@ -24,7 +25,7 @@ public class NetworkManager {
         int res = urlConnection.getResponseCode();
         StringBuilder response = new StringBuilder();
 
-        if (res == SERVER_OK_RESULT) {
+        if (res == SERVER_GET_OK_RESULT) {
             BufferedReader buff = new BufferedReader(new InputStreamReader(new BufferedInputStream(urlConnection.getInputStream())));
 
             String chunks;
@@ -49,6 +50,35 @@ public class NetworkManager {
 
         return urlConnection.getResponseCode();
     }
+    
+    public static Pair<Integer, String> doPOSTWithResponse(String url, String content) throws IOException {
+        HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
+        urlConnection.setRequestMethod("POST");
+        urlConnection.setDoInput(true);
+        urlConnection.setDoOutput(true);
+        urlConnection.setConnectTimeout(TIMEOUT);
+        urlConnection.setReadTimeout(TIMEOUT);
+        urlConnection.setRequestProperty("Content-Type", "application/json");
+        urlConnection.getOutputStream().write(content.getBytes(StandardCharsets.UTF_8));
+
+        int res = urlConnection.getResponseCode();
+        StringBuilder response = new StringBuilder();
+
+        if (res == SERVER_POST_OK_RESULT) {
+            BufferedReader buff = new BufferedReader(new InputStreamReader(new BufferedInputStream(urlConnection.getInputStream())));
+
+            String chunks;
+
+            while ((chunks = buff.readLine()) != null) {
+                response.append(chunks);
+            }
+
+        }
+
+        return new Pair<Integer, String>(res, response.toString());
+    }
+    
+    
     
     public static Integer doPUT(String url, String content) throws IOException {
     	

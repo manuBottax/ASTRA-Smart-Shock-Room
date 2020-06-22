@@ -12,11 +12,12 @@
 	<-  !setupCommandQueue(QueueVisualisationId);
 		!setupMonitorQueue(QueueMonitorId);
 		!setupActionQueue(QueueActionId);
-		!setupDisplay(Display_id);
-		!setupTraumaSource(Source_Trauma_id);
-		!setupTac(Source_TAC_id);
-		!setupTimer(Timer_id);
-		!setupMockSource(Source_id).
+		!setupDisplay(DisplayIdd);
+		! setupVitalParameterSource(VitalParameterId);
+		!setupTraumaSource(SourceTraumaId);
+		!setupTac(SourceTACId);
+		!setupTimer(TimerId);
+		!setupMockSource(SourceId).
 	
 +! setupCommandQueue(Q)
 	<- makeArtifact("roomVisualisationCommands", "astraArtifact.RoomCommandQueueArtifact", ["room.visualisation", "room_visualisation_commands_queue"], Q).	
@@ -31,7 +32,10 @@
 	<- makeArtifact("display_sr", "astraArtifact.DisplayArtifact", [], D).
 	
 +! setupTraumaSource(S)
-	<- makeArtifact("activeTraumaService", "astraArtifact.TraumaArtifact", [], S).
+	<- makeArtifact("activeTraumaService", "astraArtifact.ActiveTraumaArtifact", [], S).
+
++! setupVitalParameterSource(V)
+	<- makeArtifact("vitalParameterMonitor", "astraArtifact.VitalParameterArtifact", [], V).	
 	
 +! setupTac(T) 
 	<- makeArtifact("tacPS", "astraArtifact.TACArtifact", [], T).

@@ -24,6 +24,18 @@ var displayTextData = function (req, res) {
   }
 }
 
+var clearData = function (req, res) {
+
+  if (req.params){
+
+      io.emit("display_data", {position : req.params.position, name : "", type: "text", value : ""});
+      jsonUtils.sendJsonResponse(res, 201, "OK");
+
+  } else {
+    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  }
+}
+
 var displayImageData =  function (req, res) {
 
   if (req.params){
@@ -56,6 +68,8 @@ router.post('/api/display/:position/temporal_data', displayTextData)
 router.post('/api/display/:position/env_data', displayTextData)
 
 router.post('/api/display/:position/error', displayTextData)
+
+router.post('/api/display/:position/clear', clearData)
 
 router.get('/', (req, res) => {
   res.send('<h1>ASTRA Shock Room Display Service</h1> <p> You should not be here. </p>');

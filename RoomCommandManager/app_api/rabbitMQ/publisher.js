@@ -27,6 +27,6 @@ amqp.connect('amqp://localhost', function(connect_error, connection) {
 
 module.exports.publishActivity = function(msg, key) { 
   channel.publish(exchangeName, key, Buffer.from(JSON.stringify(msg)));
-  console.log(" [x] Attività inviata a %s :", key);
+  console.log(" [x] Comando inviato a %s :", key);
   console.log(msg)
 };

@@ -13,7 +13,7 @@ current_patient("123459").
 +! observe 
 	<-	?find_queue(Queue)
 		?find_display(Display)
-		?find_active_trauma(TraumaSource)
+		?find_vital_parameter_source(VitalParameterSource)
 		?find_tac_source(TacSource)
 		?find_mock_source(MockSource)
 	
@@ -49,22 +49,22 @@ current_patient("123459").
 /* Vital Parameters request */
 +! requestData(CommandId, "blood_pressure", Target, Position)  
 	<-	.println("Searching for blood_pressure data");
-		getBloodPressureValue(Value) [artifact_id(TraumaSourceId)];
+		getBloodPressureValue(Value) [artifact_id(VitalParameterSourceId)];
 		!displayData(CommandId, "blood_pressure", Value, Target, Position).
 		
 +! requestData(CommandId, "spO2", Target, Position)
 	<-	.println("Searching for saturation data");
-		getSaturationValue(Value) [artifact_id(TraumaSourceId)];
+		getSaturationValue(Value) [artifact_id(VitalParameterSourceId)];
 		!displayData(CommandId, "spO2", Value, Target, Position).
 		
 +! requestData(CommandId, "heart_rate", Target, Position)
 	<-	.println("Searching for heart rate data");
-		getHeartRateValue(Value) [artifact_id(TraumaSourceId)];
+		getHeartRateValue(Value) [artifact_id(VitalParameterSourceId)];
 		!displayData(CommandId, "heart_rate", Value, Target, Position).
 		
 +! requestData(CommandId, "temperature", Target, Position)
 	<-	.println("Searching for temperature data");
-		getTemperatureValue(Value) [artifact_id(TraumaSourceId)];
+		getTemperatureValue(Value) [artifact_id(VitalParameterSourceId)];
 		!displayData(CommandId, "temperature", Value, Target, Position).
 		
 // this is removed for testing behaviour with unsupported data type
@@ -194,12 +194,12 @@ current_patient("123459").
 	<-	.wait(200);
 		?find_display(DisplayId).
 	
-+? find_active_trauma(TraumaSourceId) 
-	<-	lookupArtifact("activeTraumaService", TraumaSourceId).
++? find_vital_parameter_source(VitalParameterSourceId) 
+	<-	lookupArtifact("activeTraumaService", VitalParameterSourceId).
 
--? find_active_trauma(TraumaSourceId) 
+-? find_vital_parameter_source(VitalParameterSourceId) 
 	<-	.wait(200);
-		?find_active_trauma(TraumaSourceId).
+		?find_vital_parameter_source(VitalParameterSourceId).
 	
 +? find_tac_source(TacSourceId) 
 	<-	lookupArtifact("tacPS", TacSourceId).

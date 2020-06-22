@@ -13,13 +13,13 @@ current_patient("123459").
 +! observe : true 
 	<-	?find_queue(Queue)
 		?find_display(Display)
-		?find_active_trauma(TraumaSource)
+		?find_vital_parameter_source(VitalParameterSource)
 		?find_tac_source(TacSource)
 		?find_mock_source(MockSource)
 		?find_timer_artifact(TimeMonitor)
 	
 		focus(Queue)
-		focus(TraumaSource)
+		focus(VitalParameterSource)
 		focus(TimeMonitor)
 		focus(Display).
 
@@ -44,25 +44,25 @@ current_patient("123459").
 
 +! monitorData(CommandId, "blood_pressure", Target, Position) 
 	<-  .println("Monitoring")
-		monitorBloodPressure(CommandId, Target, Position) [artifact_id(TraumaSourceId)]
+		monitorBloodPressure(CommandId, Target, Position) [artifact_id(VitalParameterId)]
 		completeCommand(Command) [artifact_id(QueueId)]
 		.println("Command Handling completed, waiting for a new command.").
 
 +! monitorData(CommandId, "spO2", Target, Position) 
 	<-  .println("Monitoring")
-		monitorSaturation(CommandId, Target, Position) [artifact_id(TraumaSourceId)]
+		monitorSaturation(CommandId, Target, Position) [artifact_id(VitalParameterId)]
 		completeCommand(Command) [artifact_id(QueueId)]
 		.println("Command Handling completed, waiting for a new command.").
 		
 +! monitorData(CommandId, "heart_rate", Target, Position) 
 	<-  .println("Monitoring")
-		monitorHeartRate(CommandId, Target, Position) [artifact_id(TraumaSourceId)]
+		monitorHeartRate(CommandId, Target, Position) [artifact_id(VitalParameterId)]
 		completeCommand(Command) [artifact_id(QueueId)]
 		.println("Command Handling completed, waiting for a new command.").
 		
 +! monitorData(CommandId, "temperature", Target, Position) 
 	<-  .println("Monitoring")
-		monitorTemperature(CommandId, Target, Position) [artifact_id(TraumaSourceId)]
+		monitorTemperature(CommandId, Target, Position) [artifact_id(VitalParameterId)]
 		completeCommand(Command) [artifact_id(QueueId)]
 		.println("Command Handling completed, waiting for a new command.").
 		
@@ -111,12 +111,12 @@ current_patient("123459").
 	<-	.wait(200);
 		?find_display(DisplayId).
 	
-+? find_active_trauma(TraumaSourceId) 
-	<-	lookupArtifact("activeTraumaService", TraumaSourceId).
++? find_vital_parameter_source(VitalParameterId) 
+	<-	lookupArtifact("vitalParameterMonitor", VitalParameterId).
 
--? find_active_trauma(TraumaSourceId) 
+-? find_vital_parameter_source(VitalParameterId) 
 	<-	.wait(200);
-		?find_active_trauma(TraumaSourceId).
+		?find_vital_parameter_source(VitalParameterId).
 	
 +? find_tac_source(TacSourceId) 
 	<-	lookupArtifact("tacPS", TacSourceId).

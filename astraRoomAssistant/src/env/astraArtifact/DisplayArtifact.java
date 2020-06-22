@@ -304,6 +304,28 @@ public class DisplayArtifact extends Artifact {
 	}
 	
 	@OPERATION
+	void clearSection (String position) {
+		
+		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "clear";
+		
+		try {
+						
+			int res = NetworkManager.doPOST(path, new JSONObject().toString());
+						
+			if (res != 201) {
+				System.out.println("Error : cannot complete display operation");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("command display failed", "service error", "failed_display_clear", res );
+			}
+			
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("command display failed", "I/O error", "failed_display_clear", "IOException");
+		}
+	}
+	
+	@OPERATION
 	void setDisplayStatus (String status) {
 		
 		String path = DISPLAY_SERVICE_URL + "/status" ;
