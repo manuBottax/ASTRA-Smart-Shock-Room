@@ -23,7 +23,7 @@ export class AppComponent {
   displayStatus: String = "idle"
 
   constructor(private socketService: WebSocketService){
-    console.log(this.dataArray.length);
+    // console.log(this.dataArray.length);
     
     this.dataSubscription = socketService.dataStream.subscribe( data => {
       var position = parseInt(data.position) - 1 ;
@@ -31,7 +31,7 @@ export class AppComponent {
       if (position < 0 ) {position = 0};
       if (position > 6 ) {position = 6}
 
-      console.log(data.value)
+      // console.log(data.value)
 
       if (data.type == 'text'){
         if (data.name.length > 0){
@@ -47,17 +47,17 @@ export class AppComponent {
       }
 
 
-      console.log("Updated Data Array Value")
-      console.log(this.dataArray[position])
+      // console.log("Updated Data Array Value")
+      // console.log(this.dataArray[position])
 
-      console.log(this.componentArray[position]);
+      // console.log(this.componentArray[position]);
 
       this.componentArray[position].updateValue(this.dataArray[position]);
 
     });
 
     this.statusSubscription = socketService.statusStream.subscribe( status => {
-        console.log("status : " + status);
+        // console.log("status : " + status);
         this.displayStatus = status;
       }
     )

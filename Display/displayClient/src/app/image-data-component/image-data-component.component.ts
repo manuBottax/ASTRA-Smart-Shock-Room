@@ -10,7 +10,7 @@ export class ImageDataComponent implements DataInterface {
   @Input() data: any;
 
   ngOnInit() {
-    console.log(this.data);
+    // console.log(this.data);
   }
 
 }

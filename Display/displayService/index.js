@@ -24,6 +24,26 @@ var displayTextData = function (req, res) {
   }
 }
 
+var displayPreHArrayData = function (req, res) {
+
+  if (req.params){
+
+    var textArray = JSON.parse(req.body.data).preH;
+
+    displayString = ""
+
+    textArray.forEach(element => {
+      displayString = displayString + " | " + element;
+    });
+
+      io.emit("display_data", {position : req.params.position, name : req.body.name, type: "text", value : displayString});
+      jsonUtils.sendJsonResponse(res, 201, "OK");
+
+  } else {
+    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  }
+}
+
 var clearData = function (req, res) {
 
   if (req.params){
@@ -51,6 +71,8 @@ var displayImageData =  function (req, res) {
 router.get('/', (req, res) => {
   res.send('<h1>ASTRA Shock Room Display Service</h1> <p> You should not be here. </p>');
 });
+
+router.post('/api/display/:position/preH', displayPreHArrayData)
 
 router.post('/api/display/:position/patient_data', displayTextData)
 

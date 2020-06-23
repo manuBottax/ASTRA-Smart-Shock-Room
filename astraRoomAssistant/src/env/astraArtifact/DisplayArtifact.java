@@ -28,6 +28,33 @@ public class DisplayArtifact extends Artifact {
 	}
 	
 	@OPERATION
+	void showPreHInfo (String data, String position) {
+		
+		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "preH";
+		
+		try {
+			
+			JSONObject body = new JSONObject();
+			
+			body.put("name", "preH");
+			body.put("data", data);
+			
+			int res = NetworkManager.doPOST(path, body.toString());
+			
+			if (res != 201) {
+				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("command display failed", "service error", "failed_display", res );
+			}
+			
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("command display failed", "I/O error", "failed_display", "IOException");
+		}
+	}
+	
+	@OPERATION
 	void showPatientInfo (String data, String position) {
 		
 		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "patient_data";

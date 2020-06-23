@@ -1,4 +1,4 @@
-// Agent displayLayoutManagerAgent in project astraRoomAssistant
+// Agent patientEventManagerAgent in project astraRoomAssistant
 
 /* Initial beliefs and rules */
 
@@ -18,32 +18,51 @@
 		focus(Trauma);
 		
 		setDisplayStatus("idle") [artifact_id(DisplayId)].
-		//.wait(30000);
-		/*setDisplayStatus("preH") [artifact_id(DisplayId)];
-		showTraumaLeaderInfo("Emiliano Gamberini", "1") [artifact_id(DisplayId)];
-		monitorETAWithTimer("preH", "display_sr", "2", 120) [artifact_id(TimeMonitorId)]*/
-		//.wait(30000);
-		/*setArrivalTime [artifact_id(TimeMonitorId)];
-		setDisplayStatus("active") [artifact_id(DisplayId)];
-		showPatientInfo("123459", "3") [artifact_id(DisplayId)];
-		monitorTotalTime("preH", "display_sr", "2") [artifact_id(TimeMonitorId)].*/
 		
 +patient_status(Status) : Status = "arriving"
 	<- .println("test : Arriving patient");
+		addTraumaLeader("Emiliano Gamberini") [artifact_id(TraumaId)];
 		setDisplayStatus("preH") [artifact_id(DisplayId)];
 		showTraumaLeaderInfo("Emiliano Gamberini", "1") [artifact_id(DisplayId)];
-		monitorETA("system", "display_sr", "2") [artifact_id(TimeMonitorId)].
+		!monitorPreH.
 	
 +patient_status(Status) : Status = "active"
 	<- .println("test : patient is arrived");
 		setArrivalTime [artifact_id(TimeMonitorId)];
 		setDisplayStatus("active") [artifact_id(DisplayId)];
-		showPatientInfo("123459", "3") [artifact_id(DisplayId)];
-		monitorTotalTime("system", "display_sr", "2") [artifact_id(TimeMonitorId)].
+		!showInitialData
+		!monitorActiveTrauma.
 	
 +patient_status(Status) : Status = "done"
 	<- .println("test : Patient trauma handling completed");
 		setDisplayStatus("idle") [artifact_id(DisplayId)].
+		
++! monitorPreH : patient_status("arriving")
+	<- 	.wait(1000)
+		getETA("system", "display_sr", "2") [artifact_id(TimeMonitorId)];
+		getPreHInfo(PreH) [artifact_id(TraumaId)];
+		showPreHInfo(PreH, "3") [artifact_id(DisplayId)];
+		!monitorPreH.	
+		
+-! monitorPreH 
+	<- .println("Stop Monitoring PreH").
+	
++! showInitialData
+	<-	.wait(2000);
+		showPatientInfo("123459", "3") [artifact_id(DisplayId)];
+		getPreHInfo(PreH) [artifact_id(TraumaId)];
+		showPreHInfo(PreH, "4") [artifact_id(DisplayId)].
+	
++! monitorActiveTrauma : patient_status("active")
+	<- 	.wait(1000);
+		getTotalTime("system", "display_sr", "2") [artifact_id(TimeMonitorId)];
+		!monitorActiveTrauma.
+	
+-! monitorActiveTrauma 
+	<- .println("Stop Monitoring Active Trauma"). 
+	
++ new_monitoring_value(CommandId, Value, DataType, Target, Position) : DataType = "eta" | DataType = "total_time"
+	<-  showTemporalData(Value, DataType, Position) [artifact_id(Target)].
 		
 +? find_display(DisplayId)
 	<-	lookupArtifact("display_sr", DisplayId).

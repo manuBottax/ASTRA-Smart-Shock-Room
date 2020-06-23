@@ -32,6 +32,10 @@
   <div class="row single-data-container">
     <app-data-container [data]=dataArray[1] (bindedComponent)="onBindedComponent(1, $event)"></app-data-container>
   </div>
+
+  <div class="row single-data-container">
+    <app-data-container [data]=dataArray[2] (bindedComponent)="onBindedComponent(2, $event)"></app-data-container>
+  </div>
 </div>
 
 <div class="dark-bg" *ngIf="displayStatus == 'idle'">

@@ -41,13 +41,90 @@ public class ActiveTraumaArtifact extends Artifact {
         	
         } catch (IOException ex){
             //ex.printStackTrace();
-            System.out.println("Error : Cannot Reach Trauma Service STATUS");
+            System.out.println("Error : Cannot Reach Trauma Service");
 			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
         }
 		
 		System.out.println("Active Trauma Artifact Created !");
 		
 		execInternalOp("monitorPatientStatus");
+	}
+	
+	@OPERATION
+	void addTraumaLeader(String name) {
+		
+		String requestPath = BASE_SERVICE_URL + this.currentTraumaID + "/trauma_team/element";
+		
+		try { 
+			
+			JSONObject data = new JSONObject();
+			data.put("name", name);
+			data.put("role", "team leader");
+			
+			Integer res = NetworkManager.doPOST(requestPath, "{\"trauma_team_element\" : " + data  + "}".toString());		
+			
+			if (res != 201) {	
+				System.out.println("Error : Trauma Service Error");
+				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+			} 
+        	
+        } catch (IOException ex){
+            //ex.printStackTrace();
+            System.out.println("Error : Cannot Reach Trauma Service");
+			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+        }
+	}
+	
+	@OPERATION
+	void addTraumaTeamMember(String name) {
+		
+		String requestPath = BASE_SERVICE_URL + this.currentTraumaID + "/trauma_team/element";
+		
+		try { 
+			
+			JSONObject data = new JSONObject();
+			data.put("name", name);
+			data.put("role", "team member");
+			
+			Integer res = NetworkManager.doPOST(requestPath, "{\"trauma_team_element\" : " + data  + "}".toString());		
+			
+			if (res != 201) {	
+				System.out.println("Error : Trauma Service Error");
+				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+			} 
+        	
+        } catch (IOException ex){
+            //ex.printStackTrace();
+            System.out.println("Error : Cannot Reach Trauma Service");
+			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+        }
+	}
+	
+	@OPERATION 
+	void getPreHInfo(OpFeedbackParam<String> preHInfo) {
+		
+		String requestPath = BASE_SERVICE_URL + this.currentTraumaID + "/preH";
+		
+		try { 
+			
+			Pair<Integer, String> res = NetworkManager.doGET(requestPath);		
+			
+			if (res.getKey() == 200) {	
+				    				
+				JSONObject json = new JSONObject(res.getValue());
+				
+				preHInfo.set(json.toString());
+				
+			} else {
+				System.out.println("Error : Cannot GET Patient preH");
+				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+			} 
+        	
+        } catch (IOException ex){
+            //ex.printStackTrace();
+            System.out.println("Error : Cannot Reach Trauma Service");
+			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+        }
 	}
 
 	@INTERNAL_OPERATION
@@ -71,7 +148,11 @@ public class ActiveTraumaArtifact extends Artifact {
 					
 					String st = json.getString("patient_status");
 					
-					status.updateValue(st);
+					String old = (String) status.getValue();
+					
+					if (! old.equals(st)) {
+						status.updateValue(st);
+					}
 					
 				} else {
 					System.out.println("Error : Cannot GET Patient STATUS");

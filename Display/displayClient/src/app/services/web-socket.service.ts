@@ -32,9 +32,9 @@ export class WebSocketService {
     this.socket = io(environment.SOCKET_ENDPOINT);
 
     this.socket.on('display_data', (data: PatientData) => {
-      console.log(data);
-      console.log(data.position);
-      console.log(data.value);
+      // console.log(data);
+      // console.log(data.position);
+      // console.log(data.value);
  
       this.dataSource.next(data);
 

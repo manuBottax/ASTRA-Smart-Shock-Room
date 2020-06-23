@@ -166,6 +166,8 @@ module.exports.addTraumaTeamElement = function(req,res) {
                     DB.updateOne({"_id" : trauma_id}, data)
                       .exec(function(update_err, update_data){
                           if (update_err) {
+                            console.log("Error during trauma_team element creation")
+                            console.log(update_err)
                             jsonUtils.sendJsonResponse(res, 400, "Error during trauma_team element creation");
                             return;
                           } else {
@@ -173,6 +175,8 @@ module.exports.addTraumaTeamElement = function(req,res) {
                           }
                       });
                 } else {
+                    console.log("Error during trauma_team element creation")
+                    console.log(update_err)
                     jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_team_element in request body");
                 } 
             }
@@ -347,7 +351,6 @@ module.exports.updatePreHInfo = function(req,res) {
         jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
     }
 }
-
 
 
 /* TODO : 
