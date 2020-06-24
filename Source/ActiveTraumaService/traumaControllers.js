@@ -6,29 +6,36 @@ var mongoose = require( 'mongoose');
 var DB = mongoose.model('Trauma');
 
 /*
-    Trauma {
-        _id : String,
-        patient_status : String,
-        trauma_team : [{}],
-        preH : [{}],
-        trauma_info : [{}],
-        MTC : [{}],
-        anamnesis : [{}],
-        vital_sign : [{}],
-        report : [{}],
-        events : [{}]
-    }
+    // Trauma {
+    //     _id : String,
+    //     current_trauma_status : String,
+    //     startOperatorId : String,
+    //     startOperatorDescription : String,
+    //     delayedActivation : {},
+    //     traumaTeamMembers : String[],
+    //     preH : {},
+    //     traumaInfo : {},
+    //     patientInitialCondition: {}
+    //     events : [{}]
+    // }
 */
 
 //router.post('/api/trauma', traumaController.postTrauma);
 module.exports.postTrauma = async function (req, res) {
 
-    DB.create({} , function(err, trauma) {
+    var data = {
+        startOperatorId : req.body.startOperatorId,
+        startOperatorDescription : req.body.startOperatorDescription,
+        delayedActivation : req.body.delayedActivation,
+        traumaTeamMembers : req.body.traumaTeamMembers
+    }
+
+    DB.create(data , function(err, trauma) {
         if (err) {
             jsonUtils.sendJsonResponse(res, 400, err);
         } else {
             console.log("Trauma created successfully !")
-            jsonUtils.sendJsonResponse(res, 201, trauma);
+            jsonUtils.sendJsonResponse(res, 201, trauma._id);
         }
     }); 
 }
@@ -83,8 +90,8 @@ module.exports.deleteTrauma = function(req,res) {
 }
 
 
-// router.get('/api/trauma/:trauma_id/patient_status',traumaController.getPatientStatus)
-module.exports.getPatientStatus = function(req,res) {
+// router.get('/api/trauma/:trauma_id/trauma_current_status',traumaController.getTraumaStatus)
+module.exports.getTraumaStatus = function(req,res) {
 
     if (req.params && req.params.trauma_id) {
 
@@ -98,7 +105,7 @@ module.exports.getPatientStatus = function(req,res) {
                 return;
             } else {
                 var status = data.patient_status;
-                jsonUtils.sendJsonResponse(res, 200, {"patient_status" : status });
+                jsonUtils.sendJsonResponse(res, 200, {"current_trauma_status" : status });
             }
         }); 
 
@@ -107,8 +114,8 @@ module.exports.getPatientStatus = function(req,res) {
     }
 }
 
-// router.put('/api/trauma/:trauma_id/patient_status',traumaController.updatePatientStatus)
-module.exports.updatePatientStatus = function(req,res) {
+// router.put('/api/trauma/:trauma_id/trauma_current_status',traumaController.updateTraumaStatus)
+module.exports.updateTraumaStatus = function(req,res) {
 
     if (req.params && req.params.trauma_id) {
 
@@ -122,62 +129,19 @@ module.exports.updatePatientStatus = function(req,res) {
                 return;
             } else {
                 
-                if (req.body.patient_status){
-                    data.patient_status = req.body.patient_status;
+                if (req.body.current_trauma_status){
+                    data.patient_status = req.body.current_trauma_status;
                     DB.updateOne({"_id" : trauma_id}, data)
                       .exec(function(update_err, update_data){
                           if (update_err) {
                             jsonUtils.sendJsonResponse(res, 400, "Error during status update");
                             return;
                           } else {
-                            jsonUtils.sendJsonResponse(res, 200, {"patient_status" : update_data });
+                            jsonUtils.sendJsonResponse(res, 200, {"current_trauma_status" : update_data });
                           }
                       });
                 } else {
                     jsonUtils.sendJsonResponse(res, 404, "Invalid status in request body");
-                } 
-            }
-        }); 
-
-    } else {
-        jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
-    }
-}
-
-// router.post('/api/trauma/:trauma_id/trauma_team/element', traumaController.addTraumaTeamElement);
-module.exports.addTraumaTeamElement = function(req,res) {
-
-    if (req.params && req.params.trauma_id) {
-
-        var trauma_id = req.params.trauma_id
-
-        DB
-        .findById(trauma_id)
-        .exec(function(err, data) {
-            if (err){
-                jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
-                return;
-            } else {
-                
-                if (req.body.trauma_team_element){
-
-                    data.trauma_team.push(req.body.trauma_team_element);
-
-                    DB.updateOne({"_id" : trauma_id}, data)
-                      .exec(function(update_err, update_data){
-                          if (update_err) {
-                            console.log("Error during trauma_team element creation")
-                            console.log(update_err)
-                            jsonUtils.sendJsonResponse(res, 400, "Error during trauma_team element creation");
-                            return;
-                          } else {
-                            jsonUtils.sendJsonResponse(res, 201, {"trauma_team" : data.trauma_team });
-                          }
-                      });
-                } else {
-                    console.log("Error during trauma_team element creation")
-                    console.log(update_err)
-                    jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_team_element in request body");
                 } 
             }
         }); 
@@ -201,7 +165,11 @@ module.exports.getTraumaTeam = function(req,res) {
                 jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
                 return;
             } else {
-                jsonUtils.sendJsonResponse(res, 200, {"trauma_team" : data.trauma_team });
+
+                jsonUtils.sendJsonResponse(res, 200, {
+                    "traumaLeader" : data.startOperatorDescription, 
+                    "traumaTeamMembers" : data.traumaTeamMembers
+                });
                 
             } 
         });
@@ -212,82 +180,44 @@ module.exports.getTraumaTeam = function(req,res) {
 }
 
 // router.put ('/api/trauma/:trauma_id/trauma_team', traumaController.updateTraumaTeam);
-module.exports.updateTraumaTeam = function(req,res) {
+// module.exports.updateTraumaTeam = function(req,res) {
 
-    if (req.params && req.params.trauma_id) {
+//     if (req.params && req.params.trauma_id) {
 
-        var trauma_id = req.params.trauma_id
+//         var trauma_id = req.params.trauma_id
 
-        DB
-        .findById(trauma_id)
-        .exec(function(err, data) {
-            if (err){
-                jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
-                return;
-            } else {
+//         DB
+//         .findById(trauma_id)
+//         .exec(function(err, data) {
+//             if (err){
+//                 jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
+//                 return;
+//             } else {
                 
-                if (req.body.trauma_team){
+//                 if (req.body.trauma_team){
 
-                    data.trauma_team = req.body.trauma_team;
+//                     data.trauma_team = req.body.trauma_team;
 
-                    DB.updateOne({"_id" : trauma_id}, data)
-                      .exec(function(update_err, update_data){
-                          if (update_err) {
-                            jsonUtils.sendJsonResponse(res, 400, "Error during trauma_team update");
-                            return;
-                          } else {
-                            jsonUtils.sendJsonResponse(res, 200, {"trauma_team" : data.trauma_team });
-                          }
-                      });
-                } else {
-                    jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_team in request body");
-                } 
-            }
-        }); 
+//                     DB.updateOne({"_id" : trauma_id}, data)
+//                       .exec(function(update_err, update_data){
+//                           if (update_err) {
+//                             jsonUtils.sendJsonResponse(res, 400, "Error during trauma_team update");
+//                             return;
+//                           } else {
+//                             jsonUtils.sendJsonResponse(res, 200, {"trauma_team" : data.trauma_team });
+//                           }
+//                       });
+//                 } else {
+//                     jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_team in request body");
+//                 } 
+//             }
+//         }); 
 
-    } else {
-        jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
-    }
-}
+//     } else {
+//         jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
+//     }
+// }
 
-// router.post('/api/trauma/:trauma_id/preH/element', traumaController.addPreHInfoElement);
-module.exports.addPreHInfoElement = function(req,res) {
-
-    if (req.params && req.params.trauma_id) {
-
-        var trauma_id = req.params.trauma_id
-
-        DB
-        .findById(trauma_id)
-        .exec(function(err, data) {
-            if (err){
-                jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
-                return;
-            } else {
-                
-                if (req.body.preH_element){
-
-                    data.preH.push(req.body.preH_element);
-
-                    DB.updateOne({"_id" : trauma_id}, data)
-                      .exec(function(update_err, update_data){
-                          if (update_err) {
-                            jsonUtils.sendJsonResponse(res, 400, "Error during preH element creation");
-                            return;
-                          } else {
-                            jsonUtils.sendJsonResponse(res, 201, {"preH" : data.preH });
-                          }
-                      });
-                } else {
-                    jsonUtils.sendJsonResponse(res, 404, "Invalid preH_element in request body");
-                } 
-            }
-        }); 
-
-    } else {
-        jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
-    }
-}
 
 // router.get ('/api/trauma/:trauma_id/preH', traumaController.getPreHInfo);
 module.exports.getPreHInfo = function(req,res) {
@@ -303,13 +233,12 @@ module.exports.getPreHInfo = function(req,res) {
                 jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
                 return;
             } else {
-                jsonUtils.sendJsonResponse(res, 200, {"preH" : data.preH });
+                jsonUtils.sendJsonResponse(res, 200, data.preh );
             } 
         });
     } else {
         jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
-    }
-    
+    }   
 }
 
 
@@ -328,21 +257,21 @@ module.exports.updatePreHInfo = function(req,res) {
                 return;
             } else {
                 
-                if (req.body.preH){
+                if (req.body.preh){
 
-                    data.preH = req.body.preH;
+                    data.preh = JSON.parse(req.body.preh);
 
                     DB.updateOne({"_id" : trauma_id}, data)
                       .exec(function(update_err, update_data){
                           if (update_err) {
-                            jsonUtils.sendJsonResponse(res, 400, "Error during preH update");
+                            jsonUtils.sendJsonResponse(res, 400, "Error during preh update");
                             return;
                           } else {
-                            jsonUtils.sendJsonResponse(res, 200, {"preH" : data.preH });
+                            jsonUtils.sendJsonResponse(res, 200, data.preh);
                           }
                       });
                 } else {
-                    jsonUtils.sendJsonResponse(res, 404, "Invalid preH in request body");
+                    jsonUtils.sendJsonResponse(res, 404, "Invalid preh in request body");
                 } 
             }
         }); 
@@ -352,64 +281,262 @@ module.exports.updatePreHInfo = function(req,res) {
     }
 }
 
+// router.get ('/api/trauma/:trauma_id/trauma_info', traumaController.getTraumaInfo);
+module.exports.getTraumaInfo = function(req,res) {
 
-/* TODO : 
+    if (req.params && req.params.trauma_id) {
 
-// ActiveTrauma
+        var trauma_id = req.params.trauma_id
 
-router.post('/api/trauma/:trauma_id/trauma_info', traumaController.addTraumaInfo);
-router.get ('/api/trauma/:trauma_id/trauma_info', traumaController.getTraumaInfo);
-router.put ('/api/trauma/:trauma_id/trauma_info', traumaController.updateTraumaInfo);
-
-router.post('/api/trauma/:trauma_id/MTC', traumaController.addMajorTraumaCriteria);
-router.get ('/api/trauma/:trauma_id/MTC', traumaController.getMajorTraumaCriteria);
-router.put ('/api/trauma/:trauma_id/MTC', traumaController.updateMajorTraumaCriteria);
-
-router.post('/api/trauma/:trauma_id/anamnesis', traumaController.addAnamnesis);
-router.get ('/api/trauma/:trauma_id/anamnesis', traumaController.getAnamnesis);
-router.put ('/api/trauma/:trauma_id/anamnesis', traumaController.updateAnamnesis);
-
-router.post('/api/trauma/:trauma_id/vital_sign', traumaController.addVitalSign);
-router.get ('/api/trauma/:trauma_id/vital_sign', traumaController.getVitalSign);
-router.put ('/api/trauma/:trauma_id/vital_sign', traumaController.updateVitalSign);
-
-// TraumaTracker 
-
-router.post('/api/trauma/:trauma_id/report', traumaController.addReport);
-router.get ('/api/trauma/:trauma_id/report', traumaController.getReport);
-router.put ('/api/trauma/:trauma_id/report', traumaController.updateReport);
-
-router.post('/api/trauma/:trauma_id/events', traumaController.addEvent);
-router.get ('/api/trauma/:trauma_id/events', traumaController.getEvent);
-router.put ('/api/trauma/:trauma_id/events', traumaController.updateEvent); */
+        DB
+        .findById(trauma_id)
+        .exec(function(err, data) {
+            if (err){
+                jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
+                return;
+            } else {
+                console.log(data);
+                jsonUtils.sendJsonResponse(res, 200, data.traumaInfo );
+            } 
+        });
+    } else {
+        jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
+    }   
+}
 
 
+// router.put ('/api/trauma/:trauma_id/trauma_info', traumaController.updateTraumaInfo);
+module.exports.updateTraumaInfo = function(req,res) {
 
+    if (req.params && req.params.trauma_id) {
 
+        var trauma_id = req.params.trauma_id
 
+        DB
+        .findById(trauma_id)
+        .exec(function(err, data) {
+            if (err){
+                jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
+                return;
+            } else {
+                
+                if (req.body.traumaInfo){
 
+                    data.traumaInfo = JSON.parse(req.body.traumaInfo);
 
-// router.get('/api/tac_data/:patient_id', tacController.getTACByPatient);
-// module.exports.getTACByPatient = function(req,res) {
+                    DB.updateOne({"_id" : trauma_id}, data)
+                      .exec(function(update_err, update_data){
+                          if (update_err) {
+                            jsonUtils.sendJsonResponse(res, 400, "Error during traumaInfo update");
+                            return;
+                          } else {
+                            jsonUtils.sendJsonResponse(res, 200, data.traumaInfo);
+                          }
+                      });
+                } else {
+                    jsonUtils.sendJsonResponse(res, 404, "Invalid traumaInfo in request body");
+                } 
+            }
+        }); 
 
-//     if (req.params && req.params.patient_id) {
+    } else {
+        jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
+    }
+}
 
-//         var patient_id = req.params.patient_id
+// router.get ('/api/trauma/:trauma_id/patient_initial_condition', traumaController.getPatientInitialCondition);
+module.exports.getPatientInitialCondition = function(req,res) {
 
-//         DB
-//         .find({"patient_id" : patient_id})
-//         .exec(function(err, data) {
-//             if (err){
-//                 jsonUtils.sendJsonResponse(res, 404, err);
-//                 return;
-//             } else {
-//                 console.log("Patient data retrieved !")
-//                 jsonUtils.sendJsonResponse(res, 200, data);
-//             }
-//         }); 
+    if (req.params && req.params.trauma_id) {
 
-//     } else {
-//         jsonUtils.sendJsonResponse(res, 404, "Invalid patient_id params");
-//     }
+        var trauma_id = req.params.trauma_id
 
-// }
+        DB
+        .findById(trauma_id)
+        .exec(function(err, data) {
+            if (err){
+                jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
+                return;
+            } else {
+                // console.log(data);
+                jsonUtils.sendJsonResponse(res, 200, data.patientInitialCondition );
+            } 
+        });
+    } else {
+        jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
+    }   
+}
+
+// router.put ('/api/trauma/:trauma_id/patient_initial_condition', traumaController.updatePatientInitialCondition);
+module.exports.updatePatientInitialCondition = function(req,res) {
+
+    if (req.params && req.params.trauma_id) {
+
+        var trauma_id = req.params.trauma_id
+
+        DB
+        .findById(trauma_id)
+        .exec(function(err, data) {
+            if (err){
+                jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
+                return;
+            } else {
+                
+                if (req.body.patientInitialCondition){
+
+                    data.patientInitialCondition = JSON.parse(req.body.patientInitialCondition);
+
+                    DB.updateOne({"_id" : trauma_id}, data)
+                      .exec(function(update_err, update_data){
+                          if (update_err) {
+                            jsonUtils.sendJsonResponse(res, 400, "Error during Patient Initial Condition update");
+                            return;
+                          } else {
+                            jsonUtils.sendJsonResponse(res, 200, data.patientInitialCondition);
+                          }
+                      });
+                } else {
+                    jsonUtils.sendJsonResponse(res, 404, "Invalid patientInitialCondition in request body");
+                } 
+            }
+        }); 
+
+    } else {
+        jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
+    }
+}
+
+// router.post('/api/trauma/:trauma_id/events', traumaController.addEvent);
+module.exports.addEvent = function(req,res) {
+
+    if (req.params && req.params.trauma_id) {
+
+        var trauma_id = req.params.trauma_id
+
+        DB
+        .findById(trauma_id)
+        .exec(function(err, data) {
+            if (err){
+                jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
+                return;
+            } else {
+                
+                if (req.body.event){
+
+                    data.events.push(JSON.parse(req.body.event));
+
+                    DB.updateOne({"_id" : trauma_id}, data)
+                      .exec(function(update_err, update_data){
+                          if (update_err) {
+                            jsonUtils.sendJsonResponse(res, 400, "Error during events update");
+                            return;
+                          } else {
+                            jsonUtils.sendJsonResponse(res, 200, data.events);
+                          }
+                      });
+                } else {
+                    jsonUtils.sendJsonResponse(res, 404, "Invalid event in request body");
+                } 
+            }
+        }); 
+
+    } else {
+        jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
+    }
+}
+
+// router.get('/api/trauma/:trauma_id/events', traumaController.getEventList);
+module.exports.getEventList = function(req,res) {
+
+    if (req.params && req.params.trauma_id) {
+
+        var trauma_id = req.params.trauma_id
+
+        DB
+        .findById(trauma_id)
+        .exec(function(err, data) {
+            if (err){
+                jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
+                return;
+            } else {
+
+                var events = data.events;
+
+                jsonUtils.sendJsonResponse(res, 200, events );
+                
+            } 
+        });
+    } else {
+        jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id or event_id params");
+    }   
+}
+
+// router.get ('/api/trauma/:trauma_id/events/:event_id'', traumaController.getEvent);
+module.exports.getEvent = function(req,res) {
+
+    if (req.params && req.params.trauma_id && req.params.event_id) {
+
+        var trauma_id = req.params.trauma_id
+
+        DB
+        .findById(trauma_id)
+        .exec(function(err, data) {
+            if (err){
+                jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
+                return;
+            } else {
+                
+                var ev = data.events.find((event) => {console.log(event.eventId) ; console.log(req.params.event_id) ; console.log(event.eventId == req.params.event_id) ; return event.eventId == req.params.event_id});
+                if (ev){
+                    jsonUtils.sendJsonResponse(res, 200,  ev );
+                } else {
+                    jsonUtils.sendJsonResponse(res, 404,  "not found" );
+                }
+                
+            } 
+        });
+    } else {
+        jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id or event_id params");
+    }   
+}
+
+// router.put ('/api/trauma/:trauma_id/events/:event_id', traumaController.updateEvent);
+module.exports.updateEvent = function(req,res) {
+
+    if (req.params && req.params.trauma_id && req.params.event_id) {
+
+        var trauma_id = req.params.trauma_id
+
+        DB
+        .findById(trauma_id)
+        .exec(function(err, data) {
+            if (err){
+                jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
+                return;
+            } else {
+
+                for (let i = 0; i < data.events.length; i++) {
+                    const e = data.events[i];
+
+                    if (e.eventId == req.params.event_id){
+                        found = true;
+                        data.events[i] = JSON.parse(req.body.event);
+                        DB.updateOne({"_id" : trauma_id}, data)
+                          .exec(function(update_err, update_data){
+                                if (update_err) {
+                                    jsonUtils.sendJsonResponse(res, 400, "Error during events update");
+                                    return;
+                                } else {
+                                    jsonUtils.sendJsonResponse(res, 200, data.events);
+                                    return;
+                                }
+                          });
+                    }
+                }
+            } 
+        });
+    } else {
+        jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id or event_id params");
+    }   
+}
+

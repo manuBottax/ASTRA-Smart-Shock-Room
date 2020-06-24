@@ -72,46 +72,28 @@ router.post('/api/trauma', traumaController.postTrauma);
 router.get ('/api/trauma/:trauma_id', traumaController.getTrauma);
 router.delete('/api/trauma/:trauma_id', traumaController.deleteTrauma);
 
-router.get('/api/trauma/:trauma_id/patient_status',traumaController.getPatientStatus)
-router.put('/api/trauma/:trauma_id/patient_status',traumaController.updatePatientStatus)
+router.get('/api/trauma/:trauma_id/trauma_current_status',traumaController.getTraumaStatus)
+router.put('/api/trauma/:trauma_id/trauma_current_status',traumaController.updateTraumaStatus)
 
 // ActiveTrauma
 
-router.post('/api/trauma/:trauma_id/trauma_team/element', traumaController.addTraumaTeamElement);
 router.get ('/api/trauma/:trauma_id/trauma_team', traumaController.getTraumaTeam);
-router.put ('/api/trauma/:trauma_id/trauma_team', traumaController.updateTraumaTeam);
+// router.put ('/api/trauma/:trauma_id/trauma_team', traumaController.updateTraumaTeam);
 
-router.post('/api/trauma/:trauma_id/preH/element', traumaController.addPreHInfoElement);
 router.get ('/api/trauma/:trauma_id/preH', traumaController.getPreHInfo);
 router.put ('/api/trauma/:trauma_id/preH', traumaController.updatePreHInfo);
 
-// TODO: 
+router.get ('/api/trauma/:trauma_id/trauma_info', traumaController.getTraumaInfo);
+router.put ('/api/trauma/:trauma_id/trauma_info', traumaController.updateTraumaInfo);
 
-// router.post('/api/trauma/:trauma_id/trauma_info', traumaController.addTraumaInfo);
-// router.get ('/api/trauma/:trauma_id/trauma_info', traumaController.getTraumaInfo);
-// router.put ('/api/trauma/:trauma_id/trauma_info', traumaController.updateTraumaInfo);
+router.get ('/api/trauma/:trauma_id/patient_initial_condition', traumaController.getPatientInitialCondition);
+router.put ('/api/trauma/:trauma_id/patient_initial_condition', traumaController.updatePatientInitialCondition);
 
-// router.post('/api/trauma/:trauma_id/MTC', traumaController.addMajorTraumaCriteria);
-// router.get ('/api/trauma/:trauma_id/MTC', traumaController.getMajorTraumaCriteria);
-// router.put ('/api/trauma/:trauma_id/MTC', traumaController.updateMajorTraumaCriteria);
+router.post('/api/trauma/:trauma_id/events', traumaController.addEvent);
+router.get ('/api/trauma/:trauma_id/events/:event_id', traumaController.getEvent);
 
-// router.post('/api/trauma/:trauma_id/anamnesis', traumaController.addAnamnesis);
-// router.get ('/api/trauma/:trauma_id/anamnesis', traumaController.getAnamnesis);
-// router.put ('/api/trauma/:trauma_id/anamnesis', traumaController.updateAnamnesis);
-
-// router.post('/api/trauma/:trauma_id/vital_sign', traumaController.addVitalSign);
-// router.get ('/api/trauma/:trauma_id/vital_sign', traumaController.getVitalSign);
-// router.put ('/api/trauma/:trauma_id/vital_sign', traumaController.updateVitalSign);
-
-// // TraumaTracker 
-
-// router.post('/api/trauma/:trauma_id/report', traumaController.addReport);
-// router.get ('/api/trauma/:trauma_id/report', traumaController.getReport);
-// router.put ('/api/trauma/:trauma_id/report', traumaController.updateReport);
-
-// router.post('/api/trauma/:trauma_id/events', traumaController.addEvent);
-// router.get ('/api/trauma/:trauma_id/events', traumaController.getEvent);
-// router.put ('/api/trauma/:trauma_id/events', traumaController.updateEvent);
+router.get('/api/trauma/:trauma_id/events', traumaController.getEventList);
+router.put ('/api/trauma/:trauma_id/events/:event_id', traumaController.updateEvent);
 
 app.use('/', router);
 

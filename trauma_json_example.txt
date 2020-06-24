@@ -1,0 +1,72 @@
+"preh" : {"territorialArea" : "RN", "isCarAccident" : true, "aValue" : "test data", "bPleuralDecompression" : false, "cBloodProtocol" : true, "cTpod" : false, "dGcsTotal" : 2, "dAnisocoria" : false, "dAnisocoria" : true, "dMidriasi" : true, "eMotility" : false, "worstBloodPressure" : 50, "worstRespiratoryRate" : 35 }
+
+"traumaInfo" : { "code" : "t_12345", "sdo" : "t_67890", "erDeceased" : false, "admissionCode" : "Rosso", "name" : "Mario", "surname" : "Rossi", "gender" : "M", "dob" : "01/01/1980", "age" : "40", "accidentDate" : "2020-06-24", "accidentTime" : "12:01:25", "accidentType" :  "Chiuso", "vehicle" : "Automedica", "fromOtherEmergency" : false, "otherEmergency" : "", "majorTraumaCriteria" : { "dynamic" : true, "physiological" : false, "anatomical" : false }, "anamnesi" : { "antiplatelets" : false, "anticoagulants" : false, "nao" : true }}
+
+"patientInitialCondition" : {"vitalSigns" : { "temp" : "Ipertermico", "hr" : "Normale", "bp" : "Ipoteso", "spo2" : "Ipossico", "etco2" : "Normale" }, 
+ "clinicalPicture" : {"gcsTotal" : "11", "gcsMotor" : "(4) Retrae", "gcsVerbal": "(4) Confusa", "gcsEyes" : "(3) Chiamata", "sedated" : false, "pupils" : "Normale", "airway" : "Presidio Sovraglottico", "positiveInhalation" : true, "intubationFailed" : false, "chestTube" : "Sinistra", "oxygenPercentage" : "55",  "hemorrhage": true, "limbsFracture" : false, "fractureExposition" : false, "burn" : "Non Presente"}}
+ 
+ ------------------------	EVENTI	-----------------------------------
+ 
+// EVENT 1a : “procedure” - manovra/procedura
+"event" : { "eventId" : 1 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "procedureId" : "intubation" , "procedureDescription" : "descrizione di test della procedura da effettuare", "procedureType" : "one-shot", "difficultAirway" : true, "inhalation" : false, "videolaringo" : false, "frova" : true }}
+
+// EVENT 1b : “procedure” - manovra/procedura
+"event" : { "eventId" : 2 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "procedureId" : "drainage" , "procedureDescription" : "descrizione di test della procedura da effettuare", "procedureType" : "time-dependent", "event" : "end", "right" : true, "left" : false }}
+
+// EVENT 1c : “procedure” - manovra/procedura
+"event" : { "eventId" : 3 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "procedureId" : "chest-tube" , "procedureDescription" : "descrizione di test della procedura da effettuare", "procedureType" : "time-dependent", "event" : "start", "right" : false, "left" : true }}
+
+// EVENT 1d : “procedure” - manovra/procedura
+"event" : { "eventId" : 4 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "procedureId" : "fixator" , "procedureDescription" : "descrizione di test della procedura da effettuare", "procedureType" : "one-shot" }}
+
+-----------------------------------------------------------
+
+// EVENT 2a : “diagnostic” - esame clinico
+"event" : { "eventId" : 5 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "diagnosticId" : "echofast" , "diagnosticDescription" : "descrizione di test della diagnostica da effettuare" }}
+
+// EVENT 2b : “diagnostic” - esame clinico
+"event" : { "eventId" : 6 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "diagnosticId" : "abg" , "diagnosticDescription" : "descrizione di test della diagnostica da effettuare", "lactates" : 5, "be" : 6, "ph" : 7, "hb" : 8 }}
+
+// EVENT 2c : “diagnostic” - esame clinico
+"event" : { "eventId" : 7 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "diagnosticId" : "rotem" , "diagnosticDescription" : "descrizione di test della diagnostica da effettuare", "fibtem" : "d_123", "extem" : "d_234", "hyperfibrinolysis" : true }}
+
+-----------------------------------------------------------
+
+// EVENT 3a : “drug” - somministrazione di un farmaco 
+"event" : { "eventId" : 8 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "drugId" : "crystalloid" , "drugDescription" : "descrizione del farmaco", "administrationType" : "drug-protocol"}}
+
+// EVENT 3b : “drug” - somministrazione di un farmaco 
+"event" : { "eventId" : 9 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "drugId" : "crystalloid" , "drugDescription" : "descrizione del farmaco", "administrationType" : "one-shot", "qty" : 100, "unit" : "mg"}}
+
+// EVENT 3c : “drug” - somministrazione di un farmaco 
+"event" : { "eventId" : 10 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "drugId" : "crystalloid" , "drugDescription" : "descrizione del farmaco", "administrationType" : "continuous-infusion", "event" : "start", "qty" : 100, "unit" : "mg"}}
+
+// EVENT 3d : “drug” - somministrazione di un farmaco 
+"event" : { "eventId" : 11 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "drugId" : "crystalloid" , "drugDescription" : "descrizione del farmaco", "administrationType" : "continuous-infusion", "event" : "stop", "duration" : 120 }}
+
+-----------------------------------------------------------
+
+// EVENT 4a : “blood-product” - somministrazione di un emoderivato 
+"event" : { "eventId" : 12 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "bloodProductId" : "fibrinogen" , "bloodProductDescription" : "descrizione dell'emoderivato", "administrationType" : "drug-protocol"}}
+
+// EVENT 4b : “blood-product” - somministrazione di un emoderivato 
+"event" : { "eventId" : 13 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "bloodProductId" : "emazies" , "bloodProductDescription" : "descrizione dell'emoderivato", "administrationType" : "drug-protocol", "bagCode" : "123456"}}
+
+// EVENT 4c : “blood-product” - somministrazione di un emoderivato 
+"event" : { "eventId" : 14 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "bloodProductId" : "emazies" , "bloodProductDescription" : "descrizione dell'emoderivato", "administrationType" : "one-shot", "bagCode" : "123456", "qty" : 450, "unit" : "ml"}}
+
+-----------------------------------------------------------
+
+// EVENT 5 : “room-in” - evento che rappresenta l’ingresso in una stanza 
+"event" : { "eventId" : 15 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "place" : "ER_CT"}}
+
+-----------------------------------------------------------
+
+// EVENT 6 : “room-out” - evento che rappresenta l’uscita da una stanza
+"event" : { "eventId" : 16 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : { "place" : "NEUROSURGERY_OPERATING_ROOM"}}
+
+-----------------------------------------------------------
+
+// EVENT 7 : “patient-accepted” - evento che rappresenta l’ingresso del paziente in Shock Room 
+"event" : { "eventId" : 17 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "procedure" , "content" : {}}
+
