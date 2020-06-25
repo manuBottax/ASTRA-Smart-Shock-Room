@@ -15,10 +15,10 @@ public class VitalParameterArtifact extends Artifact {
 	
 	private static final String BASE_SERVICE_URL = "http://192.168.1.120:3005/api/vital_parameter/";
 	
-	private boolean pressureMonitoring = false;
-	private boolean saturationMonitoring = false;
-	private boolean heartRateMonitoring = false;
-	private boolean temperatureMonitoring = false; 
+	//private boolean pressureMonitoring = false;
+	//private boolean saturationMonitoring = false;
+	//private boolean heartRateMonitoring = false;
+	//private boolean temperatureMonitoring = false; 
 	
 	void init() {	
 		
@@ -139,6 +139,8 @@ public class VitalParameterArtifact extends Artifact {
 			failed("Data retrieve failed", "I/O error", "failed_data_retrieve" );
 		}			
 	}
+	
+	/*
 	
 	@OPERATION
 	void monitorBloodPressure(String id, String target, String position) {
@@ -304,6 +306,8 @@ public class VitalParameterArtifact extends Artifact {
 	void stopBloodPressureMonitoring() {
 		this.pressureMonitoring = false;
 	}
+	
+	*/
 	
 }
 

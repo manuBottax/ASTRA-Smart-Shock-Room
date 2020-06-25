@@ -14,7 +14,7 @@
 		!setupActionQueue(QueueActionId);
 		!setupDisplay(DisplayIdd);
 		! setupVitalParameterSource(VitalParameterId);
-		!setupTraumaSource(SourceTraumaId);
+		//!setupTraumaSource(SourceTraumaId);
 		!setupTac(SourceTACId);
 		!setupTimer(TimerId);
 		!setupMockSource(SourceId).
@@ -31,8 +31,8 @@
 +! setupDisplay(D)
 	<- makeArtifact("display_sr", "astraArtifact.DisplayArtifact", [], D).
 	
-+! setupTraumaSource(S)
-	<- makeArtifact("activeTraumaService", "astraArtifact.ActiveTraumaArtifact", [], S).
+/*+! setupTraumaSource(S)
+	<- makeArtifact("activeTraumaService", "astraArtifact.ActiveTraumaArtifact", [], S).*/
 
 +! setupVitalParameterSource(V)
 	<- makeArtifact("vitalParameterMonitor", "astraArtifact.VitalParameterArtifact", [], V).	

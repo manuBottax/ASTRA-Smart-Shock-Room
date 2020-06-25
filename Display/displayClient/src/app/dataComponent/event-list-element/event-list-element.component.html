@@ -1,0 +1,96 @@
+
+<div class ="row">
+
+    Evento # {{event.eventId}} - {{event.date}} {{event.time}} @ {{event.place}}
+
+    <div class="row" *ngIf="event.type == 'procedure'">
+        <span *ngIf="event.content.procedureType == 'time-dependent'">
+            <span *ngIf="event.content.event == 'start'">Inizio </span>
+            <span *ngIf="event.content.event == 'end'">Fine </span>
+        </span>" && event.content.event == 'time-dependent'"
+        Procedura # {{event.content.procedureId}} : {{event.content.procedureDescription}} ({{event.content.procedureType}})
+        
+        <div class="row" *ngIf="event.content.procedureId == 'intubation'">
+
+            Dettagli intubazione : 
+
+            <div class="col-6"> Vie Aeree Difficili : {{event.content.difficultAirway}} </div>
+            <div class="col-6"> Inalazione : {{event.content.inhalation}} </div>
+            <div class="col-6"> Videolaringo : {{event.content.videolaringo}} </div>
+            <div class="col-6"> Frova : {{event.content.frova}} </div>
+
+        </div>
+
+        <div class="row" *ngIf="event.content.procedureId == 'intubation'">
+
+            Dettagli intubazione : 
+
+            <div class="col-6"> Vie Aeree Difficili : {{event.content.difficultAirway}} </div>
+            <div class="col-6"> Inalazione : {{event.content.inhalation}} </div>
+            <div class="col-6"> Videolaringo : {{event.content.videolaringo}} </div>
+            <div class="col-6"> Frova : {{event.content.frova}} </div>
+
+        </div>
+
+        <div class="row" *ngIf="event.content.procedureId == 'drainage'">
+
+            Dettagli Drenaggio : 
+
+            <div class="col-6"> Destro : {{event.content.right}} </div>
+            <div class="col-6"> Sinistro : {{event.content.left}} </div>
+
+        </div>
+
+        <div class="row" *ngIf="event.content.procedureId == 'chest-tube'">
+
+            Dettagli Decompressione Pleurica : 
+
+            <div class="col-6"> Destra : {{event.content.right}} </div>
+            <div class="col-6"> Sinistra : {{event.content.left}} </div>
+
+        </div>
+    </div>
+    
+    <div *ngIf="event.type == 'diagnostic'">
+        <!-- <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
+        <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
+            <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
+        </div> -->
+    </div>
+    
+    <div *ngIf="event.type == 'drug'">
+        <!-- <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
+        <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
+            <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
+        </div> -->
+    </div>
+    
+    <div *ngIf="event.type == 'blood-product'">
+        <!-- <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
+        <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
+            <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
+        </div> -->
+    </div>
+    
+    <div *ngIf="event.type == 'room-in'">
+        <!-- <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
+        <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
+            <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
+        </div> -->
+    </div>
+    
+    <div *ngIf="event.type == 'room-out'">
+        <!-- <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
+        <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
+            <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
+        </div> -->
+    </div>
+    
+    <div *ngIf="event.type == 'patient-accepted'">
+        <!-- <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
+        <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
+            <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
+        </div> -->
+    </div>
+
+</div>

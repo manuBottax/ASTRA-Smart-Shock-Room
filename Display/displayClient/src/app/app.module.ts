@@ -9,6 +9,12 @@ import { DataContainerComponent } from './data-container/data-container.componen
 import { TextDataComponent } from './text-data-component/text-data-component.component';
 import { ImageDataComponent } from './image-data-component/image-data-component.component';
 import { DataDirective } from './data.directive';
+import { TraumaTeamDataComponent } from './trauma-team-data-component/trauma-team-data.component';
+import { PrehDataComponent } from './dataComponent/preh-data/preh-data.component';
+import { TraumaInfoDataComponent } from './dataComponent/trauma-info-data/trauma-info-data.component';
+import { PatientInitialConditionDataComponent } from './dataComponent/patient-initial-condition-data/patient-initial-condition-data.component';
+import { EventListDataComponent } from './dataComponent/event-list-data/event-list-data.component';
+import { EventListElementComponent } from './dataComponent/event-list-element/event-list-element.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
 
@@ -18,11 +24,22 @@ const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
     DataContainerComponent,
     TextDataComponent,
     ImageDataComponent,
-    DataDirective
+    DataDirective,
+    TraumaTeamDataComponent,
+    PrehDataComponent,
+    TraumaInfoDataComponent,
+    PatientInitialConditionDataComponent,
+    EventListDataComponent,
+    EventListElementComponent
   ],
   entryComponents: [
     ImageDataComponent,
-    TextDataComponent
+    TextDataComponent,
+    TraumaTeamDataComponent,
+    PrehDataComponent,
+    TraumaInfoDataComponent,
+    PatientInitialConditionDataComponent,
+    EventListDataComponent
   ],
   imports: [
     BrowserModule,

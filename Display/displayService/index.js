@@ -10,6 +10,67 @@ app.use(express.urlencoded( { extended: true } ));
 
 var displayStatus = "idle";
 
+
+var displayTraumaTeamData = function (req, res) {
+
+  if (req.params){
+    
+      io.emit("display_data", {position : req.params.position, name : "", type: "trauma_team", value : req.body.data});
+      jsonUtils.sendJsonResponse(res, 201, "OK");
+
+  } else {
+    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  }
+}
+
+var displayPreHData = function (req, res) {
+
+  if (req.params){
+
+    io.emit("display_data", {position : req.params.position, name : req.body.name, type: "preh", value : req.body.data});
+    jsonUtils.sendJsonResponse(res, 201, "OK");
+
+  } else {
+    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  }
+}
+
+var displayTraumaInfoData = function (req, res) {
+
+  if (req.params){
+
+    io.emit("display_data", {position : req.params.position, name : req.body.name, type: "trauma_info", value : req.body.data});
+    jsonUtils.sendJsonResponse(res, 201, "OK");
+
+  } else {
+    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  }
+}
+
+var displayInitialConditionInfoData = function (req, res) {
+
+  if (req.params){
+
+    io.emit("display_data", {position : req.params.position, name : req.body.name, type: "patient_initial_condition", value : req.body.data});
+    jsonUtils.sendJsonResponse(res, 201, "OK");
+
+  } else {
+    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  }
+}
+
+var displayEventListData = function (req, res) {
+
+  if (req.params){
+
+    io.emit("display_data", {position : req.params.position, name : req.body.name, type: "event_list", value : req.body.data});
+    jsonUtils.sendJsonResponse(res, 201, "OK");
+
+  } else {
+    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  }
+}
+
 var displayTextData = function (req, res) {
 
   if (req.params){
@@ -17,38 +78,6 @@ var displayTextData = function (req, res) {
     //console.log("req.body.name" + req.body.name);
 
       io.emit("display_data", {position : req.params.position, name : req.body.name, type: "text", value : req.body.data});
-      jsonUtils.sendJsonResponse(res, 201, "OK");
-
-  } else {
-    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
-  }
-}
-
-var displayPreHArrayData = function (req, res) {
-
-  if (req.params){
-
-    var textArray = JSON.parse(req.body.data).preH;
-
-    displayString = ""
-
-    textArray.forEach(element => {
-      displayString = displayString + " | " + element;
-    });
-
-      io.emit("display_data", {position : req.params.position, name : req.body.name, type: "text", value : displayString});
-      jsonUtils.sendJsonResponse(res, 201, "OK");
-
-  } else {
-    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
-  }
-}
-
-var clearData = function (req, res) {
-
-  if (req.params){
-
-      io.emit("display_data", {position : req.params.position, name : "", type: "text", value : ""});
       jsonUtils.sendJsonResponse(res, 201, "OK");
 
   } else {
@@ -68,15 +97,36 @@ var displayImageData =  function (req, res) {
   }
 }
 
+var clearData = function (req, res) {
+
+  if (req.params){
+
+      io.emit("display_data", {position : req.params.position, name : "", type: "text", value : ""});
+      jsonUtils.sendJsonResponse(res, 201, "OK");
+
+  } else {
+    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  }
+}
+
+
 router.get('/', (req, res) => {
   res.send('<h1>ASTRA Shock Room Display Service</h1> <p> You should not be here. </p>');
 });
 
-router.post('/api/display/:position/preH', displayPreHArrayData)
+router.post('/api/display/:position/tl_data', displayTraumaTeamData)
+
+router.post('/api/display/:position/preH', displayPreHData)
+
+router.post('/api/display/:position/trauma_info', displayTraumaInfoData)
+
+router.post('/api/display/:position/patient_initial_condition', displayInitialConditionInfoData)
+
+router.post('/api/display/:position/events', displayEventListData)
+
+
 
 router.post('/api/display/:position/patient_data', displayTextData)
-
-router.post('/api/display/:position/tl_data', displayTextData)
 
 router.post('/api/display/:position/biometric_data', displayTextData)
 

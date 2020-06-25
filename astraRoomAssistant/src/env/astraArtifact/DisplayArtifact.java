@@ -3,7 +3,9 @@
 package astraArtifact;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cartago.*;
@@ -28,7 +30,38 @@ public class DisplayArtifact extends Artifact {
 	}
 	
 	@OPERATION
-	void showPreHInfo (String data, String position) {
+	void showTraumaTeamInfo (String traumaLeader, ArrayList<String> traumaTeam, String position) {
+		
+		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "tl_data";
+		
+		try {
+			
+			JSONObject teamData = new JSONObject();
+			
+			teamData.put("traumaLeader", traumaLeader);
+			teamData.put("traumaTeam", traumaTeam);
+			
+			JSONObject data = new JSONObject();
+			
+			data.put("data", teamData);
+			
+			int res = NetworkManager.doPOST(path, data.toString());
+			
+			if (res != 201) {
+				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("command display failed", "service error", "failed_display", res );
+			}
+			
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("command display failed", "I/O error", "failed_display", "IOException");
+		}
+	} 
+	
+	@OPERATION
+	void showPreHInfo (JSONObject data, String position) {
 		
 		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "preH";
 		
@@ -55,15 +88,15 @@ public class DisplayArtifact extends Artifact {
 	}
 	
 	@OPERATION
-	void showPatientInfo (String data, String position) {
+	void showTraumaInfo (JSONObject data, String position) {
 		
-		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "patient_data";
+		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "trauma_info";
 		
 		try {
 			
 			JSONObject body = new JSONObject();
 			
-			body.put("name", "ID paziente");
+			body.put("name", "Trauma Info");
 			body.put("data", data);
 			
 			int res = NetworkManager.doPOST(path, body.toString());
@@ -82,16 +115,71 @@ public class DisplayArtifact extends Artifact {
 	}
 	
 	@OPERATION
-	void showTraumaLeaderInfo (String teamLeaderName, String position) {
+	void showPatientInitialConditionInfo (JSONObject data, String position) {
 		
-		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "tl_data";
+		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "patient_initial_condition";
 		
 		try {
 			
 			JSONObject body = new JSONObject();
 			
-			body.put("name", "Trauma Leader");
-			body.put("data", teamLeaderName);
+			body.put("name", "Patient Initial Condition");
+			body.put("data", data);
+			
+			int res = NetworkManager.doPOST(path, body.toString());
+			
+			if (res != 201) {
+				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("command display failed", "service error", "failed_display", res );
+			}
+			
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("command display failed", "I/O error", "failed_display", "IOException");
+		}
+	}
+	
+	@OPERATION
+	void showEventList (JSONArray data, String position) {
+		
+		String path = DISPLAY_SERVICE_URL + "/" + position + "/events";
+		
+		try {
+			
+			JSONObject body = new JSONObject();
+			
+			body.put("name", "events");
+			body.put("data", data);
+			
+			int res = NetworkManager.doPOST(path, body.toString());
+			
+			if (res != 201) {
+				System.out.println("Error : cannot complete display");
+				getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("command display failed", "service error", "failed_display", res );
+			}
+			
+		} catch (IOException e) {
+			System.out.println("Error : IOException [ " + e.getMessage() + " ]");
+			getObsProperty("display_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("command display failed", "I/O error", "failed_display", "IOException");
+		}
+	}
+	
+	
+	@OPERATION
+	void showPatientInfo (String data, String position) {
+		
+		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "patient_data";
+		
+		try {
+			
+			JSONObject body = new JSONObject();
+			
+			body.put("name", "ID paziente");
+			body.put("data", data);
 			
 			int res = NetworkManager.doPOST(path, body.toString());
 			

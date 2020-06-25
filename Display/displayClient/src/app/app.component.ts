@@ -4,6 +4,11 @@ import { Subscription } from 'rxjs';
 import { DataItem } from './data-item';
 import { TextDataComponent } from './text-data-component/text-data-component.component';
 import { ImageDataComponent } from './image-data-component/image-data-component.component';
+import { TraumaTeamDataComponent } from './trauma-team-data-component/trauma-team-data.component';
+import { PrehDataComponent } from './dataComponent/preh-data/preh-data.component';
+import { TraumaInfoDataComponent } from './dataComponent/trauma-info-data/trauma-info-data.component';
+import { PatientInitialConditionDataComponent } from './dataComponent/patient-initial-condition-data/patient-initial-condition-data.component';
+import { EventListDataComponent } from './dataComponent/event-list-data/event-list-data.component';
 
 @Component({
   selector: 'app-root',
@@ -31,33 +36,53 @@ export class AppComponent {
       if (position < 0 ) {position = 0};
       if (position > 6 ) {position = 6}
 
-      // console.log(data.value)
+      // console.log(data)
 
-      if (data.type == 'text'){
-        if (data.name.length > 0){
-          var v = data.name + " : " + data.value;
-        } else {
-          var v = "";
-        }
-        this.dataArray[position] = new DataItem(TextDataComponent, {value: v});
-      } else if (data.type == 'image'){
-        //In this development state you can visualise image only in the big slot for layout management reason.
-        position = 3 ; 
-        this.dataArray[position] = new DataItem(ImageDataComponent, {available : true, path: data.value});
+      switch (data.type) {
+
+        case 'trauma_team' : 
+          this.dataArray[position] = new DataItem(TraumaTeamDataComponent, {value : data.value});
+          break;
+
+        case 'preh' : 
+          this.dataArray[position] = new DataItem(PrehDataComponent, {value : data.value});
+          break;
+
+        case 'trauma_info' : 
+          this.dataArray[position] = new DataItem(TraumaInfoDataComponent, {value : data.value});
+          break; 
+
+        case 'patient_initial_condition' : 
+          this.dataArray[position] = new DataItem(PatientInitialConditionDataComponent, {value : data.value});
+          break; 
+
+        case 'event_list' : 
+          this.dataArray[position] = new DataItem(EventListDataComponent, {value : data.value});
+          break; 
+
+        case 'image' :
+          //In this development state you can visualise image only in the big slot for layout management reason.
+          position = 3 ; 
+          this.dataArray[position] = new DataItem(ImageDataComponent, {available : true, path: data.value});
+          break;
+
+        case 'text':
+          if (data.name.length > 0){
+            var v = data.name + " : " + data.value;
+          } else {
+            var v = "";
+  
+          }
+          this.dataArray[position] = new DataItem(TextDataComponent, {value: v});
+          break;
+      
       }
-
-
-      // console.log("Updated Data Array Value")
-      // console.log(this.dataArray[position])
-
-      // console.log(this.componentArray[position]);
 
       this.componentArray[position].updateValue(this.dataArray[position]);
 
     });
 
     this.statusSubscription = socketService.statusStream.subscribe( status => {
-        // console.log("status : " + status);
         this.displayStatus = status;
       }
     )

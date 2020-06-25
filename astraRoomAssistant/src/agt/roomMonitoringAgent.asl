@@ -20,7 +20,6 @@ current_patient("123459").
 	
 		focus(Queue)
 		focus(VitalParameterSource)
-		focus(TimeMonitor)
 		focus(Display).
 
 + last_pending_command(Command) 
@@ -35,67 +34,167 @@ current_patient("123459").
 	<-	.println("Error ( " , Error , " ) on command update");
 		setErrorOnCommand(Command) [artifact_id(QueueId)].
 		
-+! processCommand(CommandId, "monitoring", DataType, Target, Position)
++! processCommand(CommandId, "monitoring", DataType, Target, Position) : current_command(Command)
 	<-	.println("Working on Command ", CommandId);
 		.println("Want to monitor ", DataType);
-		!monitorData(CommandId, DataType, Target, Position).
+		!monitorData(Command, DataType, Target, Position).
 		
 /* ---------- Biometric Data Monitoring ------------------------ */
 
-+! monitorData(CommandId, "blood_pressure", Target, Position) 
-	<-  .println("Monitoring")
-		monitorBloodPressure(CommandId, Target, Position) [artifact_id(VitalParameterId)]
++! monitorData(Command, "blood_pressure", Target, Position) 
+	<-  .println("Monitoring Blood Pressure");
+		+monitoring("blood_pressure");
+		!monitorBloodPressure(Target, Position);
+		completeCommand(Command) [artifact_id(QueueId)];
+		.println("Command Handling completed, waiting for a new command.").
+		
++! monitorData(Command, "spO2", Target, Position) 
+	<-  .println("Monitoring spO2");
+		+monitoring("spO2");
+		!monitorSaturation(Target, Position);
+		completeCommand(Command) [artifact_id(QueueId)];
+		.println("Command Handling completed, waiting for a new command.").
+		
++! monitorData(Command, "heart_rate", Target, Position) 
+	<-  .println("Monitoring Heart Rate");
+		+monitoring("heart_rate");
+		!monitorHeartRate(Target, Position)
+		completeCommand(Command) [artifact_id(QueueId)]
+		.println("Command Handling completed, waiting for a new command.").
+		
++! monitorData(Command, "temperature", Target, Position) 
+	<-  .println("Monitoring");
+		+monitoring("temperature");
+		!monitorTemperature(Target, Position)
 		completeCommand(Command) [artifact_id(QueueId)]
 		.println("Command Handling completed, waiting for a new command.").
 
-+! monitorData(CommandId, "spO2", Target, Position) 
-	<-  .println("Monitoring")
-		monitorSaturation(CommandId, Target, Position) [artifact_id(VitalParameterId)]
-		completeCommand(Command) [artifact_id(QueueId)]
-		.println("Command Handling completed, waiting for a new command.").
+// ---------- Blood Pressure
+	
++! monitorBloodPressure(Target, Position) : monitoring("blood_pressure")
+	<- 	getBloodPressureValue(Value) [artifact_id(VitalParameterId)];
+		showBiometricData(Value, "blood_pressure", Position) [artifact_id(Target)];
+		.wait(1000);
+		!! monitorBloodPressure (Target, Position).
 		
-+! monitorData(CommandId, "heart_rate", Target, Position) 
-	<-  .println("Monitoring")
-		monitorHeartRate(CommandId, Target, Position) [artifact_id(VitalParameterId)]
-		completeCommand(Command) [artifact_id(QueueId)]
-		.println("Command Handling completed, waiting for a new command.").
++! stopMonitoringBloodPressure
+	<-  -monitoring("blood_pressure");
+		.println("Stop monitoring blood pressure").
+	
+-! monitorBloodPressure(Target, Position)
+	<- 	!stopMonitoringBloodPressure.
+	
+// ----------
+
+// ---------- spO2
 		
-+! monitorData(CommandId, "temperature", Target, Position) 
-	<-  .println("Monitoring")
-		monitorTemperature(CommandId, Target, Position) [artifact_id(VitalParameterId)]
-		completeCommand(Command) [artifact_id(QueueId)]
-		.println("Command Handling completed, waiting for a new command.").
++! monitorSaturation(Target, Position) : monitoring("spO2")
+	<- 	getSaturationValue(Value) [artifact_id(VitalParameterId)];
+		showBiometricData(Value, "spO2", Position) [artifact_id(Target)];
+		.wait(1000);
+		!! monitorBloodPressure (Target, Position).
+		
++! stopMonitoringSaturation
+	<- 	-monitoring("spO2");
+		.println("Stop monitoring saturation").
+	
+-! monitorSaturation(Target, Position)
+	<- 	!stopMonitoringSaturation.
+	
+// ----------
+
+// ---------- heart rate
+		
++! monitorHeartRate(Target, Position) : monitoring("heart_rate")
+	<- 	getHeartRateValue(Value) [artifact_id(VitalParameterId)];
+		showBiometricData(Value, "heart_rate", Position) [artifact_id(Target)];
+		.wait(1000);
+		!! monitorHeartRate (Target, Position).
+		
++! stopMonitoringHeartRate
+	<- 	-monitoring("heart_rate");
+		.println("Stop monitoring heart rate").
+	
+-! monitorHeartRate(Target, Position)
+	<- 	!stopMonitoringHeartRate.
+	
+// ----------
+
+// ---------- temperature
+		
++! monitorTemperature(Target, Position) : monitoring("temperature")
+	<- 	getTemperatureValue(Value) [artifact_id(VitalParameterId)];
+		showBiometricData(Value, "temperature", Position) [artifact_id(Target)];
+		.wait(1000);
+		!! monitorTemperature (Target, Position).
+		
++! stopMonitoringTemperature
+	<- 	-monitoring("temperature");
+		.println("Stop monitoring temperature").
+	
+-! monitorTemperature(Target, Position)
+	<- 	!stopMonitoringTemperature.
+	
+// ----------
 		
 // TODO: è da implementare il monitoraggio di CO2, EGA e ROTEM che al momento sono disabilitati per motivi di test
 		
 /* ---------- Time Monitoring ------------------------ */
 		
-+! monitorData(CommandId, "eta", Target, Position) 
-	<-  .println("Monitoring")
-		monitorETA(CommandId, Target, Position) [artifact_id(TimeMonitor)]
++! monitorData(Command, "eta", Target, Position) 
+	<-  .println("Monitoring ETA");
+		+monitoring("eta");
+		! monitorETA(Target, Position)
 		completeCommand(Command) [artifact_id(QueueId)]
 		.println("Command Handling completed, waiting for a new command.").
 		
 +! monitorData(CommandId, "total_time", Target, Position) 
-	<-  .println("Monitoring")
-		monitorTotalTime(CommandId, Target, Position) [artifact_id(TimeMonitor)]
+	<-  .println("Monitoring elapsed time");
+		+monitoring("total_time");
+		! monitorTotalTime(CommandId, Target, Position) [artifact_id(TimeMonitor)]
 		completeCommand(Command) [artifact_id(QueueId)]
 		.println("Command Handling completed, waiting for a new command.").
 		
+// ---------- eta
+		
++! monitorETA(Target, Position) : monitoring("eta")
+	<- 	getTimeToETA(Value) [artifact_id(TimeMonitorId)];
+		showTemporalData(Value, "eta", Position) [artifact_id(Target)];
+		.wait(1000);
+		!! monitorETA (Target, Position).
+		
++! stopMonitoringETA
+	<- 	-monitoring("eta");
+		.println("Stop monitoring ETA").
+	
+-! monitorETA(Target, Position)
+	<- 	!stopMonitoringETA.
+	
+// ----------
 
+// ---------- total_time
+		
++! monitorTotalTime(Target, Position) : monitoring("total_time")
+	<- 	getTimeFromArrive(Value) [artifact_id(VitalParameterId)];
+		showTemporalData(Value, "total_time", Position) [artifact_id(Target)];
+		.wait(1000);
+		!! monitorTotalTime (Target, Position).
+		
++! stopMonitoringTotalTime
+	<- 	-monitoring("total_time");
+		.println("Stop monitoring total time").
+	
+-! monitorTotalTime(Target, Position)
+	<- 	!stopMonitoringTotalTime.
+	
+// ----------
 		
 -! monitorData(CommandId, DataType, Target, Position) : current_command(Command)
 	<-  .println("Cannot complete Monitoring")
-		/* TODO : Stop monitoring in base al tipo */
 		setErrorOnCommand(Command) [artifact_id(QueueId)].
 		
 /* -------------------------------------------------- */
-
-+ new_monitoring_value(CommandId, Value, DataType, Target, Position) : DataType = "blood_pressure" | DataType = "spO2" | DataType = "heart_rate" | DataType = "temperature"
-	<-  showBiometricData(Value, DataType, Position) [artifact_id(Target)].
 	
-+ new_monitoring_value(CommandId, Value, DataType, Target, Position) : DataType = "eta" | DataType = "total_time"
-	<-  showTemporalData(Value, DataType, Position) [artifact_id(Target)].
 		
 +? find_queue(QueueId) 
 	<- lookupArtifact("roomMonitorCommands", QueueId).

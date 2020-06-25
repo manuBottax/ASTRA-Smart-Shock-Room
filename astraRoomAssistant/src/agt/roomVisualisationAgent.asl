@@ -16,6 +16,7 @@ current_patient("123459").
 		?find_vital_parameter_source(VitalParameterSource)
 		?find_tac_source(TacSource)
 		?find_mock_source(MockSource)
+		?find_timer_artifact(TimeMonitor)
 	
 		focus(Queue)
 		focus(Display).
@@ -91,11 +92,15 @@ current_patient("123459").
 		!displayData(CommandId, "tac", Value, Target, Position). 
 
 /* Temporal data */
-+! requestData(CommandId, DataType, Target, Position) : DataType = "eta" | DataType = "total_time" 
++! requestData(CommandId, "eta", Target, Position)
 	<-	.println("Searching for Temporal Data : ", DataType);
-		getMockData(Value) [artifact_id(MockSourceId)];
+		getETA(Value) [artifact_id(TimeMonitorId)];
 		!displayData(CommandId, DataType, Value, Target, Position).
-		/* TODO: gestione degli aspetti temporali */
+		
++! requestData(CommandId, "total_time", Target, Position)
+	<-	.println("Searching for Temporal Data : ", DataType);
+		getArrivalTime(Value) [artifact_id(TimeMonitorId)];
+		!displayData(CommandId, DataType, Value, Target, Position).
 	
 /* Environment data */
 +! requestData(CommandId, "used_blood_unit", Target, Position) 
@@ -214,6 +219,13 @@ current_patient("123459").
 -? find_mock_source(MockSourceId) 
 	<-	.wait(200);
 		?find_mock_source(MockSourceId).
+		
++? find_timer_artifact(TimeMonitorId)
+	<-  lookupArtifact("roomTimeMonitor", TimeMonitorId).
+	
+-? find_timer_artifact(TimeMonitorId)
+	<-  .wait(200);
+		?find_timer_artifact(TimeMonitorId).
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }

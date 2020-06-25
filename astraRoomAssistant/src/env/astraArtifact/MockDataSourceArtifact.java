@@ -56,7 +56,6 @@ public class MockDataSourceArtifact extends Artifact {
 			
 			if (res.getKey() == 200) {	
 				
-				
 				JSONObject json = new JSONObject(res.getValue());
 				String val = json.getString("path");
 				path.set(val);

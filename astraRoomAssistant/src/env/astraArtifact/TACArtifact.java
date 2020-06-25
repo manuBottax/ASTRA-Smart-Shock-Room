@@ -105,8 +105,6 @@ public class TACArtifact extends Artifact {
     				
     				String st = json.getString("status");
     				
-    				//System.out.println("Polling for status -> OK ( " + st + " )");
-    				
     				status.updateValue(st);
     				
     			} else {
@@ -125,8 +123,6 @@ public class TACArtifact extends Artifact {
             await_time(POLLING_TIME);
             
         }
-		
-	}
-	
+	}	
 }
 

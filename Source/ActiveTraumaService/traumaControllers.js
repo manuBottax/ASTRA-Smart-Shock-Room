@@ -104,8 +104,8 @@ module.exports.getTraumaStatus = function(req,res) {
                 jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
                 return;
             } else {
-                var status = data.patient_status;
-                jsonUtils.sendJsonResponse(res, 200, {"current_trauma_status" : status });
+                // var status = data.trauma_current_status;
+                jsonUtils.sendJsonResponse(res, 200, {"trauma_current_status" : data.trauma_current_status });
             }
         }); 
 
@@ -129,15 +129,15 @@ module.exports.updateTraumaStatus = function(req,res) {
                 return;
             } else {
                 
-                if (req.body.current_trauma_status){
-                    data.patient_status = req.body.current_trauma_status;
+                if (req.body.trauma_current_status){
+                    data.trauma_current_status = req.body.trauma_current_status;
                     DB.updateOne({"_id" : trauma_id}, data)
                       .exec(function(update_err, update_data){
                           if (update_err) {
                             jsonUtils.sendJsonResponse(res, 400, "Error during status update");
                             return;
                           } else {
-                            jsonUtils.sendJsonResponse(res, 200, {"current_trauma_status" : update_data });
+                            jsonUtils.sendJsonResponse(res, 200, {"trauma_current_status" : data.trauma_current_status });
                           }
                       });
                 } else {
@@ -168,7 +168,7 @@ module.exports.getTraumaTeam = function(req,res) {
 
                 jsonUtils.sendJsonResponse(res, 200, {
                     "traumaLeader" : data.startOperatorDescription, 
-                    "traumaTeamMembers" : data.traumaTeamMembers
+                    "traumaTeamMembers" : JSON.parse(data.traumaTeamMembers)
                 });
                 
             } 
@@ -233,7 +233,11 @@ module.exports.getPreHInfo = function(req,res) {
                 jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
                 return;
             } else {
-                jsonUtils.sendJsonResponse(res, 200, data.preh );
+                if(data.preh){
+                    jsonUtils.sendJsonResponse(res, 200, data.preh );
+                } else {
+                    jsonUtils.sendJsonResponse(res, 200, {} );
+                }
             } 
         });
     } else {
@@ -267,7 +271,7 @@ module.exports.updatePreHInfo = function(req,res) {
                             jsonUtils.sendJsonResponse(res, 400, "Error during preh update");
                             return;
                           } else {
-                            jsonUtils.sendJsonResponse(res, 200, data.preh);
+                            jsonUtils.sendJsonResponse(res, 200, update_data);
                           }
                       });
                 } else {
@@ -295,8 +299,13 @@ module.exports.getTraumaInfo = function(req,res) {
                 jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
                 return;
             } else {
-                console.log(data);
-                jsonUtils.sendJsonResponse(res, 200, data.traumaInfo );
+                // console.log(data);
+                if(data.traumaInfo){
+                    jsonUtils.sendJsonResponse(res, 200, data.traumaInfo );
+                } else {
+                    jsonUtils.sendJsonResponse(res, 200, {} );
+                }
+                // jsonUtils.sendJsonResponse(res, 200, data.traumaInfo );
             } 
         });
     } else {
@@ -359,7 +368,12 @@ module.exports.getPatientInitialCondition = function(req,res) {
                 return;
             } else {
                 // console.log(data);
-                jsonUtils.sendJsonResponse(res, 200, data.patientInitialCondition );
+                if(data.patientInitialCondition){
+                    jsonUtils.sendJsonResponse(res, 200, data.patientInitialCondition );
+                } else {
+                    jsonUtils.sendJsonResponse(res, 200, {} );
+                }
+                // jsonUtils.sendJsonResponse(res, 200, data.patientInitialCondition );
             } 
         });
     } else {

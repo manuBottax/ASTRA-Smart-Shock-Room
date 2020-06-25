@@ -1,0 +1,56 @@
+<p> Condizioni iniziali del Paziente : </p>
+
+<p *ngIf="initialCondition.vitalSigns">     Parametri Vitali : </p>
+<div class="row" *ngIf="initialCondition.vitalSigns">
+    <div class="col-4" *ngIf="initialCondition.vitalSigns.temp">Temperatura : {{initialCondition.vitalSigns.temp}}</div>
+    <div class="col-4" *ngIf="initialCondition.vitalSigns.hr">Frequenza Cardiaca : {{initialCondition.vitalSigns.hr}}</div>
+    <div class="col-4" *ngIf="initialCondition.vitalSigns.bp">Pressione Arteriosa Sistolica : {{initialCondition.vitalSigns.bp}}</div>
+    <div class="col-6" *ngIf="initialCondition.vitalSigns.spo2">Saturazione (SpO2) : {{initialCondition.vitalSigns.spo2}}</div>
+    <div class="col-6" *ngIf="initialCondition.vitalSigns.etco2">EtCO2 : {{initialCondition.vitalSigns.etco2}}</div>
+</div>
+
+<p  *ngIf="initialCondition.clinicalPicture">     Esame Neurologico : </p>
+<div class="row" *ngIf="initialCondition.clinicalPicture">
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.gcsTotal">GCS Totale : {{initialCondition.clinicalPicture.gcsTotal}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.gcsMotor">GCS Motorio : {{initialCondition.clinicalPicture.gcsMotor}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.gcsVerbal">GCS Verbale : {{initialCondition.clinicalPicture.gcsVerbal}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.gcsEyes">GCS Occhi : {{initialCondition.clinicalPicture.gcsEyes}}</div>
+    <div class="col-6" *ngIf="initialCondition.clinicalPicture.sedated">Paziente Sedato : {{initialCondition.clinicalPicture.sedated}}</div>
+    <div class="col-6" *ngIf="initialCondition.clinicalPicture.pupils">Pupille : {{initialCondition.clinicalPicture.pupils}}</div>
+</div>
+
+<p  *ngIf="initialCondition.clinicalPicture">     Vie Aeree e Respirazione : </p>
+<div class="row" *ngIf="initialCondition.clinicalPicture">
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.airway">Vie Aeree : {{initialCondition.clinicalPicture.airway}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.positiveInhalation">Inalazione Certa  : {{initialCondition.clinicalPicture.positiveInhalation}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.intubationFailed">IOT Fallita : {{initialCondition.clinicalPicture.intubationFailed}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.chestTube">Decompressione Pleurica : {{initialCondition.clinicalPicture.chestTube}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.oxygenPercentage">% O2 : {{initialCondition.clinicalPicture.oxygenPercentage}}</div>
+</div>
+
+<div *ngIf="initialCondition.clinicalPicture">
+    <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
+    <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
+        <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
+    </div>
+</div>
+
+<div *ngIf="initialCondition.clinicalPicture">
+    <p *ngIf="initialCondition.clinicalPicture.limbsFracture || initialCondition.clinicalPicture.fractureExposition">     Lesioni Ortopediche : </p>
+    <div class="row" *ngIf="initialCondition.clinicalPicture.limbsFracture || initialCondition.clinicalPicture.fractureExposition">
+        <div class="col-6" *ngIf="initialCondition.clinicalPicture.limbsFracture">Fratture Arti : {{initialCondition.clinicalPicture.limbsFracture}}</div>
+        <div class="col-6" *ngIf="initialCondition.clinicalPicture.fractureExposition">Frattura Esposta  : {{initialCondition.clinicalPicture.fractureExposition}}</div>
+    </div>
+</div>
+
+<div *ngIf="initialCondition.clinicalPicture">
+    <p *ngIf="initialCondition.clinicalPicture.burn">     Ustioni : </p>
+    <div class="row" *ngIf="initialCondition.clinicalPicture.burn">
+        <div *ngIf="initialCondition.clinicalPicture.burn">Ustione : {{initialCondition.clinicalPicture.burn}}</div>
+    </div>
+</div>
+
+
+
+
+    

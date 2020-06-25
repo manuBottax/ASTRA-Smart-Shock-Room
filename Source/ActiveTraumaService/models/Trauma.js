@@ -14,7 +14,7 @@ var mongoose = require( 'mongoose' );
     // }
 
 var traumaSchema = new mongoose.Schema({ 
-    current_trauma_status: {type: String, required: true, "default" : "unavailable"},
+    trauma_current_status: {type: String, required: true, "default" : "unavailable"},
     startOperatorId : {type: String, required: true},
     startOperatorDescription :  {type: String, required: true},
     delayedActivation : { type: Object} ,

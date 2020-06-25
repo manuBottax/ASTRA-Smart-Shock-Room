@@ -11,58 +11,76 @@
 +!start 
 	<- 	?find_display(Display);
 		?find_timer_artifact(TimeMonitor);
-		?find_active_trauma(Trauma);
+		//?find_active_trauma(Trauma);
 		
+		makeArtifact("activeTraumaService", "astraArtifact.ActiveTraumaArtifact", ["5ef46cf93ab75946ecec4500"], TraumaId);
+		
+		focus(TraumaId);
 		focus(Display);
-		focus(TimeMonitor);
-		focus(Trauma);
 		
 		setDisplayStatus("idle") [artifact_id(DisplayId)].
 		
-+patient_status(Status) : Status = "arriving"
++trauma_status(Status) : Status = "arriving"
 	<- .println("test : Arriving patient");
-		addTraumaLeader("Emiliano Gamberini") [artifact_id(TraumaId)];
+		
+		getTraumaTeam(TL, TT) [artifact_id(TraumaId)];
 		setDisplayStatus("preH") [artifact_id(DisplayId)];
-		showTraumaLeaderInfo("Emiliano Gamberini", "1") [artifact_id(DisplayId)];
+		showTraumaTeamInfo(TL, TT, "1") [artifact_id(DisplayId)];
 		!monitorPreH.
 	
-+patient_status(Status) : Status = "active"
++trauma_status(Status) : Status = "active"
 	<- .println("test : patient is arrived");
-		setArrivalTime [artifact_id(TimeMonitorId)];
+		setPatientArrived [artifact_id(TimeMonitorId)];
 		setDisplayStatus("active") [artifact_id(DisplayId)];
 		!showInitialData
-		!monitorActiveTrauma.
+		!monitorActiveTraumaTime
+		!monitorActiveTraumaEvent.
 	
-+patient_status(Status) : Status = "done"
++trauma_status(Status) : Status = "done"
 	<- .println("test : Patient trauma handling completed");
 		setDisplayStatus("idle") [artifact_id(DisplayId)].
 		
-+! monitorPreH : patient_status("arriving")
++! monitorPreH : trauma_status("arriving")
 	<- 	.wait(1000)
-		getETA("system", "display_sr", "2") [artifact_id(TimeMonitorId)];
+		getTimeToETA(Eta) [artifact_id(TimeMonitorId)];
+		showTemporalData(Eta, "eta", "2") [artifact_id(DisplayId)];
 		getPreHInfo(PreH) [artifact_id(TraumaId)];
 		showPreHInfo(PreH, "3") [artifact_id(DisplayId)];
-		!monitorPreH.	
+		!!monitorPreH.	
 		
--! monitorPreH 
-	<- .println("Stop Monitoring PreH").
+ -! monitorPreH 
+	<- .println("Stop Monitoring PreH"). 
 	
-+! showInitialData
-	<-	.wait(2000);
-		showPatientInfo("123459", "3") [artifact_id(DisplayId)];
-		getPreHInfo(PreH) [artifact_id(TraumaId)];
-		showPreHInfo(PreH, "4") [artifact_id(DisplayId)].
++! showInitialData : trauma_status("active")
+	<-	.wait(1500);
+		showPatientInfo("123459", "1") [artifact_id(DisplayId)];
+		clearSection("3") [artifact_id(DisplayId)];
+		getPatientInitialCondition(InitCond)[artifact_id(TraumaId)];
+		showPatientInitialConditionInfo(InitCond, "4") [artifact_id(DisplayId)];
+		getTraumaInfo(TInfo) [artifact_id(TraumaId)];
+		showTraumaInfo(TInfo, "5") [artifact_id(DisplayId)].
 	
-+! monitorActiveTrauma : patient_status("active")
++! monitorActiveTraumaTime : trauma_status("active")
 	<- 	.wait(1000);
-		getTotalTime("system", "display_sr", "2") [artifact_id(TimeMonitorId)];
-		!monitorActiveTrauma.
+		getTimeFromArrive(Time) [artifact_id(TimeMonitorId)];
+		showTemporalData(Time, "total_time", "2") [artifact_id(DisplayId)];
+		!!monitorActiveTraumaTime.
 	
--! monitorActiveTrauma 
-	<- .println("Stop Monitoring Active Trauma"). 
+-! monitorActiveTraumaTime 
+	<- .println("Stop Monitoring Active Trauma Time"). 
 	
-+ new_monitoring_value(CommandId, Value, DataType, Target, Position) : DataType = "eta" | DataType = "total_time"
-	<-  showTemporalData(Value, DataType, Position) [artifact_id(Target)].
++! monitorActiveTraumaEvent : trauma_status("active")
+	<- 	.wait(10000);
+		getEventList(EventList) [artifact_id(TimeMonitorId)];
+		showEventList(EventList, "6") [artifact_id(DisplayId)];
+		//getPatientInitialCondition(InitCond)[artifact_id(TraumaId)];
+		//showPatientInitialConditionInfo(InitCond, "4") [artifact_id(DisplayId)];
+		!!monitorActiveTraumaEvent.
+	
+-! monitorActiveTraumaEvent 
+	<- .println("Stop Monitoring Active TraumaEvent").
+	
+// --------------------------------------------------------------------------------------------------
 		
 +? find_display(DisplayId)
 	<-	lookupArtifact("display_sr", DisplayId).
@@ -78,12 +96,12 @@
 	<-  .wait(200);
 		?find_timer_artifact(TimeMonitorId).
 		
-+? find_active_trauma(TraumaId)
+/* +? find_active_trauma(TraumaId)
 	<-  lookupArtifact("activeTraumaService", TraumaId).
 	
 -? find_active_trauma(TraumaId)
 	<-  .wait(200);
-		?find_active_trauma(TraumaId).
+		?find_active_trauma(TraumaId). */
 		
 		
 { include("$jacamoJar/templates/common-cartago.asl") }

@@ -90,9 +90,8 @@ router.get ('/api/trauma/:trauma_id/patient_initial_condition', traumaController
 router.put ('/api/trauma/:trauma_id/patient_initial_condition', traumaController.updatePatientInitialCondition);
 
 router.post('/api/trauma/:trauma_id/events', traumaController.addEvent);
-router.get ('/api/trauma/:trauma_id/events/:event_id', traumaController.getEvent);
-
 router.get('/api/trauma/:trauma_id/events', traumaController.getEventList);
+router.get ('/api/trauma/:trauma_id/events/:event_id', traumaController.getEvent);
 router.put ('/api/trauma/:trauma_id/events/:event_id', traumaController.updateEvent);
 
 app.use('/', router);
