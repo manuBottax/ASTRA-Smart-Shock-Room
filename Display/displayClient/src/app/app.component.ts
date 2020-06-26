@@ -27,6 +27,8 @@ export class AppComponent {
 
   displayStatus: String = "idle"
 
+  imageDisplay : Boolean = false;
+
   constructor(private socketService: WebSocketService){
     // console.log(this.dataArray.length);
     
@@ -61,8 +63,8 @@ export class AppComponent {
           break; 
 
         case 'image' :
-          //In this development state you can visualise image only in the big slot for layout management reason.
-          position = 3 ; 
+          position = 4 ; 
+          this.imageDisplay = true;
           this.dataArray[position] = new DataItem(ImageDataComponent, {available : true, path: data.value});
           break;
 

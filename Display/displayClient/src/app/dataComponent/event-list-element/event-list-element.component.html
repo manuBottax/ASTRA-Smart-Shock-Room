@@ -7,20 +7,9 @@
         <span *ngIf="event.content.procedureType == 'time-dependent'">
             <span *ngIf="event.content.event == 'start'">Inizio </span>
             <span *ngIf="event.content.event == 'end'">Fine </span>
-        </span>" && event.content.event == 'time-dependent'"
+        </span>
         Procedura # {{event.content.procedureId}} : {{event.content.procedureDescription}} ({{event.content.procedureType}})
         
-        <div class="row" *ngIf="event.content.procedureId == 'intubation'">
-
-            Dettagli intubazione : 
-
-            <div class="col-6"> Vie Aeree Difficili : {{event.content.difficultAirway}} </div>
-            <div class="col-6"> Inalazione : {{event.content.inhalation}} </div>
-            <div class="col-6"> Videolaringo : {{event.content.videolaringo}} </div>
-            <div class="col-6"> Frova : {{event.content.frova}} </div>
-
-        </div>
-
         <div class="row" *ngIf="event.content.procedureId == 'intubation'">
 
             Dettagli intubazione : 
@@ -52,45 +41,102 @@
     </div>
     
     <div *ngIf="event.type == 'diagnostic'">
-        <!-- <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
-        <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
-            <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
-        </div> -->
+
+        Diagnostica # {{event.content.diagnosticId}} : {{event.content.diagnosticDescription}}
+
+        <div class="row" *ngIf="event.content.diagnosticId == 'abg'">
+
+            Dettagli ABG : 
+
+            <div class="col-6"> Lattati : {{event.content.lactates}} </div>
+            <div class="col-6"> BE : {{event.content.be}} </div>
+            <div class="col-6"> PH : {{event.content.ph}} </div>
+            <div class="col-6"> HB : {{event.content.hb}} </div>
+
+        </div>
+
+        <div class="row" *ngIf="event.content.diagnosticId == 'rotem'">
+
+            Dettagli Rotem : 
+
+            <div class="col-6"> Fibtem : {{event.content.fibtem}} </div>
+            <div class="col-6"> Extem : {{event.content.extem}} </div>
+            <div class="col-6"> Iperfibrinolisi : {{event.content.hyperfibrinolysis}} </div>
+
+        </div>
     </div>
+
     
     <div *ngIf="event.type == 'drug'">
-        <!-- <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
-        <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
-            <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
-        </div> -->
+
+        Farmaco # {{event.content.drugId}} : {{event.content.drugDescription}} ({{event.content.administrationType}})
+
+        <div class="row" *ngIf="event.content.administrationType == 'one-shot' || event.content.administrationType == 'continuous-infusion'">
+            <span *ngIf="event.content.administrationType == 'continuous-infusion'">
+                <span *ngIf="event.content.event == 'start'">Inizio Somministrazione di {{event.content.qty}} {{event.content.unit}}</span>
+                <span *ngIf="event.content.event == 'variation'">Variazione Somministrazione : {{event.content.qty}} {{event.content.unit}}</span>
+                <span *ngIf="event.content.event == 'stop'">Fine Somministrazione dopo {{event.content.duration}}</span>
+            </span>
+
+            <span *ngIf="event.content.administrationType == 'one-shot'">
+                Somministrati {{event.content.qty}} {{event.content.unit}}
+            </span>
+        </div>
     </div>
+
     
     <div *ngIf="event.type == 'blood-product'">
-        <!-- <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
-        <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
-            <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
-        </div> -->
+
+        Prodotto Ematico # {{event.content.bloodProductId}} : {{event.content.bloodProductDescription}} ({{event.content.administrationType}})
+
+        <div class="row" *ngIf="event.content.administrationType == 'one-shot'">
+            
+            Somministrati {{event.content.qty}} {{event.content.unit}}
+            
+            <span *ngIf="event.content.bloodProductId == 'emazies' || event.content.bloodProductId == 'platelets' || event.content.bloodProductId == 'fresh-frozen-plasma'">
+                 (Sacca n° {{event.content.bagCode}})
+            </span>
+
+        </div>
     </div>
+
     
     <div *ngIf="event.type == 'room-in'">
-        <!-- <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
-        <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
-            <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
-        </div> -->
+
+        Ingresso in 
+        
+        <span *ngIf="event.content.place == 'TRANSPORT'"> Trasporto </span>
+        <span *ngIf="event.content.place == 'PREH'"> PRE-H </span>
+        <span *ngIf="event.content.place == 'SHOCK_ROOM'"> Shock-Room </span>
+        <span *ngIf="event.content.place == 'ER_CT'"> TAC PS </span>
+        <span *ngIf="event.content.place == 'GENERAL_OPERATING_ROOM'"> Sala Operatoria: Blocco </span>
+        <span *ngIf="event.content.place == 'NEUROSURGERY_OPERATING_ROOM'"> Sala Operatoria: Neurochirurgia </span>
+        <span *ngIf="event.content.place == 'ORTOPEDICAL_OPERATIG_ROOM'"> Sala Operatoria: Ortopedia </span>
+        <span *ngIf="event.content.place == 'ANGIOGRAPHIC_ROOM'"> Sala Angiografica </span>
+        <span *ngIf="event.content.place == 'ICU_1'"> Terapia Intensiva: TI-1 </span>
+        <span *ngIf="event.content.place == 'ICU_2'"> Terapia Intensiva: TI-2 </span>
+
     </div>
     
     <div *ngIf="event.type == 'room-out'">
-        <!-- <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
-        <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
-            <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
-        </div> -->
+
+        Uscita da 
+        
+        <span *ngIf="event.content.place == 'TRANSPORT'"> Trasporto </span>
+        <span *ngIf="event.content.place == 'PREH'"> PRE-H </span>
+        <span *ngIf="event.content.place == 'SHOCK_ROOM'"> Shock-Room </span>
+        <span *ngIf="event.content.place == 'ER_CT'"> TAC PS </span>
+        <span *ngIf="event.content.place == 'GENERAL_OPERATING_ROOM'"> Sala Operatoria: Blocco </span>
+        <span *ngIf="event.content.place == 'NEUROSURGERY_OPERATING_ROOM'"> Sala Operatoria: Neurochirurgia </span>
+        <span *ngIf="event.content.place == 'ORTOPEDICAL_OPERATIG_ROOM'"> Sala Operatoria: Ortopedia </span>
+        <span *ngIf="event.content.place == 'ANGIOGRAPHIC_ROOM'"> Sala Angiografica </span>
+        <span *ngIf="event.content.place == 'ICU_1'"> Terapia Intensiva: TI-1 </span>
+        <span *ngIf="event.content.place == 'ICU_2'"> Terapia Intensiva: TI-2 </span>
+
     </div>
     
     <div *ngIf="event.type == 'patient-accepted'">
-        <!-- <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
-        <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
-            <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
-        </div> -->
+        Paziente Accettato.
     </div>
 
 </div>

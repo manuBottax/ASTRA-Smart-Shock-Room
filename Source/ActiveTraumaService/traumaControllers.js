@@ -72,7 +72,7 @@ module.exports.deleteTrauma = function(req,res) {
         var trauma_id = req.params.trauma_id
 
         DB
-        .deleteOne({"_id " : trauma_id})
+        .deleteOne({"_id" : trauma_id})
         .exec(function(err, data) {
             if (err){
                 console.log("Error during trauma deletion !")

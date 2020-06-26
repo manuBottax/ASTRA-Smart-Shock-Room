@@ -15,18 +15,27 @@
     text-align: center;
 }
 
-.bottom-container {
+.big-data-container {
+    height: 600px;
+    overflow: hidden;
+    border-radius: 15px;
+    border: 2px solid black;
+    text-align: center;
+}
+
+/* .bottom-container {
     padding: 2%;
     border-radius: 15px;
     border: 2px solid black;
     height: 500px;
-}
+} */
 
 .single-data-container{
     padding: 0.5%;
     border-radius: 15px;
     border: 2px solid black;
     height: 30%;
+    overflow: hidden;
 }
 
 .static-data-container{

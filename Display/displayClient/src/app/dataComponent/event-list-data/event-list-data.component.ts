@@ -15,6 +15,6 @@ export class EventListDataComponent implements OnInit, DataInterface{
   constructor() { }
 
   ngOnInit() {
-    this.eventList = this.data.data.value;
+    this.eventList = this.data.data.value.reverse();
   }
 }
