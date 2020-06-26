@@ -1,23 +1,27 @@
 
 <div class ="row">
 
-    Evento # {{event.eventId}} - {{event.date}} {{event.time}} @ {{event.place}}
+    Evento # {{event.eventId}} - {{event.date}} {{event.time}} @ {{event.place}} | 
 
     <div class="row" *ngIf="event.type == 'procedure'">
         <span *ngIf="event.content.procedureType == 'time-dependent'">
             <span *ngIf="event.content.event == 'start'">Inizio </span>
             <span *ngIf="event.content.event == 'end'">Fine </span>
         </span>
-        Procedura # {{event.content.procedureId}} : {{event.content.procedureDescription}} ({{event.content.procedureType}})
+         Procedura # {{event.content.procedureId}} : {{event.content.procedureDescription}} ({{event.content.procedureType}})
         
-        <div class="row" *ngIf="event.content.procedureId == 'intubation'">
+        <div *ngIf="event.content.procedureId == 'intubation'">
 
-            Dettagli intubazione : 
+            Dettagli intubazione :
 
-            <div class="col-6"> Vie Aeree Difficili : {{event.content.difficultAirway}} </div>
-            <div class="col-6"> Inalazione : {{event.content.inhalation}} </div>
-            <div class="col-6"> Videolaringo : {{event.content.videolaringo}} </div>
-            <div class="col-6"> Frova : {{event.content.frova}} </div>
+            <div class="row">
+
+                <div class="col-6"> Vie Aeree Difficili : {{event.content.difficultAirway}} </div>
+                <div class="col-6"> Inalazione : {{event.content.inhalation}} </div>
+                <div class="col-6"> Videolaringo : {{event.content.videolaringo}} </div>
+                <div class="col-6"> Frova : {{event.content.frova}} </div>
+
+            </div>
 
         </div>
 
@@ -72,22 +76,22 @@
         Farmaco # {{event.content.drugId}} : {{event.content.drugDescription}} ({{event.content.administrationType}})
 
         <div class="row" *ngIf="event.content.administrationType == 'one-shot' || event.content.administrationType == 'continuous-infusion'">
-            <span *ngIf="event.content.administrationType == 'continuous-infusion'">
+            <div *ngIf="event.content.administrationType == 'continuous-infusion'">
                 <span *ngIf="event.content.event == 'start'">Inizio Somministrazione di {{event.content.qty}} {{event.content.unit}}</span>
                 <span *ngIf="event.content.event == 'variation'">Variazione Somministrazione : {{event.content.qty}} {{event.content.unit}}</span>
                 <span *ngIf="event.content.event == 'stop'">Fine Somministrazione dopo {{event.content.duration}}</span>
-            </span>
+            </div>
 
-            <span *ngIf="event.content.administrationType == 'one-shot'">
+            <div *ngIf="event.content.administrationType == 'one-shot'">
                 Somministrati {{event.content.qty}} {{event.content.unit}}
-            </span>
+            </div>
         </div>
     </div>
 
     
     <div *ngIf="event.type == 'blood-product'">
 
-        Prodotto Ematico # {{event.content.bloodProductId}} : {{event.content.bloodProductDescription}} ({{event.content.administrationType}})
+        Emoderivato # {{event.content.bloodProductId}} : {{event.content.bloodProductDescription}} ({{event.content.administrationType}})
 
         <div class="row" *ngIf="event.content.administrationType == 'one-shot'">
             

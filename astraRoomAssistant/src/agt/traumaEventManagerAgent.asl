@@ -1,4 +1,4 @@
-// Agent patientEventManagerAgent in project astraRoomAssistant
+// Agent traumaEventManagerAgent in project astraRoomAssistant
 
 /* Initial beliefs and rules */
 
@@ -13,7 +13,7 @@
 		?find_timer_artifact(TimeMonitor);
 		//?find_active_trauma(Trauma);
 		
-		makeArtifact("activeTraumaService", "astraArtifact.ActiveTraumaArtifact", ["5ef46cf93ab75946ecec4500"], TraumaId);
+		makeArtifact("activeTraumaService", "astraArtifact.ActiveTraumaArtifact", ["5ef5bc4f0c479b291c25360b"], TraumaId);
 		
 		focus(TraumaId);
 		focus(Display);
@@ -55,10 +55,11 @@
 	<-	.wait(1500);
 		showPatientInfo("123459", "1") [artifact_id(DisplayId)];
 		clearSection("3") [artifact_id(DisplayId)];
-		getPatientInitialCondition(InitCond)[artifact_id(TraumaId)];
-		showPatientInitialConditionInfo(InitCond, "4") [artifact_id(DisplayId)];
 		getTraumaInfo(TInfo) [artifact_id(TraumaId)];
-		showTraumaInfo(TInfo, "5") [artifact_id(DisplayId)].
+		showTraumaInfo(TInfo, "4") [artifact_id(DisplayId)];
+		getPatientInitialCondition(InitCond)[artifact_id(TraumaId)];
+		showPatientInitialConditionInfo(InitCond, "5") [artifact_id(DisplayId)].
+
 	
 +! monitorActiveTraumaTime : trauma_status("active")
 	<- 	.wait(1000);
@@ -72,9 +73,7 @@
 +! monitorActiveTraumaEvent : trauma_status("active")
 	<- 	.wait(10000);
 		getEventList(EventList) [artifact_id(TimeMonitorId)];
-		showEventList(EventList, "6") [artifact_id(DisplayId)];
-		//getPatientInitialCondition(InitCond)[artifact_id(TraumaId)];
-		//showPatientInitialConditionInfo(InitCond, "4") [artifact_id(DisplayId)];
+		showEventList(EventList, "5") [artifact_id(DisplayId)];
 		!!monitorActiveTraumaEvent.
 	
 -! monitorActiveTraumaEvent 

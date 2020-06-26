@@ -23,7 +23,7 @@ export class AppComponent {
   
   dataArray : Array<DataItem> = new Array();
 
-  componentArray : Array<any> = new Array(7);
+  componentArray : Array<any> = new Array(8);
 
   displayStatus: String = "idle"
 
@@ -36,7 +36,7 @@ export class AppComponent {
       var position = parseInt(data.position) - 1 ;
 
       if (position < 0 ) {position = 0};
-      if (position > 6 ) {position = 6}
+      if (position > 7 ) {position = 7}
 
       // console.log(data)
 
@@ -63,12 +63,15 @@ export class AppComponent {
           break; 
 
         case 'image' :
-          position = 4 ; 
+          position = 5 ; 
           this.imageDisplay = true;
           this.dataArray[position] = new DataItem(ImageDataComponent, {available : true, path: data.value});
           break;
 
         case 'text':
+          if(position == 5 || position == 6 || position == 7)
+            this.imageDisplay = false;
+
           if (data.name.length > 0){
             var v = data.name + " : " + data.value;
           } else {
@@ -92,7 +95,7 @@ export class AppComponent {
 
   ngOnInit() {
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 8; i++) {
       
       this.dataArray.push(new DataItem(TextDataComponent, {value : ''}));
       

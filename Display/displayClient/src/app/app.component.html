@@ -9,19 +9,22 @@
     <div class="col-4 static-data-container"> <app-data-container [data]=dataArray[2] (bindedComponent)="onBindedComponent(2, $event)"></app-data-container> </div>
   </div>
 
-  <div class="row justify-content-around"> 
-    <div class="col-6 big-data-container"> <app-data-container [data]=dataArray[3] (bindedComponent)="onBindedComponent(3, $event)"></app-data-container> </div>
+  <div class="row justify-content-around bottom-container"> 
+    <div class="col-6">
+      <div class="info-data-container"> <app-data-container [data]=dataArray[3] (bindedComponent)="onBindedComponent(3, $event)"></app-data-container> </div>
+      <div class="event-data-container"> <app-data-container [data]=dataArray[4] (bindedComponent)="onBindedComponent(4, $event)"></app-data-container> </div>
+    </div>
+    
     <div class="col-6" *ngIf="!imageDisplay"> 
-      <div class="row single-data-container"> <app-data-container [data]=dataArray[4] (bindedComponent)="onBindedComponent(4, $event)"></app-data-container> </div>
       <div class="row single-data-container"> <app-data-container [data]=dataArray[5] (bindedComponent)="onBindedComponent(5, $event)"></app-data-container> </div>
       <div class="row single-data-container"> <app-data-container [data]=dataArray[6] (bindedComponent)="onBindedComponent(6, $event)"></app-data-container> </div>
+      <div class="row single-data-container"> <app-data-container [data]=dataArray[7] (bindedComponent)="onBindedComponent(7, $event)"></app-data-container> </div>
     </div>
 
     <div class="col-6" *ngIf="imageDisplay"> 
-      <div class="row big-data-container"> <app-data-container [data]=dataArray[4] (bindedComponent)="onBindedComponent(4, $event)"></app-data-container> </div>
-      <!-- <div class="row single-data-container"> <app-data-container [data]=dataArray[5] (bindedComponent)="onBindedComponent(5, $event)"></app-data-container> </div> -->
-      <!-- <div class="row single-data-container"> <app-data-container [data]=dataArray[6] (bindedComponent)="onBindedComponent(6, $event)"></app-data-container> </div> -->
+      <div class="row big-data-container"> <app-data-container [data]=dataArray[5] (bindedComponent)="onBindedComponent(5, $event)"></app-data-container> </div>
     </div>
+
   </div>
 </div>
 
@@ -31,15 +34,15 @@
     <h1 class ="title">ASTRA Shock Room Display - Dati PreH </h1> 
   </div>
 
-  <div class="row single-data-container">
+  <div class="row preh-data-container">
     <app-data-container [data]=dataArray[0] (bindedComponent)="onBindedComponent(0, $event)"></app-data-container>
   </div>
 
-  <div class="row single-data-container">
+  <div class="row preh-data-container">
     <app-data-container [data]=dataArray[1] (bindedComponent)="onBindedComponent(1, $event)"></app-data-container>
   </div>
 
-  <div class="row single-data-container">
+  <div class="row preh-data-container">
     <app-data-container [data]=dataArray[2] (bindedComponent)="onBindedComponent(2, $event)"></app-data-container>
   </div>
 </div>

@@ -19,8 +19,8 @@ mas astraRoomAssistant {
 	agent systemStatusMonitorAgent
 	agent errorHandlerAgent
 	
-	// 
-	agent patientEventManagerAgent
+	// Trauma Event Manager
+	agent traumaEventManagerAgent
 	
 	//Room Assistant Agents
     agent roomVisualisationAgent
