@@ -1,0 +1,25 @@
+
+<h3> ASTRA Command Monitor </h3>
+
+<div> Stato dei comandi ricevuti </div>	
+
+<div class="row">
+	Totale comandi ricevuti : {{commandTotalAmount}}
+</div>
+
+<div class="row">
+	Comandi in attesa : {{pendingCommandList.length}}
+</div>
+
+<div class="row">
+	Comandi in esecuzione : {{processingCommandList.length}}
+</div>
+
+<div class="row">
+	Comandi completati : {{completedCommandList.length}} | Durata Media : {{avgCompletionTime}} | Durata Massima : {{maxCompletionTime}}
+</div>
+
+<div class="row">
+	Comandi rifiutati : {{failedCommandList.length}} | Durata Media : {{avgFailureTime}} | Durata Massima : {{maxFailureTime}}
+</div>
+

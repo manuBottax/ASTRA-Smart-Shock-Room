@@ -254,7 +254,7 @@ module.exports.updateStatus = function(req,res) {
 
                 var completion_timestamp = '';
 
-                if (req.body.status === CommandStatus.completed){
+                if (req.body.status === CommandStatus.completed || req.body.status === CommandStatus.error){
                     completion_timestamp = Date.now();
                 }
 
