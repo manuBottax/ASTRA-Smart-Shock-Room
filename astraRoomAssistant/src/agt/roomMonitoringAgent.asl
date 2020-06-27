@@ -92,7 +92,7 @@ current_patient("123459").
 	<- 	getSaturationValue(Value) [artifact_id(VitalParameterId)];
 		showBiometricData(Value, "spO2", Position) [artifact_id(Target)];
 		.wait(1000);
-		!! monitorBloodPressure (Target, Position).
+		!! monitorSaturation (Target, Position).
 		
 +! stopMonitoringSaturation
 	<- 	-monitoring("spO2");

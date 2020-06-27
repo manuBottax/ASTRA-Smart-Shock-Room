@@ -97,6 +97,34 @@ var displayImageData =  function (req, res) {
   }
 }
 
+var displayErrorData = function (req, res) {
+
+  if (req.params){
+
+    // console.log("req.body.data : ")
+    // console.log(req.body.data);
+
+    var type = 'visualizzare'
+
+    if (req.body.data.type == 'monitoring'){
+      type = 'monitorare'
+    } else if (req.body.data.type == 'annotation'){
+      type = 'annotare'
+    } else if (req.body.data.type == 'action'){
+      type = 'completare'
+    }
+
+    var errorMessage = "Impossibile " + type + " " + req.body.data.params.value + " (Comando # " + req.body.data.command_id + ")"; 
+
+      io.emit("display_data", {position : req.params.position, name : req.body.name, type: "text", value : errorMessage});
+      jsonUtils.sendJsonResponse(res, 201, "OK");
+
+  } else {
+    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  }
+}
+
+
 var clearData = function (req, res) {
 
   if (req.params){
@@ -139,7 +167,7 @@ router.post('/api/display/:position/temporal_data', displayTextData)
 
 router.post('/api/display/:position/env_data', displayTextData)
 
-router.post('/api/display/:position/error', displayTextData)
+router.post('/api/display/:position/error', displayErrorData)
 
 router.post('/api/display/:position/clear', clearData)
 

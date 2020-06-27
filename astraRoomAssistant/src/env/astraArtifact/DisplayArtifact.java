@@ -392,7 +392,7 @@ public class DisplayArtifact extends Artifact {
 	}
 	
 	@OPERATION
-	void showError (String error, String position) {
+	void showError (JSONObject error, String position) {
 		
 		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "error";
 		

@@ -25,15 +25,15 @@
 	
 + last_refused_command(Command, CommandID) [artifact_id(RoomVisualQueue)] : ( not CommandID == "-1")
 	<-	.println("A room visualisation command was refused : " , CommandID);
-		showError("Impossibile completare il comando", "7") [artifact_id(Display)].
+		showError(Command, "8") [artifact_id(Display)].
 	
 + last_refused_command(Command, CommandID) [artifact_id(RoomMonitorQueue)] : ( not CommandID == "-1")
 	<-	.println("A room monitoring command was refused : " , CommandID);
-		showError("Impossibile completare il comando", "7") [artifact_id(Display)].
+		showError(Command, "8") [artifact_id(Display)].
 	
 + last_refused_command(Command, CommandID) [artifact_id(RoomActionQueue)] :  ( not CommandID == "-1")
 	<-	.println("A room action command was refused : " , CommandID);
-		showError("Impossibile completare il comando", "7") [artifact_id(Display)].	
+		showError(Command, "8") [artifact_id(Display)].	
 
 /* ERROR on Visualisation  */
 + last_wrong_command(Command, CommandID) [artifact_id(RoomVisualQueue)] : ( not CommandID == "-1") & retry_attempt(CommandID, N) & N < 5 

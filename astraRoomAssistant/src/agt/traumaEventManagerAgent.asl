@@ -53,8 +53,8 @@
 	
 +! showInitialData : trauma_status("active")
 	<-	.wait(1500);
-		showPatientInfo("123459", "1") [artifact_id(DisplayId)];
-		clearSection("3") [artifact_id(DisplayId)];
+		showPatientInfo("123459", "3") [artifact_id(DisplayId)];
+		//clearSection("3") [artifact_id(DisplayId)];
 		getTraumaInfo(TInfo) [artifact_id(TraumaId)];
 		showTraumaInfo(TInfo, "4") [artifact_id(DisplayId)];
 		getPatientInitialCondition(InitCond)[artifact_id(TraumaId)];

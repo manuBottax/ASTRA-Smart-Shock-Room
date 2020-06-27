@@ -12,6 +12,7 @@ import cartago.*;
 import javafx.util.Pair;
 import utils.ArtifactStatus;
 import utils.NetworkManager;
+import utils.WebSocketHandler;
 
 public class ActiveTraumaArtifact extends Artifact {
 	
@@ -24,61 +25,26 @@ public class ActiveTraumaArtifact extends Artifact {
 		
 		this.currentTraumaID = traumaID;
 		
+	    WebSocketHandler ws;
+		
+		ws = new WebSocketHandler("new_trauma" , "http://192.168.1.120:3005");
+		
+		ws.addMessageHandler(new WebSocketHandler.MessageHandler() {
+
+			public void receivedMessage(JSONObject message) {
+				System.out.println("New Trauma Created");
+				System.out.println("trauma id : " +  message.getString("trauma_id"));
+				currentTraumaID = message.getString("trauma_id");
+				execInternalOp("monitorTraumaStatus");
+			}
+
+		});
+		
 		
 		defineObsProperty("trauma_status", "unavailable");
 		defineObsProperty("trauma_artifact_status", ArtifactStatus.SERVICE_CONNECTED.getStatus());
 		
-		execInternalOp("monitorTraumaStatus");
 	}
-	
-	/* //POST Trauma
-	@OPERATION
-	void createNewTrauma() {
-		
-		try { 
-			
-			JSONObject data = new JSONObject();
-			JSONObject delayedActivationData = new JSONObject();
-			
-			delayedActivationData.put("isDelayedActivation", true);
-			delayedActivationData.put("originalAccessDate", "2020-06-24");
-			delayedActivationData.put("originalAccessTime", "18:38:27");
-			
-			String[] ttMembers = new String[] {"anestesista","medico ps", "neurochirurgo"};
-			
-			data.put("startOperatorId", "m_1234");
-			data.put("startOperatorDescription" , "Emiliano Gamberini");
-			data.put("traumaTeamMembers", ttMembers);
-			data.put("delayedActivation", delayedActivationData);
-			
-			Pair<Integer, String> res = NetworkManager.doPOSTWithResponse(BASE_SERVICE_URL, data.toString());		
-			
-			if (res.getKey() == 201) {	
-				System.out.println("Trauma Created !");
-				System.out.println(res.getValue());
-				    				
-				//JSONObject json = new JSONObject(res.getValue());
-				
-				//this.currentTraumaID = json.getString("_id");
-				
-				this.currentTraumaID = res.getValue();
-				
-				System.out.println("Trauma ID setted : " + this.currentTraumaID);
-				
-			} else {
-				System.out.println("Error : Trauma Service Error");
-				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
-			} 
-        	
-        } catch (IOException ex){
-            //ex.printStackTrace();
-            System.out.println("Error : Cannot Reach Trauma Service");
-			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
-        }
-		
-		System.out.println("Active Trauma Artifact Created !");
-		
-	} */
 	
 	@OPERATION
 	void getTraumaTeam(OpFeedbackParam<String> traumaLeader, OpFeedbackParam<ArrayList<String>> traumaTeam) {
@@ -116,12 +82,14 @@ public class ActiveTraumaArtifact extends Artifact {
 			} else {
 				System.out.println("Error : Cannot GET Trauma Team Info");
 				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("Trauma Data retrieve failed", "service error", "failed_trauma_data_retrieve" );
 			} 
         	
         } catch (IOException ex){
             //ex.printStackTrace();
             System.out.println("Error : Cannot Reach Trauma Service");
 			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("Trauma Data retrieve failed", "unavailable service", "failed_trauma_data_retrieve" );
         }
 		
 	}
@@ -144,12 +112,14 @@ public class ActiveTraumaArtifact extends Artifact {
 			} else {
 				System.out.println("Error : Cannot GET Patient preH");
 				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("Trauma Data retrieve failed", "service error", "failed_trauma_data_retrieve" );
 			} 
         	
         } catch (IOException ex){
             //ex.printStackTrace();
             System.out.println("Error : Cannot Reach Trauma Service");
 			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("Trauma Data retrieve failed", "unavailable service", "failed_trauma_data_retrieve" );
         }
 	}
 	
@@ -171,12 +141,14 @@ public class ActiveTraumaArtifact extends Artifact {
 			} else {
 				System.out.println("Error : Cannot GET Trauma Info");
 				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("Trauma Data retrieve failed", "service error", "failed_trauma_data_retrieve" );
 			} 
         	
         } catch (IOException ex){
             //ex.printStackTrace();
             System.out.println("Error : Cannot Reach Trauma Service");
 			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("Trauma Data retrieve failed", "unavailable service", "failed_trauma_data_retrieve" );
         }
 	}
 	
@@ -198,12 +170,14 @@ public class ActiveTraumaArtifact extends Artifact {
 			} else {
 				System.out.println("Error : Cannot GET Patient Initial Condition");
 				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("Trauma Data retrieve failed", "service error", "failed_trauma_data_retrieve" );
 			} 
         	
         } catch (IOException ex){
             //ex.printStackTrace();
             System.out.println("Error : Cannot Reach Trauma Service");
 			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("Trauma Data retrieve failed", "unavailable service", "failed_trauma_data_retrieve" );
         }
 	}
 	
@@ -225,12 +199,14 @@ public class ActiveTraumaArtifact extends Artifact {
 			} else {
 				System.out.println("Error : Cannot GET Trauma Event list");
 				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("Trauma Data retrieve failed", "service error", "failed_trauma_data_retrieve" );
 			} 
         	
         } catch (IOException ex){
             //ex.printStackTrace();
             System.out.println("Error : Cannot Reach Trauma Service");
 			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("Trauma Data retrieve failed", "unavailable service", "failed_trauma_data_retrieve" );
         }
 	}
 	
@@ -252,12 +228,14 @@ public class ActiveTraumaArtifact extends Artifact {
 			} else {
 				System.out.println("Error : Cannot GET Trauma Event # " + eventID );
 				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+				failed("Trauma Data retrieve failed", "service error", "failed_trauma_data_retrieve" );
 			} 
         	
         } catch (IOException ex){
             //ex.printStackTrace();
             System.out.println("Error : Cannot Reach Trauma Service");
 			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+			failed("Trauma Data retrieve failed", "unavailable service", "failed_trauma_data_retrieve" );
         }
 	}
 	
@@ -268,10 +246,8 @@ public class ActiveTraumaArtifact extends Artifact {
 		
 		String requestPath = BASE_SERVICE_URL + this.currentTraumaID + "/trauma_current_status";
 		
-		//System.out.println("path : " + requestPath);
-		
 		while(true) {
-	
+
 	        try { 
 				
 				Pair<Integer, String> res = NetworkManager.doGET(requestPath);		
@@ -281,8 +257,6 @@ public class ActiveTraumaArtifact extends Artifact {
 					JSONObject json = new JSONObject(res.getValue());
 					
 					String st = json.getString("trauma_current_status");
-					
-					//System.out.println("Trauma Status : " + st) ;
 					
 					String old = (String) status.getValue();
 					
@@ -294,6 +268,7 @@ public class ActiveTraumaArtifact extends Artifact {
 					System.out.println("Error : Cannot GET Patient STATUS");
 					status.updateValue("unavailable");
 					getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
+					failed("Trauma Data retrieve failed", "service error", "failed_trauma_data_retrieve" );
 				} 
 	        	
 	        } catch (IOException ex){
@@ -301,6 +276,7 @@ public class ActiveTraumaArtifact extends Artifact {
 	            System.out.println("Error : Cannot Reach Trauma Service");
 				status.updateValue("unavailable");
 				getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
+				failed("Trauma Data retrieve failed", "unavailable service", "failed_trauma_data_retrieve" );
 	        }
 	        
 	        await_time(POLLING_TIME);
@@ -308,57 +284,3 @@ public class ActiveTraumaArtifact extends Artifact {
 	    }
 	}
 }
-
-
-/*
-@OPERATION
-void addTraumaLeader(String name) {
-	
-	String requestPath = BASE_SERVICE_URL + this.currentTraumaID + "/trauma_team/element";
-	
-	try { 
-		
-		JSONObject data = new JSONObject();
-		data.put("name", name);
-		data.put("role", "team leader");
-		
-		Integer res = NetworkManager.doPOST(requestPath, "{\"trauma_team_element\" : " + data  + "}".toString());		
-		
-		if (res != 201) {	
-			System.out.println("Error : Trauma Service Error");
-			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
-		} 
-    	
-    } catch (IOException ex){
-        //ex.printStackTrace();
-        System.out.println("Error : Cannot Reach Trauma Service");
-		getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
-    }
-}
-
-@OPERATION
-void addTraumaTeamMember(String name) {
-	
-	String requestPath = BASE_SERVICE_URL + this.currentTraumaID + "/trauma_team/element";
-	
-	try { 
-		
-		JSONObject data = new JSONObject();
-		data.put("name", name);
-		data.put("role", "team member");
-		
-		Integer res = NetworkManager.doPOST(requestPath, "{\"trauma_team_element\" : " + data  + "}".toString());		
-		
-		if (res != 201) {	
-			System.out.println("Error : Trauma Service Error");
-			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_ERROR.getStatus());
-		} 
-    	
-    } catch (IOException ex){
-        //ex.printStackTrace();
-        System.out.println("Error : Cannot Reach Trauma Service");
-		getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
-    }
-}
-*/
-

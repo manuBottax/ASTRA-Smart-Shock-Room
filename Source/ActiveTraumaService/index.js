@@ -5,11 +5,42 @@ var jsonUtils = require("./jsonUtilities");
 
 require('./models/db')
 
-var patientStatus = "unavailable";
+var mongoose = require( 'mongoose');
+
+var DB = mongoose.model('Trauma');
 
 app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const http = require('http').createServer(app);
+
+//The vital parameter monitor isn't actually connected.
+const io = require('socket.io')(http);
+
+io.on('connection', (socket) => {
+    console.log('Vital Parameter monitor connected');
+    
+    socket.on('disconnect', () => {
+      console.log('Vital Parameter monitor disconnected');
+    });
+
+    socket.on('test', (msg) => {
+      console.log("[ Trauma Monitor Artifact ] Message received ")
+      console.log('[ Trauma Monitor Artifact ] message: ' + msg);
+    });
+
+    socket.on('vp_monitor_message', (msg) => {
+        console.log('[ Vital Paramenter Monitor ] message: ' + msg);
+    });
+
+    socket.on('vp_update_blooed_pressure', (msg) => {
+      console.log('[ Vital Paramenter Monitor ] new blood pressure: ' + msg);
+      // update value 
+    });
+
+    //...
+});
 
 var traumaController = require("./traumaControllers");
 
@@ -66,14 +97,37 @@ router.get('/api/vital_parameter/temperature',  (req, res) => {
 
 })
 
+
+var createTrauma = function (req, res) {
+
+  var data = {
+    startOperatorId : req.body.startOperatorId,
+    startOperatorDescription : req.body.startOperatorDescription,
+    delayedActivation : req.body.delayedActivation,
+    traumaTeamMembers : req.body.traumaTeamMembers
+  }
+
+  DB.create(data , function(err, trauma) {
+      if (err) {
+          jsonUtils.sendJsonResponse(res, 400, err);
+      } else {
+          console.log("Trauma created successfully !")
+          io.emit("new_trauma", {"trauma_id" : trauma._id});
+          jsonUtils.sendJsonResponse(res, 201, trauma._id);
+      }
+  }); 
+}
+
 //// --- Active Trauma API --- 
 
-router.post('/api/trauma', traumaController.postTrauma);
+router.post('/api/trauma', createTrauma);
 router.get ('/api/trauma/:trauma_id', traumaController.getTrauma);
 router.delete('/api/trauma/:trauma_id', traumaController.deleteTrauma);
 
-router.get('/api/trauma/:trauma_id/trauma_current_status',traumaController.getTraumaStatus)
-router.put('/api/trauma/:trauma_id/trauma_current_status',traumaController.updateTraumaStatus)
+// router.get('/api/trauma/:trauma_id/trauma_current_status',traumaController.getTraumaStatus)
+// (req, res) => { io.emit("test_message", {}) ; jsonUtils.sendJsonResponse(res, "200", "OK")}
+router.get('/api/trauma/:trauma_id/trauma_current_status',traumaController.getTraumaStatus);
+router.put('/api/trauma/:trauma_id/trauma_current_status',traumaController.updateTraumaStatus);
 
 // ActiveTrauma
 
@@ -96,29 +150,7 @@ router.put ('/api/trauma/:trauma_id/events/:event_id', traumaController.updateEv
 
 app.use('/', router);
 
-const http = require('http').createServer(app);
 
-//The vital parameter monitor isn't actually connected.
-const io = require('socket.io')(http);
-
-io.on('connection', (socket) => {
-    console.log('Vital Parameter monitor connected');
-    
-    socket.on('disconnect', () => {
-      console.log('Vital Parameter monitor disconnected');
-    });
-
-    socket.on('vp_monitor_message', (msg) => {
-        console.log('[ Vital Paramenter Monitor ] message: ' + msg);
-    });
-
-    socket.on('vp_update_blooed_pressure', (msg) => {
-      console.log('[ Vital Paramenter Monitor ] new blood pressure: ' + msg);
-      // update value 
-    });
-
-    //...
-});
 
 
 http.listen(3005, () => {

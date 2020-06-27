@@ -1,5 +1,4 @@
 
-
 var jsonUtils = require("./jsonUtilities");
 var mongoose = require( 'mongoose');
 
@@ -115,7 +114,7 @@ module.exports.getTraumaStatus = function(req,res) {
 }
 
 // router.put('/api/trauma/:trauma_id/trauma_current_status',traumaController.updateTraumaStatus)
-module.exports.updateTraumaStatus = function(req,res) {
+module.exports.updateTraumaStatus = function(req, res) {
 
     if (req.params && req.params.trauma_id) {
 
