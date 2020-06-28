@@ -272,12 +272,12 @@ public class DisplayArtifact extends Artifact {
 	
 	
 	@OPERATION
-	void showTAC (String data, String position) {
+	void showTAC (JSONObject data, String position) {
 		
 		String path = DISPLAY_SERVICE_URL + "/" + position + "/" + "tac";
 		
 		try {
-			
+
 			JSONObject body = new JSONObject();
 			
 			body.put("data", data);

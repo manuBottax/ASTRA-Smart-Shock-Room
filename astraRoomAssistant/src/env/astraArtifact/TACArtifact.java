@@ -46,7 +46,7 @@ public class TACArtifact extends Artifact {
 	 * @param path - the path where the exam result can be retrieved. (output value) 
 	 */
 	@OPERATION
-	void getTACData(String patient_id, OpFeedbackParam<String> path) {	
+	void getTACData(String patient_id, OpFeedbackParam<JSONObject> tacData) {	
 				
 		try {
 			
@@ -64,8 +64,7 @@ public class TACArtifact extends Artifact {
 				
 				if (! json.isEmpty()) {
 				
-					String tacPath = json.getJSONObject(0).getString("path");
-					path.set(tacPath);
+					tacData.set((JSONObject) json.get(0));
 				
 				} else {
 					System.out.println("Error : TAC unavailable for that patient");

@@ -9,8 +9,11 @@ import { DataInterface } from 'src/data.interface';
 export class TacDataComponent implements DataInterface {
   
   @Input() data: any;
+  timestamp: string = "";
 
   ngOnInit() {
-    console.log(this.data);
+    // console.log(this.data);
+    var date: Date = this.data.data.value.timestamp;
+    this.timestamp = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
   }
 }

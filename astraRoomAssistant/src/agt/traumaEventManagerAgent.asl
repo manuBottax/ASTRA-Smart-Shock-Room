@@ -13,7 +13,7 @@
 		?find_timer_artifact(TimeMonitor);
 		//?find_active_trauma(Trauma);
 		
-		makeArtifact("activeTraumaService", "astraArtifact.ActiveTraumaArtifact", ["5ef5bc4f0c479b291c25360b"], TraumaId);
+		makeArtifact("activeTraumaService", "astraArtifact.ActiveTraumaArtifact",[], TraumaId);
 		
 		focus(TraumaId);
 		focus(Display);
@@ -38,6 +38,7 @@
 	
 +trauma_status(Status) : Status = "done"
 	<- .println("test : Patient trauma handling completed");
+		completeTraumaHandling [artifact_id(TraumaId)];
 		setDisplayStatus("idle") [artifact_id(DisplayId)].
 		
 +! monitorPreH : trauma_status("arriving")
@@ -53,12 +54,12 @@
 	
 +! showInitialData : trauma_status("active")
 	<-	.wait(1500);
-		showPatientInfo("123459", "3") [artifact_id(DisplayId)];
+		showPatientInfo("654321", "3") [artifact_id(DisplayId)];
 		//clearSection("3") [artifact_id(DisplayId)];
 		getTraumaInfo(TInfo) [artifact_id(TraumaId)];
 		showTraumaInfo(TInfo, "4") [artifact_id(DisplayId)];
 		getPatientInitialCondition(InitCond)[artifact_id(TraumaId)];
-		showPatientInitialConditionInfo(InitCond, "5") [artifact_id(DisplayId)].
+		showPatientInitialConditionInfo(InitCond, "6") [artifact_id(DisplayId)].
 
 	
 +! monitorActiveTraumaTime : trauma_status("active")

@@ -2,7 +2,7 @@
 
 /* Initial beliefs and rules */
 
-current_patient("123459").
+current_patient("654321").
 
 /* Initial goals */
 

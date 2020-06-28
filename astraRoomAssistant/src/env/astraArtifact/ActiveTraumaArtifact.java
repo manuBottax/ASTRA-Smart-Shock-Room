@@ -19,11 +19,11 @@ public class ActiveTraumaArtifact extends Artifact {
 	private static final String BASE_SERVICE_URL = "http://192.168.1.120:3005/api/trauma/";
 	private static final int POLLING_TIME = 10000;
 	
+	private boolean handlingTrauma = false;
+	
 	private String currentTraumaID = "";
 	
-	void init(String traumaID) {
-		
-		this.currentTraumaID = traumaID;
+	void init() {
 		
 	    WebSocketHandler ws;
 		
@@ -32,14 +32,17 @@ public class ActiveTraumaArtifact extends Artifact {
 		ws.addMessageHandler(new WebSocketHandler.MessageHandler() {
 
 			public void receivedMessage(JSONObject message) {
-				System.out.println("New Trauma Created");
-				System.out.println("trauma id : " +  message.getString("trauma_id"));
-				currentTraumaID = message.getString("trauma_id");
-				execInternalOp("monitorTraumaStatus");
+
+				if (! handlingTrauma) {
+					System.out.println("New Trauma Created");
+					System.out.println("trauma id : " +  message.getString("trauma_id"));
+					handlingTrauma = true;
+					currentTraumaID = message.getString("trauma_id");
+					execInternalOp("monitorTraumaStatus");
+				}
 			}
 
 		});
-		
 		
 		defineObsProperty("trauma_status", "unavailable");
 		defineObsProperty("trauma_artifact_status", ArtifactStatus.SERVICE_CONNECTED.getStatus());
@@ -239,6 +242,13 @@ public class ActiveTraumaArtifact extends Artifact {
         }
 	}
 	
+	@OPERATION
+	void completeTraumaHandling() {
+		this.handlingTrauma = false;
+		this.currentTraumaID = "";
+		System.out.println("Trauma Handling Completed. Waiting for new Trauma");
+	}
+	
 	@INTERNAL_OPERATION
 	void monitorTraumaStatus() {
 			
@@ -246,7 +256,7 @@ public class ActiveTraumaArtifact extends Artifact {
 		
 		String requestPath = BASE_SERVICE_URL + this.currentTraumaID + "/trauma_current_status";
 		
-		while(true) {
+		while(this.handlingTrauma) {
 
 	        try { 
 				
