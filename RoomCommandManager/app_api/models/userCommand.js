@@ -22,6 +22,7 @@ var commandSchema = new mongoose.Schema({
     issuer: {type: String, required: true},
     status: {type: String, required: true},
     timestamp: {type: String, "default": Date.now(), required: true},
+    accepted_on : {type: String},
     completed_on : {type: String}, 
     params : {type: Object}
 });

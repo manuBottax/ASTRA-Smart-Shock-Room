@@ -8,6 +8,8 @@ var DB = mongoose.model('TACData');
     TACData {
         id : String,
         patient_id : String,
+        name : req.body.name,
+        description : req.body.description,
         path : String,
         timestamp : Date
     }
@@ -17,6 +19,8 @@ module.exports.postTACData = async function (req, res) {
 
     var data = {
         patient_id : req.body.patient_id,
+        name : req.body.name,
+        description : req.body.description,
         path : req.body.path
     }
 
@@ -25,6 +29,7 @@ module.exports.postTACData = async function (req, res) {
             jsonUtils.sendJsonResponse(res, 400, err);
         } else {
             console.log("TAC Data saved successfully !")
+            console.log(tac_data);
             jsonUtils.sendJsonResponse(res, 201, tac_data);
         }
     }); 
@@ -47,6 +52,7 @@ module.exports.getTACByPatient = function(req,res) {
                 return;
             } else {
                 console.log("Patient data retrieved !")
+                console.log(data);
                 jsonUtils.sendJsonResponse(res, 200, data);
             }
         }); 

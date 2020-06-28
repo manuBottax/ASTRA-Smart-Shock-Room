@@ -10,6 +10,8 @@ var mongoose = require( 'mongoose' );
 var tacSchema = new mongoose.Schema({ 
     patient_id: {type: String, required: true},
     path: {type: String, required: true},
+    name : {type: String, required: true},
+    description : {type: String, required: true},
     timestamp: {type: String, "default": Date.now(), required: true}
 });
 

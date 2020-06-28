@@ -27,3 +27,7 @@ cd ../MockSourceService
 cd ../ActiveTraumaService
 
 /c/Windows/System32/cmd.exe //c 'start cmd /c npm install'
+
+cd ../../CommandMonitor
+
+/c/Windows/System32/cmd.exe //c 'start cmd /c npm install'

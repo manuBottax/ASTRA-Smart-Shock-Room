@@ -13,21 +13,26 @@ export class AppComponent {
 
   subscription: Subscription;
   
-  // dataList: Array<Object> = new Array(7);
   status: string;
 
   examForm : FormGroup;
   idForm : AbstractControl;
+  nameForm : AbstractControl;
+  descriptionForm : AbstractControl;
   pathForm : AbstractControl;
 
   constructor(private socketService: WebSocketService, private http: HTTPService, fb: FormBuilder){
 
     this.examForm = fb.group({
       'patient_id' : ['', Validators.required],
+      'name' : ['', Validators.required],
+      'description' : ['', Validators.required],
       'path' : ['', Validators.required],
     });
 
     this.idForm = this.examForm.controls['patient_id'];
+    this.nameForm = this.examForm.controls['name'];
+    this.descriptionForm = this.examForm.controls['description'];
     this.pathForm = this.examForm.controls['path'];
 
     this.status = "available"
@@ -42,6 +47,8 @@ export class AppComponent {
   onSubmit(data) {
     var postData = {
       patient_id : data.patient_id,
+      name : data.name,
+      description : data.description,
       path : data.path
     }
 

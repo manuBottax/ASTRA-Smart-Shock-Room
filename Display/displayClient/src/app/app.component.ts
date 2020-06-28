@@ -9,6 +9,7 @@ import { PrehDataComponent } from './dataComponent/preh-data/preh-data.component
 import { TraumaInfoDataComponent } from './dataComponent/trauma-info-data/trauma-info-data.component';
 import { PatientInitialConditionDataComponent } from './dataComponent/patient-initial-condition-data/patient-initial-condition-data.component';
 import { EventListDataComponent } from './dataComponent/event-list-data/event-list-data.component';
+import { TacDataComponent } from './dataComponent/tac-data/tac-data.component';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,7 @@ export class AppComponent {
 
   displayStatus: String = "idle"
 
-  imageDisplay : Boolean = false;
+  imageDisplay : Boolean = true;
 
   constructor(private socketService: WebSocketService){
     // console.log(this.dataArray.length);
@@ -61,6 +62,12 @@ export class AppComponent {
         case 'event_list' : 
           this.dataArray[position] = new DataItem(EventListDataComponent, {value : data.value});
           break; 
+
+        case 'tac' :
+          position = 5 ; 
+          this.imageDisplay = true;
+          this.dataArray[position] = new DataItem(TacDataComponent, {value: data.value});
+          break;
 
         case 'image' :
           position = 5 ; 

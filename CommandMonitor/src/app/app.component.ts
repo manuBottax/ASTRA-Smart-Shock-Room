@@ -15,6 +15,9 @@ export class AppComponent implements OnInit{
   completedCommandList : Array<Command>
   failedCommandList : Array<Command>
 
+  avgAcceptTime : number
+  maxAcceptTime : number
+
   avgCompletionTime : number
   maxCompletionTime : number
 
@@ -46,6 +49,34 @@ export class AppComponent implements OnInit{
       this.processingCommandList = processList;
 
       this.commandTotalAmount += this.processingCommandList.length;
+
+      var processed = 0;
+      var max = 0; 
+      var tot = 0; 
+
+      this.avgAcceptTime = 0;
+      this.maxAcceptTime = 0;
+
+      this.processingCommandList.forEach( cmd=> {
+
+        var elapsed = parseInt("" + cmd.completed_on) - parseInt("" + cmd.timestamp);
+
+        console.log("Command # " + cmd._id + " : " + elapsed + " ms");
+
+        tot = tot + elapsed;
+
+        if (elapsed > max){
+          max = elapsed;
+        }
+
+        processed = processed + 1;
+
+        if (processed == this.processingCommandList.length) {
+          this.avgAcceptTime = ( Math.round((tot / this.processingCommandList.length)) / 1000 );
+          this.maxAcceptTime = ( max / 1000) ;
+        }
+
+      })
     })
 
     this.commandService.getCompletedCommand().subscribe(completedList => {
@@ -77,8 +108,8 @@ export class AppComponent implements OnInit{
         processed = processed + 1;
 
         if (processed == this.completedCommandList.length) {
-          this.avgCompletionTime = (tot / this.completedCommandList.length);
-          this.maxCompletionTime = max;
+          this.avgCompletionTime = ( Math.round((tot / this.completedCommandList.length)) / 1000 );
+          this.maxCompletionTime = ( max / 1000) ;
         }
 
       })

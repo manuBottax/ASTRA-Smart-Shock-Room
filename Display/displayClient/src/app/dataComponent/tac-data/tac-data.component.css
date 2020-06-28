@@ -1,0 +1,11 @@
+img {
+    margin: 3%;
+    margin-left: 100px;
+    width: 400px;
+    display: block;
+}
+
+.row {
+    margin-left : 1%;
+    margin-right : 1%;
+}

@@ -12,6 +12,7 @@ var DB = mongoose.model('UserCommand');
 //     issuer : String,
 //     status : String,
 //     timestamp : Date,
+//     accepted_on : Date,
 //     completed_on : Date,
 //     params : {
 //         par1 : String,
@@ -44,6 +45,7 @@ module.exports.postCommand = function(req,res) {
         status : CommandStatus.pending,
         timestamp : Date.now(),
         completed_on : '',
+        accepted_on : '',
         params : req.body.params
     }
 
@@ -215,6 +217,7 @@ module.exports.updateCommand = function(req,res) {
             issuer : req.body.issuer,
             status : req.body.status,
             timestamp : req.body.timestamp,
+            accepted_on : req.body.accepted_on,
             completed_on : completion_timestamp,
             params : req.body.params
         }
@@ -253,6 +256,10 @@ module.exports.updateStatus = function(req,res) {
             } else {
 
                 var completion_timestamp = '';
+
+                if (req.body.status === CommandStatus.in_processing) {
+                    data.accepted_on = Date.now();
+                }
 
                 if (req.body.status === CommandStatus.completed || req.body.status === CommandStatus.error){
                     completion_timestamp = Date.now();

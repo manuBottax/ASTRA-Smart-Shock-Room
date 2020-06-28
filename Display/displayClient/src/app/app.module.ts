@@ -15,6 +15,7 @@ import { TraumaInfoDataComponent } from './dataComponent/trauma-info-data/trauma
 import { PatientInitialConditionDataComponent } from './dataComponent/patient-initial-condition-data/patient-initial-condition-data.component';
 import { EventListDataComponent } from './dataComponent/event-list-data/event-list-data.component';
 import { EventListElementComponent } from './dataComponent/event-list-element/event-list-element.component';
+import { TacDataComponent } from './dataComponent/tac-data/tac-data.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
 
@@ -30,7 +31,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
     TraumaInfoDataComponent,
     PatientInitialConditionDataComponent,
     EventListDataComponent,
-    EventListElementComponent
+    EventListElementComponent,
+    TacDataComponent
   ],
   entryComponents: [
     ImageDataComponent,
@@ -39,7 +41,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
     PrehDataComponent,
     TraumaInfoDataComponent,
     PatientInitialConditionDataComponent,
-    EventListDataComponent
+    EventListDataComponent,
+    TacDataComponent
   ],
   imports: [
     BrowserModule,

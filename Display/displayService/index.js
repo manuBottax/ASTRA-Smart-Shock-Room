@@ -97,6 +97,21 @@ var displayImageData =  function (req, res) {
   }
 }
 
+var displayTACData =  function (req, res) {
+
+  if (req.params){
+
+    console.log("TAC : ");
+    console.log(req.body.data);
+
+    io.emit("display_data", {position : req.params.position, type: "tac", value : req.body.data});
+    jsonUtils.sendJsonResponse(res, 201, "OK");
+
+  } else {
+    jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
+  }
+}
+
 var displayErrorData = function (req, res) {
 
   if (req.params){
@@ -160,7 +175,7 @@ router.post('/api/display/:position/biometric_data', displayTextData)
 
 router.post('/api/display/:position/diagnostic_data', displayTextData)
 
-router.post('/api/display/:position/tac', displayImageData)
+router.post('/api/display/:position/tac', displayTACData)
 router.post('/api/display/:position/rx', displayImageData)
 
 router.post('/api/display/:position/temporal_data', displayTextData)
