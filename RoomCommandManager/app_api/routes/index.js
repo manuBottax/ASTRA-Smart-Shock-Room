@@ -4,6 +4,7 @@ var router = express.Router();
 var commandController = require('../controllers/commandController');
 
 router.post('/commands', commandController.postCommand);
+router.delete('/commands', commandController.clearCommandCollection);
 
 router.get('/commands/pending', commandController.getPendingCommand);
 router.get('/commands/in_processing', commandController.getProcessingCommand);

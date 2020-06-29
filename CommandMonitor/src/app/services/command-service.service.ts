@@ -39,4 +39,8 @@ export class CommandService {
   getFailedCommand(): Observable<any> {
     return this.http.get(`http://localhost:3010/api/commands/failed`);
   }
+
+  clearCommandCollection(): Observable<any> {
+    return this.http.delete(`http://localhost:3010/api/commands`);
+  }
 }

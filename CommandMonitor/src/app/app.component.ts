@@ -153,4 +153,11 @@ export class AppComponent implements OnInit{
 
   }
 
+  onClearButtonClick(){
+    console.log("Elimino i comandi dal DB");
+    this.commandService.clearCommandCollection().subscribe(delRes => {
+      console.log(delRes);
+    })
+  }
+
 }

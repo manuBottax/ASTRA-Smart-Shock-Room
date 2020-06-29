@@ -306,3 +306,21 @@ module.exports.deleteCommand = function(req,res) {
         jsonUtils.sendJsonResponse(res, 404, "No Command id in request");
     }
 }
+
+// router.delete('/commands/', commandController.clearCommandCollection);
+module.exports.clearCommandCollection = function(req,res) {
+
+    DB
+    .deleteMany({})
+    .exec(function(err, data) {
+        if (err){
+            jsonUtils.sendJsonResponse(res, 404, err);
+            return;
+        } else {
+            console.log("Deleted all commands ! ");
+            console.log(data);
+            jsonUtils.sendJsonResponse(res, 200, data);
+        }
+    });
+    
+}
