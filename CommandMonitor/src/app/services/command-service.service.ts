@@ -12,6 +12,7 @@ export interface Command {
   issuer:  String, 
   status: String, 
   timestamp: String,
+  accepted_on: String ,
   completed_on : String,
   params : Object
 }
