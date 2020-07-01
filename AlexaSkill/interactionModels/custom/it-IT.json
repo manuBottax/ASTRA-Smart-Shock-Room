@@ -162,6 +162,12 @@
         {
           "values": [
             {
+              "id": "patient_initial_condition",
+              "name": {
+                "value": "Condizioni iniziali"
+              }
+            },
+            {
               "id": "rotem",
               "name": {
                 "value": "Rotem"
@@ -688,5 +694,5 @@
       }
     ]
   },
-  "version": "23"
+  "version": "24"
 }

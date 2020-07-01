@@ -28,7 +28,7 @@ export class AppComponent {
 
   displayStatus: String = "idle"
 
-  imageDisplay : Boolean = true;
+  imageDisplay : Boolean = false;
 
   constructor(private socketService: WebSocketService){
     // console.log(this.dataArray.length);

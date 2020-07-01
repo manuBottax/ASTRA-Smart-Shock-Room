@@ -6,6 +6,8 @@ const COMMAND_SERVICE_PATH = 'http://151.61.151.43:3010/api/commands'
 const Util = require('util.js');
 const Escape = require('lodash/escape');
 
+var lastUsedPosition = 6;
+
 // const audioUrl = Util.getS3PreSignedUrl("Media/silenzio.mp3");
 
 const requestHandler = require('then-request');
@@ -52,7 +54,11 @@ const VisualisationRequestIntentHandler = {
         
         //If position is not defined by the user use a default value;
         if (! isFinite(position)){
-            position = 4;
+            position = lastUsedPosition;
+            lastUsedPosition = lastUsedPosition + 1;
+            if (lastUsedPosition > 8){
+                lastUsedPosition = 6;
+            }
         }
         
         var cat = "room";
@@ -158,12 +164,16 @@ const MonitorRequestIntentHandler = {
             .intent
             .slots;
            
-        const monitor_type = slots.monitor_type.id;
+        const monitor_type = slots.monitor_type.value;
         var position = slots.position.value;
         
         //If position is not defined by the user use a default value;
         if (! isFinite(position)){
-            position = 4;
+            position = lastUsedPosition;
+            lastUsedPosition = lastUsedPosition + 1;
+            if (lastUsedPosition > 8){
+                lastUsedPosition = 6;
+            }
         }
         
          
