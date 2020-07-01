@@ -31,12 +31,20 @@
 + failed_update(Id, Error) : current_command(Command)
 	<-	.println("Error ( " , Error , " ) on command update");
 		setErrorOnCommand(Command) [artifact_id(QueueId)].
+	
++! processCommand(CommandId, "monitoring", DataType, Target, Position) : current_command(Command) & use_position (Position, Type)
+	<-	.println("Working on Command ", CommandId);
+		.println("Want to monitor ", DataType);
+		!freePosition(Position, Type);
+		+use_position(Position, DataType);
+		!monitorData(Command, DataType, Target, Position).
 		
 +! processCommand(CommandId, "monitoring", DataType, Target, Position) : current_command(Command)
 	<-	.println("Working on Command ", CommandId);
 		.println("Want to monitor ", DataType);
+		!freePosition(Position, DataType);
+		+use_position(Position, DataType);
 		!monitorData(Command, DataType, Target, Position).
-		
 /* ---------- Biometric Data Monitoring ------------------------ */
 
 +! monitorData(Command, "blood_pressure", Target, Position) 
@@ -75,12 +83,13 @@
 		.wait(1000);
 		!! monitorBloodPressure (Target, Position).
 		
-+! stopMonitoringBloodPressure
++! stopMonitoringBloodPressure(Position)
 	<-  -monitoring("blood_pressure");
+		-use_position(Position, _);
 		.println("Stop monitoring blood pressure").
 	
 -! monitorBloodPressure(Target, Position)
-	<- 	!stopMonitoringBloodPressure.
+	<- 	!stopMonitoringBloodPressure(Position).
 	
 // ----------
 
@@ -92,12 +101,13 @@
 		.wait(1000);
 		!! monitorSaturation (Target, Position).
 		
-+! stopMonitoringSaturation
++! stopMonitoringSaturation(Position)
 	<- 	-monitoring("spO2");
+		-use_position(Position, _);
 		.println("Stop monitoring saturation").
 	
 -! monitorSaturation(Target, Position)
-	<- 	!stopMonitoringSaturation.
+	<- 	!stopMonitoringSaturation(Position).
 	
 // ----------
 
@@ -109,12 +119,13 @@
 		.wait(1000);
 		!! monitorHeartRate (Target, Position).
 		
-+! stopMonitoringHeartRate
++! stopMonitoringHeartRate(Position)
 	<- 	-monitoring("heart_rate");
+		-use_position(Position, _);
 		.println("Stop monitoring heart rate").
 	
 -! monitorHeartRate(Target, Position)
-	<- 	!stopMonitoringHeartRate.
+	<- 	!stopMonitoringHeartRate(Position).
 	
 // ----------
 
@@ -126,12 +137,13 @@
 		.wait(1000);
 		!! monitorTemperature (Target, Position).
 		
-+! stopMonitoringTemperature
++! stopMonitoringTemperature(Position)
 	<- 	-monitoring("temperature");
+		-use_position(Position, _);
 		.println("Stop monitoring temperature").
 	
 -! monitorTemperature(Target, Position)
-	<- 	!stopMonitoringTemperature.
+	<- 	!stopMonitoringTemperature(Position).
 	
 // ----------
 		
@@ -161,12 +173,13 @@
 		.wait(1000);
 		!! monitorETA (Target, Position).
 		
-+! stopMonitoringETA
++! stopMonitoringETA(Position)
 	<- 	-monitoring("eta");
+		-use_position(Position, _);
 		.println("Stop monitoring ETA").
 	
 -! monitorETA(Target, Position)
-	<- 	!stopMonitoringETA.
+	<- 	!stopMonitoringETA(Position).
 	
 // ----------
 
@@ -178,12 +191,13 @@
 		.wait(1000);
 		!! monitorTotalTime (Target, Position).
 		
-+! stopMonitoringTotalTime
++! stopMonitoringTotalTime(Position)
 	<- 	-monitoring("total_time");
+		-use_position(Position, _);
 		.println("Stop monitoring total time").
 	
 -! monitorTotalTime(Target, Position)
-	<- 	!stopMonitoringTotalTime.
+	<- 	!stopMonitoringTotalTime(Position).
 	
 // ----------
 		
@@ -192,7 +206,44 @@
 		setErrorOnCommand(Command) [artifact_id(QueueId)].
 		
 /* -------------------------------------------------- */
+
++ visualise_on(Position) : use_position (Position, Type)
+	<-	.println("Received message from Visualisation Agent. Want to free position " , Position);
+		.println("Position ", Position , " used by " , Type)
+		! freePosition(Position, Type).
+		
++ visualise_on(Position)
+	<-	.println("Received message from Visualisation Agent. Want to free position " , Position);
+		.println("Position is free").
+		
++! freePosition(Position, "blood_pressure")
+	<- 	! stopMonitoringBloodPressure(Position).
 	
++! freePosition(Position, "spO2")
+	<- 	! stopMonitoringSaturation(Position).
+	
++! freePosition(Position, "heart_rate")
+	<- 	! stopMonitoringHeartRate(Position).
+	
++! freePosition(Position, "temperature")
+	<- 	! stopMonitoringTemperature(Position).
+	
++! freePosition(Position, "temperature")
+	<- 	! stopMonitoringTemperature(Position).
+
++! freePosition(Position, "temperature")
+	<- 	! stopMonitoringTemperature(Position).
+	
++! freePosition(Position, "eta")
+	<- 	! stopMonitorinETA(Position).
+	
++! freePosition(Position, "total_time")
+	<- 	! stopMonitoringTotalTime(Position).
+	
+-! freePosition(Position, DataType)
+	<- 	.println("Position not in use").
+
+/* -------------------------------------------------- */
 		
 +? find_queue(QueueId) 
 	<- lookupArtifact("roomMonitorCommands", QueueId).

@@ -36,6 +36,7 @@ current_patient("654321").
 +! processCommand(CommandId, "visualisation", DataType, Target, Position) 
 	<-	.println("Working on Command ", CommandId);
 		.println("Want to visualise ", DataType);
+		.send(roomMonitoringAgent, tell, visualise_on(Position));
 		!requestData(CommandId, DataType, Target, Position).
 
 -! processCommand(CommandId, "visualisation", DataType, Target, Position) 
