@@ -2,8 +2,6 @@
 
 /* Initial beliefs and rules */
 
-current_patient("123459").
-
 /* Initial goals */
 
 !observe.

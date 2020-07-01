@@ -100,6 +100,8 @@ router.get('/api/vital_parameter/temperature',  (req, res) => {
 
 var createTrauma = function (req, res) {
 
+
+
   var data = {
     startOperatorId : req.body.startOperatorId,
     startOperatorDescription : req.body.startOperatorDescription,
@@ -113,7 +115,7 @@ var createTrauma = function (req, res) {
       } else {
           console.log("Trauma created successfully !")
           io.emit("new_trauma", {"trauma_id" : trauma._id});
-          jsonUtils.sendJsonResponse(res, 201, trauma._id);
+          jsonUtils.sendJsonResponse(res, 201, { "_id" : trauma._id });
       }
   }); 
 }
@@ -132,7 +134,7 @@ router.put('/api/trauma/:trauma_id/trauma_current_status',traumaController.updat
 // ActiveTrauma
 
 router.get ('/api/trauma/:trauma_id/trauma_team', traumaController.getTraumaTeam);
-// router.put ('/api/trauma/:trauma_id/trauma_team', traumaController.updateTraumaTeam);
+router.put ('/api/trauma/:trauma_id/trauma_team', traumaController.updateTraumaTeam);
 
 router.get ('/api/trauma/:trauma_id/preH', traumaController.getPreHInfo);
 router.put ('/api/trauma/:trauma_id/preH', traumaController.updatePreHInfo);

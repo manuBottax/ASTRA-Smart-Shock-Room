@@ -19,25 +19,30 @@ var DB = mongoose.model('Trauma');
     // }
 */
 
+//TODO Elimina
 //router.post('/api/trauma', traumaController.postTrauma);
-module.exports.postTrauma = async function (req, res) {
+// module.exports.postTrauma = async function (req, res) {
 
-    var data = {
-        startOperatorId : req.body.startOperatorId,
-        startOperatorDescription : req.body.startOperatorDescription,
-        delayedActivation : req.body.delayedActivation,
-        traumaTeamMembers : req.body.traumaTeamMembers
-    }
+//     var data = {
+//         startOperatorId : req.body.startOperatorId,
+//         startOperatorDescription : req.body.startOperatorDescription,
+//         delayedActivation : req.body.delayedActivation,
+//         traumaTeamMembers : req.body.traumaTeamMembers
+//     }
 
-    DB.create(data , function(err, trauma) {
-        if (err) {
-            jsonUtils.sendJsonResponse(res, 400, err);
-        } else {
-            console.log("Trauma created successfully !")
-            jsonUtils.sendJsonResponse(res, 201, trauma._id);
-        }
-    }); 
-}
+//     DB.create(data , function(err, trauma) {
+//         if (err) {
+//             jsonUtils.sendJsonResponse(res, 400, err);
+//         } else {
+//             console.log("Trauma created successfully !")
+//             console.log("Trauma : " + trauma._id);
+//             jsonUtils.sendJsonResponse(res, 201, "{\"_id\" : " + trauma._id + " }");
+//         }
+
+
+
+//     }); 
+// }
 
 //router.get ('/api/trauma/:trauma_id', traumaController.getTrauma);
 module.exports.getTrauma = function(req,res) {
@@ -165,10 +170,19 @@ module.exports.getTraumaTeam = function(req,res) {
                 return;
             } else {
 
-                jsonUtils.sendJsonResponse(res, 200, {
-                    "traumaLeader" : data.startOperatorDescription, 
-                    "traumaTeamMembers" : JSON.parse(data.traumaTeamMembers)
-                });
+                if (data.traumaTeamMembers.length > 0) {
+                    jsonUtils.sendJsonResponse(res, 200, {
+                        "traumaLeader" : data.startOperatorDescription, 
+                        "traumaTeamMembers" : data.traumaTeamMembers
+                        // "traumaTeamMembers" : JSON.parse(data.traumaTeamMembers)
+                    });
+                } else {
+                    jsonUtils.sendJsonResponse(res, 200, {
+                        "traumaLeader" : data.startOperatorDescription, 
+                        "traumaTeamMembers" : []
+                    });
+                }
+
                 
             } 
         });
@@ -179,43 +193,46 @@ module.exports.getTraumaTeam = function(req,res) {
 }
 
 // router.put ('/api/trauma/:trauma_id/trauma_team', traumaController.updateTraumaTeam);
-// module.exports.updateTraumaTeam = function(req,res) {
+module.exports.updateTraumaTeam = function(req,res) {
 
-//     if (req.params && req.params.trauma_id) {
+    if (req.params && req.params.trauma_id) {
 
-//         var trauma_id = req.params.trauma_id
+        var trauma_id = req.params.trauma_id
 
-//         DB
-//         .findById(trauma_id)
-//         .exec(function(err, data) {
-//             if (err){
-//                 jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
-//                 return;
-//             } else {
+        DB
+        .findById(trauma_id)
+        .exec(function(err, data) {
+            if (err){
+                jsonUtils.sendJsonResponse(res, 404, "Trauma not found");
+                return;
+            } else {
                 
-//                 if (req.body.trauma_team){
+                if (req.body.traumaTeamMembers){
 
-//                     data.trauma_team = req.body.trauma_team;
+                    data.traumaTeamMembers = req.body.traumaTeamMembers;
 
-//                     DB.updateOne({"_id" : trauma_id}, data)
-//                       .exec(function(update_err, update_data){
-//                           if (update_err) {
-//                             jsonUtils.sendJsonResponse(res, 400, "Error during trauma_team update");
-//                             return;
-//                           } else {
-//                             jsonUtils.sendJsonResponse(res, 200, {"trauma_team" : data.trauma_team });
-//                           }
-//                       });
-//                 } else {
-//                     jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_team in request body");
-//                 } 
-//             }
-//         }); 
+                    DB.updateOne({"_id" : trauma_id}, data)
+                      .exec(function(update_err, update_data){
+                          if (update_err) {
+                            jsonUtils.sendJsonResponse(res, 400, "Error during trauma_team update");
+                            return;
+                          } else {
+                            jsonUtils.sendJsonResponse(res, 200, {
+                                "traumaLeader" : data.startOperatorDescription, 
+                                "traumaTeamMembers" : data.traumaTeamMembers
+                            });
+                          }
+                      });
+                } else {
+                    jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_team in request body");
+                } 
+            }
+        }); 
 
-//     } else {
-//         jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
-//     }
-// }
+    } else {
+        jsonUtils.sendJsonResponse(res, 404, "Invalid trauma_id params");
+    }
+}
 
 
 // router.get ('/api/trauma/:trauma_id/preH', traumaController.getPreHInfo);
@@ -262,7 +279,10 @@ module.exports.updatePreHInfo = function(req,res) {
                 
                 if (req.body.preh){
 
-                    data.preh = JSON.parse(req.body.preh);
+                    console.log(req.body.preh);
+
+                    // data.preh = JSON.parse(req.body.preh);
+                    data.preh = req.body.preh;
 
                     DB.updateOne({"_id" : trauma_id}, data)
                       .exec(function(update_err, update_data){
@@ -330,7 +350,8 @@ module.exports.updateTraumaInfo = function(req,res) {
                 
                 if (req.body.traumaInfo){
 
-                    data.traumaInfo = JSON.parse(req.body.traumaInfo);
+                    data.traumaInfo = req.body.traumaInfo;
+                    // data.traumaInfo = JSON.parse(req.body.traumaInfo);
 
                     DB.updateOne({"_id" : trauma_id}, data)
                       .exec(function(update_err, update_data){
@@ -397,7 +418,8 @@ module.exports.updatePatientInitialCondition = function(req,res) {
                 
                 if (req.body.patientInitialCondition){
 
-                    data.patientInitialCondition = JSON.parse(req.body.patientInitialCondition);
+                    data.patientInitialCondition = req.body.patientInitialCondition;
+                    // data.patientInitialCondition = JSON.parse(req.body.patientInitialCondition);
 
                     DB.updateOne({"_id" : trauma_id}, data)
                       .exec(function(update_err, update_data){
@@ -436,7 +458,8 @@ module.exports.addEvent = function(req,res) {
                 
                 if (req.body.event){
 
-                    data.events.push(JSON.parse(req.body.event));
+                    // data.events.push(JSON.parse(req.body.event));
+                    data.events.push(req.body.event);
 
                     DB.updateOne({"_id" : trauma_id}, data)
                       .exec(function(update_err, update_data){
@@ -533,7 +556,8 @@ module.exports.updateEvent = function(req,res) {
 
                     if (e.eventId == req.params.event_id){
                         found = true;
-                        data.events[i] = JSON.parse(req.body.event);
+                        // data.events[i] = JSON.parse(req.body.event);
+                        data.events[i] = req.body.event;
                         DB.updateOne({"_id" : trauma_id}, data)
                           .exec(function(update_err, update_data){
                                 if (update_err) {

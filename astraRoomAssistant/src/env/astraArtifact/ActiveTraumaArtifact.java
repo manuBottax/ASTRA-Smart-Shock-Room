@@ -17,7 +17,7 @@ import utils.WebSocketHandler;
 public class ActiveTraumaArtifact extends Artifact {
 	
 	private static final String BASE_SERVICE_URL = "http://192.168.1.120:3005/api/trauma/";
-	private static final int POLLING_TIME = 10000;
+	private static final int POLLING_TIME = 5000;
 	
 	private boolean handlingTrauma = false;
 	
@@ -36,6 +36,7 @@ public class ActiveTraumaArtifact extends Artifact {
 				if (! handlingTrauma) {
 					System.out.println("New Trauma Created");
 					System.out.println("trauma id : " +  message.getString("trauma_id"));
+					//JSONObject json = new JSONObject(message.getString("trauma_id"));
 					handlingTrauma = true;
 					currentTraumaID = message.getString("trauma_id");
 					execInternalOp("monitorTraumaStatus");

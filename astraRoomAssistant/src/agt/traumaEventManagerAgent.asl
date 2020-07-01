@@ -21,60 +21,67 @@
 		setDisplayStatus("idle") [artifact_id(DisplayId)].
 		
 +trauma_status(Status) : Status = "arriving"
-	<- .println("test : Arriving patient");
-		
-		getTraumaTeam(TL, TT) [artifact_id(TraumaId)];
+	<- .println("Trauma Status : Arriving patient");
 		setDisplayStatus("preH") [artifact_id(DisplayId)];
-		showTraumaTeamInfo(TL, TT, "1") [artifact_id(DisplayId)];
-		!monitorPreH.
+		!monitorPreHETA
+		!monitorPreHInfo.
 	
 +trauma_status(Status) : Status = "active"
-	<- .println("test : patient is arrived");
-		setPatientArrived [artifact_id(TimeMonitorId)];
+	<- .println("Trauma Status : patient is arrived");
 		setDisplayStatus("active") [artifact_id(DisplayId)];
+		setPatientArrived [artifact_id(TimeMonitorId)];
 		!showInitialData
 		!monitorActiveTraumaTime
 		!monitorActiveTraumaEvent.
 	
 +trauma_status(Status) : Status = "done"
-	<- .println("test : Patient trauma handling completed");
-		completeTraumaHandling [artifact_id(TraumaId)];
-		setDisplayStatus("idle") [artifact_id(DisplayId)].
+	<- .println("Trauma Status : Patient trauma handling completed");
+		setDisplayStatus("idle") [artifact_id(DisplayId)];
+		completeTraumaHandling [artifact_id(TraumaId)].
 		
-+! monitorPreH : trauma_status("arriving")
-	<- 	.wait(1000)
-		getTimeToETA(Eta) [artifact_id(TimeMonitorId)];
+		
++! monitorPreHETA : trauma_status("arriving")
+	<- 	getTimeToETA(Eta) [artifact_id(TimeMonitorId)];
 		showTemporalData(Eta, "eta", "2") [artifact_id(DisplayId)];
-		getPreHInfo(PreH) [artifact_id(TraumaId)];
-		showPreHInfo(PreH, "3") [artifact_id(DisplayId)];
-		!!monitorPreH.	
+		.wait(1000);
+		!!monitorPreHETA.	
 		
- -! monitorPreH 
-	<- .println("Stop Monitoring PreH"). 
+ -! monitorPreHETA
+	<- .println("Stop Monitoring PreH ETA"). 
+	
++! monitorPreHInfo: trauma_status("arriving")
+	<- 	getPreHInfo(PreH) [artifact_id(TraumaId)];
+		showPreHInfo(PreH, "3") [artifact_id(DisplayId)];
+		getTraumaTeam(TL, TT) [artifact_id(TraumaId)];
+		showTraumaTeamInfo(TL, TT, "1") [artifact_id(DisplayId)];
+		.wait(5000);
+		!!monitorPreHInfo.	
+		
+ -! monitorPreHInfo
+	<- .println("Stop Monitoring PreH INFO"). 
+	
+	
+// -----------------------------------------------------------------------------
 	
 +! showInitialData : trauma_status("active")
-	<-	.wait(1500);
-		showPatientInfo("654321", "3") [artifact_id(DisplayId)];
-		//clearSection("3") [artifact_id(DisplayId)];
-		getTraumaInfo(TInfo) [artifact_id(TraumaId)];
-		showTraumaInfo(TInfo, "4") [artifact_id(DisplayId)];
-		getPatientInitialCondition(InitCond)[artifact_id(TraumaId)];
-		showPatientInitialConditionInfo(InitCond, "6") [artifact_id(DisplayId)].
+	<-	showPatientInfo("654321", "3") [artifact_id(DisplayId)].
 
 	
 +! monitorActiveTraumaTime : trauma_status("active")
-	<- 	.wait(1000);
-		getTimeFromArrive(Time) [artifact_id(TimeMonitorId)];
+	<- 	getTimeFromArrive(Time) [artifact_id(TimeMonitorId)];
 		showTemporalData(Time, "total_time", "2") [artifact_id(DisplayId)];
+		.wait(1000);
 		!!monitorActiveTraumaTime.
 	
 -! monitorActiveTraumaTime 
 	<- .println("Stop Monitoring Active Trauma Time"). 
 	
 +! monitorActiveTraumaEvent : trauma_status("active")
-	<- 	.wait(10000);
+	<- 	getTraumaInfo(TInfo) [artifact_id(TraumaId)];
+		showTraumaInfo(TInfo, "4") [artifact_id(DisplayId)];
 		getEventList(EventList) [artifact_id(TimeMonitorId)];
 		showEventList(EventList, "5") [artifact_id(DisplayId)];
+		.wait(5000);
 		!!monitorActiveTraumaEvent.
 	
 -! monitorActiveTraumaEvent 

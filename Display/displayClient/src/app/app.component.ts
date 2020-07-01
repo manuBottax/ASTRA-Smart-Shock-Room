@@ -56,6 +56,8 @@ export class AppComponent {
           break; 
 
         case 'patient_initial_condition' : 
+          position = 5 ; 
+          this.imageDisplay = true;
           this.dataArray[position] = new DataItem(PatientInitialConditionDataComponent, {value : data.value});
           break; 
 

@@ -2,7 +2,6 @@
 
 /* Initial beliefs and rules */
 
-current_patient("123459").
 
 /* Initial goals */
 
@@ -36,18 +35,21 @@ current_patient("123459").
 		.println("Want an action on ", Target);
 		!doAction(CommandID, DataType, Target).
 
-+! doAction(CommandID, "start_trauma", Target) 
-	<-  .println("Inizio Gestione Trauma");
-		completeCommand(CommandId) [artifact_id(QueueId)].
++! doAction(CommandID, "start_trauma", Target) : current_command(Command)
+	<-  .println("Inizio Gestione Trauma : Operazione non ancora supportata");
+		refuseCommand(Command) [artifact_id(QueueId)].
+		//completeCommand(CommandId) [artifact_id(QueueId)].
 		
 +! doAction(CommandID, "patient_arrived", Target) 
-	<-  .println("Inizio Gestione Trauma")
-		setArrivalTime(CommandID) [artifact_id(Target)];
-		completeCommand(CommandId) [artifact_id(QueueId)].
+	<-  .println("Inizio Gestione Trauma : Operazione non ancora supportata")
+		refuseCommand(Command) [artifact_id(QueueId)].
+		//setArrivalTime(CommandID) [artifact_id(Target)];
+		//completeCommand(CommandId) [artifact_id(QueueId)].
 		
 +! doAction(CommandID, "end_trauma", Target) 
-	<-  .println("Termine Gestione Trauma");
-		completeCommand(CommandId) [artifact_id(QueueId)].
+	<-  .println("Termine Gestione Trauma : Operazione non ancora supportata");
+		refuseCommand(Command) [artifact_id(QueueId)].
+		//completeCommand(CommandId) [artifact_id(QueueId)].
 		
 -! doAction(CommandId, DataType, Target) : current_command(Command)
 	<-  .println("Cannot complete Action");
