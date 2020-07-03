@@ -100,7 +100,7 @@ export class AppComponent implements OnInit{
 
       this.completedCommandList.forEach( cmd=> {
 
-        var elapsed = parseInt("" + cmd.completed_on) - parseInt("" + cmd.timestamp);
+        var elapsed = parseInt("" + cmd.completed_on) - parseInt("" + cmd.accepted_on);
 
         var waitingTime = parseInt("" + cmd.accepted_on) - parseInt("" + cmd.timestamp);
 
@@ -147,7 +147,7 @@ export class AppComponent implements OnInit{
 
       this.failedCommandList.forEach( cmd=> {
 
-        var elapsed = parseInt("" + cmd.completed_on) - parseInt("" + cmd.timestamp);
+        var elapsed = parseInt("" + cmd.completed_on) - parseInt("" + cmd.accepted_on);
 
         console.log("Command # " + cmd._id + " failed in " + elapsed + " ms");
 
