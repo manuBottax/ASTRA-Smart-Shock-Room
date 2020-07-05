@@ -9,3 +9,12 @@ img {
     margin-left : 1%;
     margin-right : 1%;
 }
+
+.title-data{
+    font-weight: bold;
+    font-style: italic;
+}
+
+.title{
+    font-weight: bold;
+}

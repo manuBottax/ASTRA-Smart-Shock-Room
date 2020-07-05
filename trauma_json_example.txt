@@ -1,4 +1,4 @@
-"preh" : {"territorialArea" : "RN", "isCarAccident" : true, "aValue" : "test data", "bPleuralDecompression" : false, "cBloodProtocol" : true, "cTpod" : false, "dGcsTotal" : 2, "dAnisocoria" : false, "dAnisocoria" : true, "dMidriasi" : true, "eMotility" : false, "worstBloodPressure" : 50, "worstRespiratoryRate" : 35 }
+﻿"preh" : {"territorialArea" : "RN", "isCarAccident" : true, "aValue" : "test data", "bPleuralDecompression" : false, "cBloodProtocol" : true, "cTpod" : false, "dGcsTotal" : 2, "dAnisocoria" : false, "dAnisocoria" : true, "dMidriasi" : true, "eMotility" : false, "worstBloodPressure" : 50, "worstRespiratoryRate" : 35 }
 
 "traumaInfo" : { "code" : "t_12345", "sdo" : "t_67890", "erDeceased" : false, "admissionCode" : "Rosso", "name" : "Mario", "surname" : "Rossi", "gender" : "M", "dob" : "01/01/1980", "age" : "40", "accidentDate" : "2020-06-24", "accidentTime" : "12:01:25", "accidentType" :  "Chiuso", "vehicle" : "Automedica", "fromOtherEmergency" : false, "otherEmergency" : "", "majorTraumaCriteria" : { "dynamic" : true, "physiological" : false, "anatomical" : false }, "anamnesi" : { "antiplatelets" : false, "anticoagulants" : false, "nao" : true }}
 
@@ -47,26 +47,26 @@
 -----------------------------------------------------------
 
 // EVENT 4a : “blood-product” - somministrazione di un emoderivato 
-"event" : { "eventId" : 12 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "blood-product" , "content" : { "bloodProductId" : "fibrinogen" , "bloodProductDescription" : "descrizione dell'emoderivato", "administrationType" : "drug-protocol"}}
+"event" : { "eventId" : 12 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "Shock-Room", "type" : "blood-product" , "content" : { "bloodProductId" : "fibrinogen" , "bloodProductDescription" : "descrizione dell'emoderivato", "administrationType" : "drug-protocol"}}
 
 // EVENT 4b : “blood-product” - somministrazione di un emoderivato 
-"event" : { "eventId" : 13 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "blood-product" , "content" : { "bloodProductId" : "emazies" , "bloodProductDescription" : "descrizione dell'emoderivato", "administrationType" : "drug-protocol", "bagCode" : "123456"}}
+"event" : { "eventId" : 13 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "Shock-Room", "type" : "blood-product" , "content" : { "bloodProductId" : "emazies" , "bloodProductDescription" : "descrizione dell'emoderivato", "administrationType" : "drug-protocol", "bagCode" : "123456"}}
 
 // EVENT 4c : “blood-product” - somministrazione di un emoderivato 
-"event" : { "eventId" : 14 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "blood-product" , "content" : { "bloodProductId" : "emazies" , "bloodProductDescription" : "descrizione dell'emoderivato", "administrationType" : "one-shot", "bagCode" : "123456", "qty" : 450, "unit" : "ml"}}
+"event" : { "eventId" : 14 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "Shock-Room", "type" : "blood-product" , "content" : { "bloodProductId" : "emazies" , "bloodProductDescription" : "descrizione dell'emoderivato", "administrationType" : "one-shot", "bagCode" : "123456", "qty" : 450, "unit" : "ml"}}
 
 -----------------------------------------------------------
 
 // EVENT 5 : “room-in” - evento che rappresenta l’ingresso in una stanza 
-"event" : { "eventId" : 15 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "room-in" , "content" : { "place" : "ER_CT"}}
+"event" : { "eventId" : 15 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "Shock-Room", "type" : "room-in" , "content" : { "place" : "ER_CT"}}
 
 -----------------------------------------------------------
 
 // EVENT 6 : “room-out” - evento che rappresenta l’uscita da una stanza
-"event" : { "eventId" : 16 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "room-out" , "content" : { "place" : "NEUROSURGERY_OPERATING_ROOM"}}
+"event" : { "eventId" : 16 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "Shock-Room", "type" : "room-out" , "content" : { "place" : "NEUROSURGERY_OPERATING_ROOM"}}
 
 -----------------------------------------------------------
 
 // EVENT 7 : “patient-accepted” - evento che rappresenta l’ingresso del paziente in Shock Room 
-"event" : { "eventId" : 17 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "SHOCK_ROOM", "type" : "patient-accepted" , "content" : {}}
+"event" : { "eventId" : 17 , "date" : "2020-06-24" , "time" : "14:52:36", "place" : "Shock-Room", "type" : "patient-accepted" , "content" : {}}
 

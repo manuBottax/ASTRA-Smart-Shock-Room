@@ -2,3 +2,16 @@
     margin-right: 0px;
     margin-left: 0px;
 }
+
+.title-data{
+    font-weight: bold;
+    font-style: italic;
+}
+
+.title{
+    font-weight: bold;
+}
+
+.italic{
+    font-style: italic;
+}

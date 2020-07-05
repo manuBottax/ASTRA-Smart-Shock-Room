@@ -1,14 +1,15 @@
 
 <div class ="row">
 
-    Evento # {{event.eventId}} - {{event.date}} {{event.time}} @ {{event.place}} | 
+    <span class="title-data"> Evento # {{event.eventId}} - {{event.date}} {{event.time}} @ {{event.place}} </span>| 
 
     <div class="row" *ngIf="event.type == 'procedure'">
         <span *ngIf="event.content.procedureType == 'time-dependent'">
-            <span *ngIf="event.content.event == 'start'">Inizio </span>
-            <span *ngIf="event.content.event == 'end'">Fine </span>
+            <span class="italic" *ngIf="event.content.event == 'start'">Inizio </span>
+            <span class="italic" *ngIf="event.content.event == 'end'">Fine </span>
         </span>
-         Procedura # {{event.content.procedureId}} : {{event.content.procedureDescription}} ({{event.content.procedureType}})
+        
+        <span class="italic">Procedura # {{event.content.procedureId}} : {{event.content.procedureDescription}} ({{event.content.procedureType}})</span>
         
         <div *ngIf="event.content.procedureId == 'intubation'">
 
@@ -46,7 +47,7 @@
     
     <div *ngIf="event.type == 'diagnostic'">
 
-        Diagnostica # {{event.content.diagnosticId}} : {{event.content.diagnosticDescription}}
+        <span class="italic">Diagnostica # {{event.content.diagnosticId}} : {{event.content.diagnosticDescription}}</span>
 
         <div class="row" *ngIf="event.content.diagnosticId == 'abg'">
 
@@ -73,7 +74,7 @@
     
     <div *ngIf="event.type == 'drug'">
 
-        Farmaco # {{event.content.drugId}} : {{event.content.drugDescription}} ({{event.content.administrationType}})
+        <span class="italic">Farmaco # {{event.content.drugId}} : {{event.content.drugDescription}} ({{event.content.administrationType}})</span>
 
         <div class="row" *ngIf="event.content.administrationType == 'one-shot' || event.content.administrationType == 'continuous-infusion'">
             <div *ngIf="event.content.administrationType == 'continuous-infusion'">
@@ -91,7 +92,7 @@
     
     <div *ngIf="event.type == 'blood-product'">
 
-        Emoderivato # {{event.content.bloodProductId}} : {{event.content.bloodProductDescription}} ({{event.content.administrationType}})
+        <span class="italic">Emoderivato # {{event.content.bloodProductId}} : {{event.content.bloodProductDescription}} ({{event.content.administrationType}})</span>
 
         <div class="row" *ngIf="event.content.administrationType == 'one-shot'">
             
@@ -105,7 +106,7 @@
     </div>
 
     
-    <div *ngIf="event.type == 'room-in'">
+    <div class="italic" *ngIf="event.type == 'room-in'">
 
         Ingresso in 
         
@@ -122,7 +123,7 @@
 
     </div>
     
-    <div *ngIf="event.type == 'room-out'">
+    <div class="italic" *ngIf="event.type == 'room-out'">
 
         Uscita da 
         
@@ -139,7 +140,7 @@
 
     </div>
     
-    <div *ngIf="event.type == 'patient-accepted'">
+    <div class="italic" *ngIf="event.type == 'patient-accepted'">
         Paziente Accettato.
     </div>
 

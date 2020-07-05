@@ -1,52 +1,52 @@
-<p> Condizioni iniziali del Paziente : </p>
+<p> <span class="title">Condizioni iniziali del Paziente</span> : </p>
 
-<p *ngIf="initialCondition.vitalSigns">     Parametri Vitali : </p>
+<p *ngIf="initialCondition.vitalSigns"> <span class="title">Parametri Vitali</span> : </p>
 <div class="row" *ngIf="initialCondition.vitalSigns">
-    <div class="col-4" *ngIf="initialCondition.vitalSigns.temp">Temperatura : {{initialCondition.vitalSigns.temp}}</div>
-    <div class="col-4" *ngIf="initialCondition.vitalSigns.hr">Frequenza Cardiaca : {{initialCondition.vitalSigns.hr}}</div>
-    <div class="col-4" *ngIf="initialCondition.vitalSigns.bp">Pressione Arteriosa Sistolica : {{initialCondition.vitalSigns.bp}}</div>
-    <div class="col-6" *ngIf="initialCondition.vitalSigns.spo2">Saturazione (SpO2) : {{initialCondition.vitalSigns.spo2}}</div>
-    <div class="col-6" *ngIf="initialCondition.vitalSigns.etco2">EtCO2 : {{initialCondition.vitalSigns.etco2}}</div>
+    <div class="col-4" *ngIf="initialCondition.vitalSigns.temp"> <span class="title-data">Temperatura</span> : {{initialCondition.vitalSigns.temp}}</div>
+    <div class="col-4" *ngIf="initialCondition.vitalSigns.hr"> <span class="title-data">Frequenza Cardiaca</span> : {{initialCondition.vitalSigns.hr}}</div>
+    <div class="col-4" *ngIf="initialCondition.vitalSigns.bp"> <span class="title-data">Pressione Arteriosa Sistolica</span> : {{initialCondition.vitalSigns.bp}}</div>
+    <div class="col-6" *ngIf="initialCondition.vitalSigns.spo2"> <span class="title-data">Saturazione (SpO2)</span> : {{initialCondition.vitalSigns.spo2}}</div>
+    <div class="col-6" *ngIf="initialCondition.vitalSigns.etco2"> <span class="title-data">EtCO2</span> : {{initialCondition.vitalSigns.etco2}}</div>
 </div>
 
-<p  *ngIf="initialCondition.clinicalPicture">     Esame Neurologico : </p>
+<p  *ngIf="initialCondition.clinicalPicture"> <span class="title">Esame Neurologico</span> : </p>
 <div class="row" *ngIf="initialCondition.clinicalPicture">
-    <div class="col-3" *ngIf="initialCondition.clinicalPicture.gcsTotal">GCS Totale : {{initialCondition.clinicalPicture.gcsTotal}}</div>
-    <div class="col-3" *ngIf="initialCondition.clinicalPicture.gcsMotor">GCS Motorio : {{initialCondition.clinicalPicture.gcsMotor}}</div>
-    <div class="col-3" *ngIf="initialCondition.clinicalPicture.gcsVerbal">GCS Verbale : {{initialCondition.clinicalPicture.gcsVerbal}}</div>
-    <div class="col-3" *ngIf="initialCondition.clinicalPicture.gcsEyes">GCS Occhi : {{initialCondition.clinicalPicture.gcsEyes}}</div>
-    <div class="col-6" *ngIf="initialCondition.clinicalPicture.sedated">Paziente Sedato : {{initialCondition.clinicalPicture.sedated}}</div>
-    <div class="col-6" *ngIf="initialCondition.clinicalPicture.pupils">Pupille : {{initialCondition.clinicalPicture.pupils}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.gcsTotal"> <span class="title-data">GCS Totale</span> : {{initialCondition.clinicalPicture.gcsTotal}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.gcsMotor"> <span class="title-data">GCS Motorio</span> : {{initialCondition.clinicalPicture.gcsMotor}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.gcsVerbal"> <span class="title-data">GCS Verbale</span> : {{initialCondition.clinicalPicture.gcsVerbal}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.gcsEyes"> <span class="title-data">GCS Occhi</span> : {{initialCondition.clinicalPicture.gcsEyes}}</div>
+    <div class="col-6" *ngIf="initialCondition.clinicalPicture.sedated"> <span class="title-data">Paziente Sedato</span> : {{initialCondition.clinicalPicture.sedated}}</div>
+    <div class="col-6" *ngIf="initialCondition.clinicalPicture.pupils"> <span class="title-data">Pupille</span> : {{initialCondition.clinicalPicture.pupils}}</div>
 </div>
 
-<p  *ngIf="initialCondition.clinicalPicture">     Vie Aeree e Respirazione : </p>
+<p  *ngIf="initialCondition.clinicalPicture"> <span class="title">Vie Aeree e Respirazione</span> : </p>
 <div class="row" *ngIf="initialCondition.clinicalPicture">
-    <div class="col-3" *ngIf="initialCondition.clinicalPicture.airway">Vie Aeree : {{initialCondition.clinicalPicture.airway}}</div>
-    <div class="col-3" *ngIf="initialCondition.clinicalPicture.positiveInhalation">Inalazione Certa  : {{initialCondition.clinicalPicture.positiveInhalation}}</div>
-    <div class="col-3" *ngIf="initialCondition.clinicalPicture.intubationFailed">IOT Fallita : {{initialCondition.clinicalPicture.intubationFailed}}</div>
-    <div class="col-3" *ngIf="initialCondition.clinicalPicture.chestTube">Decompressione Pleurica : {{initialCondition.clinicalPicture.chestTube}}</div>
-    <div class="col-3" *ngIf="initialCondition.clinicalPicture.oxygenPercentage">% O2 : {{initialCondition.clinicalPicture.oxygenPercentage}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.airway"> <span class="title-data">Vie Aeree</span> : {{initialCondition.clinicalPicture.airway}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.positiveInhalation"> <span class="title-data">Inalazione Certa</span> : {{initialCondition.clinicalPicture.positiveInhalation}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.intubationFailed"> <span class="title-data">IOT Fallita</span> : {{initialCondition.clinicalPicture.intubationFailed}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.chestTube"> <span class="title-data">Decompressione Pleurica</span> : {{initialCondition.clinicalPicture.chestTube}}</div>
+    <div class="col-3" *ngIf="initialCondition.clinicalPicture.oxygenPercentage"> <span class="title-data">% O2</span> : {{initialCondition.clinicalPicture.oxygenPercentage}}</div>
 </div>
 
 <div *ngIf="initialCondition.clinicalPicture">
-    <p *ngIf="initialCondition.clinicalPicture.hemorrhage">     Emorraggie : </p>
+    <p *ngIf="initialCondition.clinicalPicture.hemorrhage"> <span class="title">Emorraggie</span> : </p>
     <div class="row" *ngIf="initialCondition.clinicalPicture.hemorrhage">
-        <div *ngIf="initialCondition.clinicalPicture.hemorrhage">Emorragie Esterne : {{initialCondition.clinicalPicture.hemorrhage}}</div>
+        <div *ngIf="initialCondition.clinicalPicture.hemorrhage"> <span class="title-data">Emorragie Esterne</span> : {{initialCondition.clinicalPicture.hemorrhage}}</div>
     </div>
 </div>
 
 <div *ngIf="initialCondition.clinicalPicture">
-    <p *ngIf="initialCondition.clinicalPicture.limbsFracture || initialCondition.clinicalPicture.fractureExposition">     Lesioni Ortopediche : </p>
+    <p *ngIf="initialCondition.clinicalPicture.limbsFracture || initialCondition.clinicalPicture.fractureExposition"> <span class="title">Lesioni Ortopediche</span> : </p>
     <div class="row" *ngIf="initialCondition.clinicalPicture.limbsFracture || initialCondition.clinicalPicture.fractureExposition">
-        <div class="col-6" *ngIf="initialCondition.clinicalPicture.limbsFracture">Fratture Arti : {{initialCondition.clinicalPicture.limbsFracture}}</div>
-        <div class="col-6" *ngIf="initialCondition.clinicalPicture.fractureExposition">Frattura Esposta  : {{initialCondition.clinicalPicture.fractureExposition}}</div>
+        <div class="col-6" *ngIf="initialCondition.clinicalPicture.limbsFracture"> <span class="title-data">Fratture Arti</span> : {{initialCondition.clinicalPicture.limbsFracture}}</div>
+        <div class="col-6" *ngIf="initialCondition.clinicalPicture.fractureExposition"> <span class="title-data">Frattura Esposta</span>  : {{initialCondition.clinicalPicture.fractureExposition}}</div>
     </div>
 </div>
 
 <div *ngIf="initialCondition.clinicalPicture">
-    <p *ngIf="initialCondition.clinicalPicture.burn">     Ustioni : </p>
+    <p *ngIf="initialCondition.clinicalPicture.burn"> <span class="title">Ustioni</span> : </p>
     <div class="row" *ngIf="initialCondition.clinicalPicture.burn">
-        <div *ngIf="initialCondition.clinicalPicture.burn">Ustione : {{initialCondition.clinicalPicture.burn}}</div>
+        <div *ngIf="initialCondition.clinicalPicture.burn"> <span class="title-data">Ustione</span> : {{initialCondition.clinicalPicture.burn}}</div>
     </div>
 </div>
 

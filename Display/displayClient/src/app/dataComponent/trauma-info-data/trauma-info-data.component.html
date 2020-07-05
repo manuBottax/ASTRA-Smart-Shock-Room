@@ -1,43 +1,43 @@
-<p> Informazioni sul Trauma : </p>
+<p> <span class="title"> Informazioni sul Trauma</span> : </p>
 
 <div class="row">
-    <div class="col-3" *ngIf="traumaInfo.code"> Codice PS : {{traumaInfo.code}}</div>
-    <div class="col-3" *ngIf="traumaInfo.sdo">Codice SDO : {{traumaInfo.sdo}}</div>
-    <div class="col-3" *ngIf="traumaInfo.name">Nome : {{traumaInfo.name}}</div>
-    <div class="col-3" *ngIf="traumaInfo.surname">Cognome : {{traumaInfo.surname}}</div>
-    <div class="col-4" *ngIf="traumaInfo.gender">Genere : {{traumaInfo.gender}}</div>
-    <div class="col-4" *ngIf="traumaInfo.dob">Data di nascita : {{traumaInfo.dob}}</div>
-    <div class="col-4"*ngIf="traumaInfo.age">Età : {{traumaInfo.age}}</div>
+    <div class="col-3" *ngIf="traumaInfo.code"> <span class="title-data">Codice PS</span> : {{traumaInfo.code}}</div>
+    <div class="col-3" *ngIf="traumaInfo.sdo"> <span class="title-data">Codice SDO</span> : {{traumaInfo.sdo}}</div>
+    <div class="col-3" *ngIf="traumaInfo.name"> <span class="title-data">Nome</span> : {{traumaInfo.name}}</div>
+    <div class="col-3" *ngIf="traumaInfo.surname"> <span class="title-data">Cognome</span> : {{traumaInfo.surname}}</div>
+    <div class="col-4" *ngIf="traumaInfo.gender"> <span class="title-data">Genere</span> : {{traumaInfo.gender}}</div>
+    <div class="col-4" *ngIf="traumaInfo.dob"> <span class="title-data">Data di nascita</span> : {{traumaInfo.dob}}</div>
+    <div class="col-4"*ngIf="traumaInfo.age"><span class="title-data">Età</span> : {{traumaInfo.age}}</div>
 </div>
 
 <div class="row">
-    <div class="col-4" *ngIf="traumaInfo.accidentDate">Data dell’incidente : {{traumaInfo.accidentDate}}</div>
-    <div class="col-4" *ngIf="traumaInfo.accidentTime">Ora dell’incidente : {{traumaInfo.accidentTime}}</div>
-    <div class="col-4" *ngIf="traumaInfo.accidentType">Tipo di incidente : {{traumaInfo.accidentType}}</div>
+    <div class="col-4" *ngIf="traumaInfo.accidentDate"> <span class="title-data">Data dell’incidente</span> : {{traumaInfo.accidentDate}}</div>
+    <div class="col-4" *ngIf="traumaInfo.accidentTime"> <span class="title-data">Ora dell’incidente</span> : {{traumaInfo.accidentTime}}</div>
+    <div class="col-4" *ngIf="traumaInfo.accidentType"> <span class="title-data">Tipo di incidente</span> : {{traumaInfo.accidentType}}</div>
 </div>
 
 <div class="row">
-    <div class="col-3" *ngIf="traumaInfo.admissionCode">Codice Ammissione in PS : {{traumaInfo.admissionCode}}</div>
-    <div class="col-3" *ngIf="traumaInfo.vehicle">Veicolo di arrivo in PS : {{traumaInfo.vehicle}}</div>
-    <div class="col-3" *ngIf="traumaInfo.fromOtherEmergency">Provenienza da altro PS : {{traumaInfo.fromOtherEmergency}}</div>
-    <div class="col-3" *ngIf="traumaInfo.otherEmergency && traumaInfo.fromOtherEmergency">PS di provenienza : {{traumaInfo.otherEmergency}}</div>
-    <div class="col-3" *ngIf="traumaInfo.erDeceased">Paziente deceduto in PS : {{traumaInfo.erDeceased}}</div>
+    <div class="col-3" *ngIf="traumaInfo.admissionCode"> <span class="title-data">Codice Ammissione in PS</span> : {{traumaInfo.admissionCode}}</div>
+    <div class="col-3" *ngIf="traumaInfo.vehicle"> <span class="title-data">Veicolo di arrivo in PS</span> : {{traumaInfo.vehicle}}</div>
+    <div class="col-3" *ngIf="traumaInfo.fromOtherEmergency"> <span class="title-data">Provenienza da altro PS</span> : {{traumaInfo.fromOtherEmergency}}</div>
+    <div class="col-3" *ngIf="traumaInfo.otherEmergency && traumaInfo.fromOtherEmergency"> <span class="title-data">PS di provenienza</span> : {{traumaInfo.otherEmergency}}</div>
+    <div class="col-3" *ngIf="traumaInfo.erDeceased"> <span class="title-data">Paziente deceduto in PS</span> : {{traumaInfo.erDeceased}}</div>
 </div>
 
 <div class="row" *ngIf="traumaInfo.majorTraumaCriteria">  
-    Major Trauma Criteria : 
+    <span class="title">Major Trauma Criteria</span> : 
     <ul>
-        <li>Dinamico : {{traumaInfo.majorTraumaCriteria.dynamic}}</li>
-        <li>Fisiologico : {{traumaInfo.majorTraumaCriteria.physiological}}</li>
-        <li>Anatomico : {{traumaInfo.majorTraumaCriteria.anatomical}}</li>
+        <li> <span class="title-data">Dinamico</span> : {{traumaInfo.majorTraumaCriteria.dynamic}}</li>
+        <li> <span class="title-data">Fisiologico</span> : {{traumaInfo.majorTraumaCriteria.physiological}}</li>
+        <li> <span class="title-data">Anatomico</span> : {{traumaInfo.majorTraumaCriteria.anatomical}}</li>
     </ul>
 </div>
 
 <div class="row"  *ngIf="traumaInfo.anamnesi">  
-    Anamnesi : 
+    <span class="title">Anamnesi</span> :
     <ul>
-        <li>Antiaggreganti : {{traumaInfo.anamnesi.antiplatelets}}</li>
-        <li>Anticoagulanti : {{traumaInfo.anamnesi.anticoagulants}}</li>
-        <li>NAO : {{traumaInfo.anamnesi.nao}}</li>
+        <li> <span class="title-data">Antiaggreganti</span> : {{traumaInfo.anamnesi.antiplatelets}}</li>
+        <li> <span class="title-data">Anticoagulanti</span> : {{traumaInfo.anamnesi.anticoagulants}}</li>
+        <li> <span class="title-data">NAO</span> : {{traumaInfo.anamnesi.nao}}</li>
     </ul>
 </div>
