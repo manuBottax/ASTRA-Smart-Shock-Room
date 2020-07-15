@@ -22,11 +22,13 @@ const LaunchRequestHandler = {
     handle(handlerInput) {
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        const speakOutput = `Benvenuto in ASTRA Room Controller. Attendo istruzioni. Dì , Alexa , seguito dalla tua richiesta. <audio src="${Escape(audioUrl)}"/>`;
+        const speakOutput = `Attendo istruzioni. <audio src="${Escape(audioUrl)}"/>`;
+        // const speakOutput = `Benvenuto in ASTRA Room Controller. Attendo istruzioni. Dì , Alexa , seguito dalla tua richiesta. <audio src="${Escape(audioUrl)}"/>`;
         
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            .reprompt(`Attendo istruzioni. Tra poco sarà necessario riaprire la Skill per continuare.`)
+            .reprompt(`Attendo istruzioni.`)
+            // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
             .getResponse();
     }
 };
@@ -82,7 +84,8 @@ const VisualisationRequestIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        const speech =  `Richiedo la visualizzazione di ${data_type} del paziente. <audio src="${Escape(audioUrl)}"/> `
+        const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
+        // const speech =  `Richiedo la visualizzazione di ${data_type} del paziente. <audio src="${Escape(audioUrl)}"/> `
         
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -93,7 +96,8 @@ const VisualisationRequestIntentHandler = {
             
         return handlerInput.responseBuilder
             .speak(speech)
-            .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+            .reprompt(`Attendo istruzioni.`)
+            // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
             .getResponse();
     }
 }
@@ -133,7 +137,8 @@ const DrugInfoVisualisationRequestIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        const speech =  `Richiedo la visualizzazione della quantità di farmaco ${drug_name} somministrata al paziente. <audio src="${Escape(audioUrl)}"/> `
+        // const speech =  `Richiedo la visualizzazione della quantità di farmaco ${drug_name} somministrata al paziente. <audio src="${Escape(audioUrl)}"/> `
+        const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
         
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -144,7 +149,8 @@ const DrugInfoVisualisationRequestIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                .reprompt(`Attendo istruzioni.`)
                 .getResponse();
         
     }
@@ -195,7 +201,8 @@ const MonitorRequestIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        var speech = `Richiedo il monitoraggio di ${monitor_type} del paziente. <audio src="${Escape(audioUrl)}"/> `
+        // var speech = `Richiedo il monitoraggio di ${monitor_type} del paziente. <audio src="${Escape(audioUrl)}"/> `
+        const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
         
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -206,7 +213,8 @@ const MonitorRequestIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                .reprompt(`Attendo istruzioni.`)
                 .getResponse();
         
     }
@@ -243,7 +251,8 @@ const OperationAnnotationRequestIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        var speech = `Richiedo l'annotazione di ${type} ${operation} del paziente. <audio src="${Escape(audioUrl)}"/> `
+        // var speech = `Richiedo l'annotazione di ${type} ${operation} del paziente. <audio src="${Escape(audioUrl)}"/> `
+        const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -254,7 +263,8 @@ const OperationAnnotationRequestIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                .reprompt(`Attendo istruzioni.`)
                 .getResponse();
     }
 }
@@ -290,7 +300,8 @@ const DrugAnnotationRequestIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        var speech = `Richiedo l'annotazione della somministrazione di ${drug_quantity} di ${drug_name} al paziente. <audio src="${Escape(audioUrl)}"/> `
+        // var speech = `Richiedo l'annotazione della somministrazione di ${drug_quantity} di ${drug_name} al paziente. <audio src="${Escape(audioUrl)}"/> `
+        const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -301,7 +312,8 @@ const DrugAnnotationRequestIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                .reprompt(`Attendo istruzioni.`)
                 .getResponse();
     
     }
@@ -327,7 +339,8 @@ const StartActionIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        var speech = `Richiedo l'inizio della gestione di un trauma per il paziente in arrivo. <audio src="${Escape(audioUrl)}"/> `
+        // var speech = `Richiedo l'inizio della gestione di un trauma per il paziente in arrivo. <audio src="${Escape(audioUrl)}"/> `
+        const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -338,7 +351,8 @@ const StartActionIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                .reprompt(`Attendo istruzioni.`)
                 .getResponse();
         
     }
@@ -364,7 +378,8 @@ const PatientActionIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        var speech = `Annoto l'arrivo del paziente. <audio src="${Escape(audioUrl)}"/> `
+        // var speech = `Annoto l'arrivo del paziente. <audio src="${Escape(audioUrl)}"/> `
+        const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -375,7 +390,8 @@ const PatientActionIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                .reprompt(`Attendo istruzioni.`)
                 .getResponse();
         
     }
@@ -401,7 +417,8 @@ const EndActionIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        var speech = `Richiedo la fine della gestione del trauma del paziente. <audio src="${Escape(audioUrl)}"/> `
+        // var speech = `Richiedo la fine della gestione del trauma del paziente. <audio src="${Escape(audioUrl)}"/> `
+        const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
@@ -412,7 +429,8 @@ const EndActionIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
+                .reprompt(`Attendo istruzioni.`)
                 .getResponse();
     }
 }
@@ -439,7 +457,7 @@ const CancelAndStopIntentHandler = {
                 || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        const speakOutput = 'Ho finito, chiudo la skill !';
+        const speakOutput = 'Ho finito !';
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .getResponse();
@@ -484,7 +502,7 @@ const ErrorHandler = {
     },
     handle(handlerInput, error) {
         console.log(`~~~~ Error handled: ${error.stack}`);
-        const speakOutput = `Mi dispiace, un errore mi ha impedito di completare la tua richiesta.`;
+        const speakOutput = `Mi dispiace, operazione non supportata.`;
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
