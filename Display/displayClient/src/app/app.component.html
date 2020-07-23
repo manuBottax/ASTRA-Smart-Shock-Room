@@ -1,4 +1,39 @@
 
+
+<!-- Layout for display in idle state, used when waiting for trauma team activation -->
+<div class="dark-bg" *ngIf="displayStatus == 'idle'">
+
+  <div class="row"> 
+    <h1 class ="title">ASTRA Shock Room Display</h1> 
+  </div>
+
+  <div class="row"> 
+    <h3>Attendo attivazione Trauma Team</h3> 
+  </div>
+
+</div>
+
+<!-- Layout for display in preH state, used when trauma team is active and patient is not arrived in hospital -->
+<div *ngIf="displayStatus == 'preH'">
+
+  <div class="row"> 
+    <h1 class ="title">ASTRA Shock Room Display - Dati PreH </h1> 
+  </div>
+
+  <div class="row preh-data-container">
+    <app-data-container [data]=dataArray[0] (bindedComponent)="onBindedComponent(0, $event)"></app-data-container>
+  </div>
+
+  <div class="row preh-data-container">
+    <app-data-container [data]=dataArray[1] (bindedComponent)="onBindedComponent(1, $event)"></app-data-container>
+  </div>
+
+  <div class="row preh-data-container">
+    <app-data-container [data]=dataArray[2] (bindedComponent)="onBindedComponent(2, $event)"></app-data-container>
+  </div>
+</div>
+
+<!-- Layout for display in active state, used when trauma team is active and patient is in the shock room -->
 <div *ngIf="displayStatus == 'active'">
   <div class="row"> 
     <h1 class ="title">ASTRA Shock Room Display</h1> 
@@ -27,37 +62,4 @@
 
   </div>
 </div>
-
-<div *ngIf="displayStatus == 'preH'">
-
-  <div class="row"> 
-    <h1 class ="title">ASTRA Shock Room Display - Dati PreH </h1> 
-  </div>
-
-  <div class="row preh-data-container">
-    <app-data-container [data]=dataArray[0] (bindedComponent)="onBindedComponent(0, $event)"></app-data-container>
-  </div>
-
-  <div class="row preh-data-container">
-    <app-data-container [data]=dataArray[1] (bindedComponent)="onBindedComponent(1, $event)"></app-data-container>
-  </div>
-
-  <div class="row preh-data-container">
-    <app-data-container [data]=dataArray[2] (bindedComponent)="onBindedComponent(2, $event)"></app-data-container>
-  </div>
-</div>
-
-<div class="dark-bg" *ngIf="displayStatus == 'idle'">
-
-  <div class="row"> 
-    <h1 class ="title">ASTRA Shock Room Display</h1> 
-  </div>
-
-  <div class="row"> 
-    <h3>Attendo attivazione Trauma Team</h3> 
-  </div>
-
-</div>
-
-
-  
+ 

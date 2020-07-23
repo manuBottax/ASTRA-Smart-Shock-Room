@@ -34,7 +34,7 @@ io.on('connection', (socket) => {
         console.log('[ Vital Paramenter Monitor ] message: ' + msg);
     });
 
-    socket.on('vp_update_blooed_pressure', (msg) => {
+    socket.on('vp_update_blood_pressure', (msg) => {
       console.log('[ Vital Paramenter Monitor ] new blood pressure: ' + msg);
       // update value 
     });
@@ -47,6 +47,10 @@ var traumaController = require("./traumaControllers");
 router.get('/', (req, res) => {
   res.send('<h1>ASTRA Shock Room Trauma Data Service</h1> <p> You should not be here. </p>');
 });
+
+////// REST Service API 
+
+/// Simulate vital parameter measurement with random data. 
 
 router.get('/api/vital_parameter/blood_pressure',  (req, res) => {
 
@@ -97,10 +101,10 @@ router.get('/api/vital_parameter/temperature',  (req, res) => {
 
 })
 
+/// API for Trauma Handling 
+/// This allow the system to integrate with TraumaTracker. 
 
 var createTrauma = function (req, res) {
-
-
 
   var data = {
     startOperatorId : req.body.startOperatorId,
@@ -128,8 +132,8 @@ router.delete('/api/trauma/:trauma_id', traumaController.deleteTrauma);
 
 // router.get('/api/trauma/:trauma_id/trauma_current_status',traumaController.getTraumaStatus)
 // (req, res) => { io.emit("test_message", {}) ; jsonUtils.sendJsonResponse(res, "200", "OK")}
-router.get('/api/trauma/:trauma_id/trauma_current_status',traumaController.getTraumaStatus);
-router.put('/api/trauma/:trauma_id/trauma_current_status',traumaController.updateTraumaStatus);
+router.get ('/api/trauma/:trauma_id/trauma_current_status',traumaController.getTraumaStatus);
+router.put ('/api/trauma/:trauma_id/trauma_current_status',traumaController.updateTraumaStatus);
 
 // ActiveTrauma
 
@@ -146,7 +150,7 @@ router.get ('/api/trauma/:trauma_id/patient_initial_condition', traumaController
 router.put ('/api/trauma/:trauma_id/patient_initial_condition', traumaController.updatePatientInitialCondition);
 
 router.post('/api/trauma/:trauma_id/events', traumaController.addEvent);
-router.get('/api/trauma/:trauma_id/events', traumaController.getEventList);
+router.get ('/api/trauma/:trauma_id/events', traumaController.getEventList);
 router.get ('/api/trauma/:trauma_id/events/:event_id', traumaController.getEvent);
 router.put ('/api/trauma/:trauma_id/events/:event_id', traumaController.updateEvent);
 

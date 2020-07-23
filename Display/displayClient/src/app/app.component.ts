@@ -30,16 +30,19 @@ export class AppComponent {
 
   imageDisplay : Boolean = false;
 
+
   constructor(private socketService: WebSocketService){
-    // console.log(this.dataArray.length);
-    
+
+  /**
+   * Specify how to handle data received by the WebSocket. 
+   * 
+   * Every time a new message is received the handler is invoked and change the component in the specified position based on the data type. 
+   */
     this.dataSubscription = socketService.dataStream.subscribe( data => {
       var position = parseInt(data.position) - 1 ;
 
       if (position < 0 ) {position = 0};
       if (position > 7 ) {position = 7}
-
-      // console.log(data)
 
       switch (data.type) {
 
@@ -96,18 +99,22 @@ export class AppComponent {
 
     });
 
+    /**
+     * Specify how to handle display status by the WebSocket
+     */
     this.statusSubscription = socketService.statusStream.subscribe( status => {
         this.displayStatus = status;
       }
     )
   }
 
+  /**
+   * Init the display on creation
+   */
   ngOnInit() {
 
-    for (let i = 0; i < 8; i++) {
-      
+    for (let i = 0; i < 8; i++) { 
       this.dataArray.push(new DataItem(TextDataComponent, {value : ''}));
-      
     }
 
     this.socketService.setupSocketConnection();
@@ -119,8 +126,6 @@ export class AppComponent {
   }
 
   onBindedComponent(position, component) {
-
     this.componentArray[position] = component;
-
   }
 }

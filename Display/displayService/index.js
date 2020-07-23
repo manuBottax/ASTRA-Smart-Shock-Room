@@ -10,7 +10,7 @@ app.use(express.urlencoded( { extended: true } ));
 
 var displayStatus = "idle";
 
-
+// --- Handler for the different type of data that the display can visualise ---
 var displayTraumaTeamData = function (req, res) {
 
   if (req.params){
@@ -75,8 +75,6 @@ var displayTextData = function (req, res) {
 
   if (req.params){
 
-    //console.log("req.body.name" + req.body.name);
-
       io.emit("display_data", {position : req.params.position, name : req.body.name, type: "text", value : req.body.data});
       jsonUtils.sendJsonResponse(res, 201, "OK");
 
@@ -116,9 +114,6 @@ var displayErrorData = function (req, res) {
 
   if (req.params){
 
-    // console.log("req.body.data : ")
-    // console.log(req.body.data);
-
     var type = 'visualizzare'
 
     if (req.body.data.type == 'monitoring'){
@@ -152,6 +147,7 @@ var clearData = function (req, res) {
   }
 }
 
+// --- REST Service Routing paths ---
 
 router.get('/', (req, res) => {
   res.send('<h1>ASTRA Shock Room Display Service</h1> <p> You should not be here. </p>');
@@ -167,8 +163,6 @@ router.post('/api/display/:position/patient_initial_condition', displayInitialCo
 
 router.post('/api/display/:position/events', displayEventListData)
 
-
-
 router.post('/api/display/:position/patient_data', displayTextData)
 
 router.post('/api/display/:position/biometric_data', displayTextData)
@@ -176,6 +170,7 @@ router.post('/api/display/:position/biometric_data', displayTextData)
 router.post('/api/display/:position/diagnostic_data', displayTextData)
 
 router.post('/api/display/:position/tac', displayTACData)
+
 router.post('/api/display/:position/rx', displayImageData)
 
 router.post('/api/display/:position/temporal_data', displayTextData)
@@ -191,8 +186,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/api/display/status', (req, res) => {
-  // console.log("Requested Status !")
-  // console.log(displayStatus)
   jsonUtils.sendJsonResponse(res,"200", {"status" : displayStatus});
 });
 
@@ -201,22 +194,6 @@ router.put('/api/display/status', (req, res) => {
   io.emit("update_status", {"status" : displayStatus});
   jsonUtils.sendJsonResponse(res,"200", {"status" : displayStatus});
 });
-
-// router.post('/api/display/:position',  (req, res) => {
-
-//   if (req.params){
-
-//       var position = req.params.position;
-
-//       var data_type = (req.body.type  === "tac" || req.body.type  === "chest_rx") ? "image" : "text"
-
-//       io.emit("display_data", {position : position, name : req.body.type, type: data_type, value : req.body.data});
-//       jsonUtils.sendJsonResponse(res, 201, "OK");
-//   } else {
-//     jsonUtils.sendJsonResponse(res, 400, "Invalid Params");
-//   }
-
-// });
 
 app.use('/', router);
 

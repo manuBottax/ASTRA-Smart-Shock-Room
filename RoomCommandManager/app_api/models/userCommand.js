@@ -3,11 +3,13 @@ var mongoose = require( 'mongoose' );
 // Command Sample Format {
 //     _id : String,
 //     type : String,
+//     category : String,
 //     target : String,
 //     issuer : String,
 //     status : String,
 //     timestamp : Date,
-//     completed_on : Date
+//     accepted_on : Date,
+//     completed_on : Date,
 //     params : {
 //         par1 : String,
 //         par2 : String,

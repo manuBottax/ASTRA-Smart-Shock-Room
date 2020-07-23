@@ -9,7 +9,6 @@ require('./models/db');
 
 var status = "unavailable";
 
-
 app = express();
 
 app.use(cors());
@@ -23,6 +22,7 @@ router.get('/', (req, res) => {
   res.send('<h1>ASTRA Shock Room TAC Sample Service</h1> <p> You should not be here. </p>');
 });
 
+/// REST Service API 
 router.get('/api/status/',  (req, res) => {
   jsonUtils.sendJsonResponse(res, 200, {"status" : status});
 });
@@ -34,6 +34,8 @@ router.get ('/api/tac_data/:patient_id', tacController.getTACByPatient);
 app.use('/', router);
 
 const http = require('http').createServer(app);
+
+/// TAC Status handled via WebSocket
 const io = require('socket.io')(http);
 
 io.on('connection', (socket) => {

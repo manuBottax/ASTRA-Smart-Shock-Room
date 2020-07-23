@@ -6,23 +6,32 @@ import { CommandService, Command } from './services/command-service.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
+/**
+ * Test system performance based on command handling time. 
+ * 
+ * This application retrieve every command issued to the system and compute average time and max time: 
+ *    - from command creation to command acceptance (status :  pending -> in_process)
+ *    - from command acceptance to completion (status : in_process -> completed)
+ *    - from command acceptance to failure (status :  in_process -> failed)
+ */
 export class AppComponent implements OnInit{
 
-  commandTotalAmount : number
+  commandTotalAmount : number;
 
-  pendingCommandList : Array<Command>
-  processingCommandList : Array<Command>
-  completedCommandList : Array<Command>
-  failedCommandList : Array<Command>
+  pendingCommandList : Array<Command>;
+  processingCommandList : Array<Command>;
+  completedCommandList : Array<Command>;
+  failedCommandList : Array<Command>;
 
-  avgAcceptTime : number
-  maxAcceptTime : number
+  avgAcceptTime : number;
+  maxAcceptTime : number;
 
-  avgCompletionTime : number
-  maxCompletionTime : number
+  avgCompletionTime : number;
+  maxCompletionTime : number;
 
-  avgFailureTime : number
-  maxFailureTime : number
+  avgFailureTime : number;
+  maxFailureTime : number;
  
   constructor(private commandService : CommandService) {
     this.pendingCommandList = new Array<Command> ();
@@ -49,34 +58,6 @@ export class AppComponent implements OnInit{
       this.processingCommandList = processList;
 
       this.commandTotalAmount += this.processingCommandList.length;
-
-      // var processed = 0;
-      // var max = 0; 
-      // var tot = 0; 
-
-      // this.avgAcceptTime = 0;
-      // this.maxAcceptTime = 0;
-
-      // this.processingCommandList.forEach( cmd=> {
-
-        // var elapsed = parseInt("" + cmd.completed_on) - parseInt("" + cmd.timestamp);
-
-        // console.log("Command # " + cmd._id + " : " + elapsed + " ms");
-
-        // tot = tot + elapsed;
-
-        // if (elapsed > max){
-        //   max = elapsed;
-        // }
-
-        // processed = processed + 1;
-
-        // if (processed == this.processingCommandList.length) {
-        //   this.avgAcceptTime = ( Math.round((tot / this.processingCommandList.length)) / 1000 );
-        //   this.maxAcceptTime = ( max / 1000) ;
-        // }
-
-      // })
     })
 
     this.commandService.getCompletedCommand().subscribe(completedList => {
@@ -98,7 +79,7 @@ export class AppComponent implements OnInit{
       this.avgAcceptTime = 0;
       this.maxAcceptTime = 0;
 
-      this.completedCommandList.forEach( cmd=> {
+      this.completedCommandList.forEach( cmd => {
 
         var elapsed = parseInt("" + cmd.completed_on) - parseInt("" + cmd.accepted_on);
 
@@ -145,7 +126,7 @@ export class AppComponent implements OnInit{
       this.avgFailureTime = 0;
       this.maxFailureTime = 0;
 
-      this.failedCommandList.forEach( cmd=> {
+      this.failedCommandList.forEach( cmd => {
 
         var elapsed = parseInt("" + cmd.completed_on) - parseInt("" + cmd.accepted_on);
 

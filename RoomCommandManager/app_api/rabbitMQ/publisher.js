@@ -2,8 +2,6 @@ var amqp = require('amqplib/callback_api');
 
 var exchangeName = 'room_command_exchange';
 
-// var key = 'data_retriever.example';
-
 var channel;
 
 amqp.connect('amqp://localhost', function(connect_error, connection) {
@@ -27,6 +25,6 @@ amqp.connect('amqp://localhost', function(connect_error, connection) {
 
 module.exports.publishActivity = function(msg, key) { 
   channel.publish(exchangeName, key, Buffer.from(JSON.stringify(msg)));
-  console.log(" [x] Comando inviato a %s :", key);
+  console.log(" [RCM] Command Send to %s :", key);
   console.log(msg)
 };

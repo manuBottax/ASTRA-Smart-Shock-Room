@@ -30,20 +30,6 @@ router.get('/api/mock_data/image',  (req, res) => {
 app.use('/', router);
 
 const http = require('http').createServer(app);
-// const io = require('socket.io')(http);
-
-// io.on('connection', (socket) => {
-//     console.log('data connected');
-    
-//     socket.on('disconnect', () => {
-//       console.log('data disconnected');
-//     });
-
-//     socket.on('mock_source_message', (msg) => {
-//         console.log('message: ' + msg);
-//     });
-// });
-
 
 http.listen(3007, () => {
   console.log(' --------------------------------------------');

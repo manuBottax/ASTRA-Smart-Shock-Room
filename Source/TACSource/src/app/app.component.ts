@@ -9,6 +9,12 @@ import { HTTPService } from './services/http.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
+/**
+ * Web app that simulate the TAC machine control system. 
+ * Using this is possible to set the TAC status (unavailable, available, in use)
+ * and create TAC Report for a patient using the dedicated form. 
+ */
 export class AppComponent {
 
   subscription: Subscription;

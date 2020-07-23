@@ -60,6 +60,7 @@ module.exports.postCommand = function(req,res) {
 
 }
 
+// Publish Command using RabbitMQ Message Handler
 const publishCommand = function (commandData) {
 
     // var params = JSON.parse(commandData.params);

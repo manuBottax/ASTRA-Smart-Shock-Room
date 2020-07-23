@@ -6,19 +6,19 @@ import { DataInterface } from 'src/data.interface';
   templateUrl: './tac-data.component.html',
   styleUrls: ['./tac-data.component.css']
 })
+
+/**
+ * Component to display TAC image and related info (patient name, timestamp, TAC report).
+ */
 export class TacDataComponent implements DataInterface {
   
   @Input() data: any;
   timestamp: string = "";
 
   ngOnInit() {
-    console.log(this.data.data.value.timestamp);
 
     var date: Date = new Date (parseInt(this.data.data.value.timestamp));
-    console.log(date);
-    console.log(date instanceof Date);
-
     this.timestamp = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-    console.log(this.timestamp);
+    // console.log(this.timestamp);
   }
 }

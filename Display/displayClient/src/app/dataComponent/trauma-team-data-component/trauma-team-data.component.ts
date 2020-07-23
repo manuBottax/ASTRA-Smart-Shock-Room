@@ -6,6 +6,12 @@ import { DataInterface } from 'src/data.interface';
   templateUrl: './trauma-team-data.component.html',
   styleUrls: ['./trauma-team-data.component.css']
 })
+
+/**
+ * Component to display Trauma Team information retrieved from Trauma Tracker
+ * The actual layout is handled in patient-initial-condition-data.component.html
+ */
+
 export class TraumaTeamDataComponent implements OnInit, DataInterface {
 
   @Input() data: any;
@@ -16,14 +22,12 @@ export class TraumaTeamDataComponent implements OnInit, DataInterface {
 
   ngOnInit() {
 
-    // console.log("Trauma Team data : ");
-    // console.log(this.data.data.value);
     var value = this.data.data.value
 
     this.traumaLeader = value.traumaLeader;
 
     value.traumaTeam.forEach(member => {
-      console.log("Member : " + member)  ; 
+      // console.log("Member : " + member)  ; 
       this.traumaTeam = this.traumaTeam + member + " | "  
     });
   }

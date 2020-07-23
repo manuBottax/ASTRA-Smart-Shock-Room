@@ -18,7 +18,6 @@ export class DataContainerComponent implements OnInit {
 
   ngOnInit() {
     this.loadComponent();
-    // console.log(this.data);
   }
 
   componentRef;
