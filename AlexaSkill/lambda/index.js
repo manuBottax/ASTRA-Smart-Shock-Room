@@ -8,10 +8,7 @@ const Escape = require('lodash/escape');
 
 var lastUsedPosition = 6;
 
-// const audioUrl = Util.getS3PreSignedUrl("Media/silenzio.mp3");
-
 const requestHandler = require('then-request');
-// const requestHandler = require('sync-request');
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -23,12 +20,10 @@ const LaunchRequestHandler = {
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
         const speakOutput = `Attendo istruzioni. <audio src="${Escape(audioUrl)}"/>`;
-        // const speakOutput = `Benvenuto in ASTRA Room Controller. Attendo istruzioni. Dì , Alexa , seguito dalla tua richiesta. <audio src="${Escape(audioUrl)}"/>`;
-        
+
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(`Attendo istruzioni.`)
-            // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
             .getResponse();
     }
 };
@@ -85,8 +80,7 @@ const VisualisationRequestIntentHandler = {
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
         const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
-        // const speech =  `Richiedo la visualizzazione di ${data_type} del paziente. <audio src="${Escape(audioUrl)}"/> `
-        
+
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
             .getBody('utf-8')
             .then(JSON.parse)
@@ -97,7 +91,6 @@ const VisualisationRequestIntentHandler = {
         return handlerInput.responseBuilder
             .speak(speech)
             .reprompt(`Attendo istruzioni.`)
-            // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
             .getResponse();
     }
 }
@@ -137,7 +130,6 @@ const DrugInfoVisualisationRequestIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        // const speech =  `Richiedo la visualizzazione della quantità di farmaco ${drug_name} somministrata al paziente. <audio src="${Escape(audioUrl)}"/> `
         const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
         
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
@@ -149,7 +141,6 @@ const DrugInfoVisualisationRequestIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .reprompt(`Attendo istruzioni.`)
                 .getResponse();
         
@@ -181,13 +172,10 @@ const MonitorRequestIntentHandler = {
                 lastUsedPosition = 6;
             }
         }
-        
          
         var id = slots.monitor_type.resolutions.resolutionsPerAuthority[0].values[0].value.id;
         console.log(id);
         
-        
-        //TODO: switch sul tipo per gestione category
         var data = {json: {
             type : "monitoring",
             category : "room",
@@ -201,7 +189,6 @@ const MonitorRequestIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        // var speech = `Richiedo il monitoraggio di ${monitor_type} del paziente. <audio src="${Escape(audioUrl)}"/> `
         const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
         
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
@@ -213,7 +200,6 @@ const MonitorRequestIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .reprompt(`Attendo istruzioni.`)
                 .getResponse();
         
@@ -251,7 +237,6 @@ const OperationAnnotationRequestIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        // var speech = `Richiedo l'annotazione di ${type} ${operation} del paziente. <audio src="${Escape(audioUrl)}"/> `
         const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
@@ -263,7 +248,6 @@ const OperationAnnotationRequestIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .reprompt(`Attendo istruzioni.`)
                 .getResponse();
     }
@@ -300,7 +284,6 @@ const DrugAnnotationRequestIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        // var speech = `Richiedo l'annotazione della somministrazione di ${drug_quantity} di ${drug_name} al paziente. <audio src="${Escape(audioUrl)}"/> `
         const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
@@ -312,7 +295,6 @@ const DrugAnnotationRequestIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .reprompt(`Attendo istruzioni.`)
                 .getResponse();
     
@@ -339,7 +321,6 @@ const StartActionIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        // var speech = `Richiedo l'inizio della gestione di un trauma per il paziente in arrivo. <audio src="${Escape(audioUrl)}"/> `
         const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
@@ -351,7 +332,6 @@ const StartActionIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .reprompt(`Attendo istruzioni.`)
                 .getResponse();
         
@@ -378,7 +358,6 @@ const PatientActionIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        // var speech = `Annoto l'arrivo del paziente. <audio src="${Escape(audioUrl)}"/> `
         const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
@@ -390,7 +369,6 @@ const PatientActionIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .reprompt(`Attendo istruzioni.`)
                 .getResponse();
         
@@ -417,7 +395,6 @@ const EndActionIntentHandler = {
         
         const audioUrl = Util.getS3PreSignedUrl("Media/silence-long.mp3");
         
-        // var speech = `Richiedo la fine della gestione del trauma del paziente. <audio src="${Escape(audioUrl)}"/> `
         const speech =  `<audio src="soundbank://soundlibrary/alarms/beeps_and_bloops/bell_03"/> <audio src="${Escape(audioUrl)}"/> `
 
         await requestHandler('POST', COMMAND_SERVICE_PATH, data)
@@ -429,7 +406,6 @@ const EndActionIntentHandler = {
             
         return handlerInput.responseBuilder
                 .speak(speech)
-                // .reprompt(`Rimango in attesa di altri comandi. Tra poco sarà necessario riaprire la Skill per continuare.`)
                 .reprompt(`Attendo istruzioni.`)
                 .getResponse();
     }
@@ -533,20 +509,3 @@ exports.handler = Alexa.SkillBuilders.custom()
         ErrorHandler,
     )
     .lambda();
-    
-    
- /////// SYNC VERSION -> Not suitable for production env ////////////////////////////////////////////////////////////////////////////////////
-        
-        // const res = requestHandler('POST', COMMAND_SERVICE_PATH, data).getBody('utf-8');
-                
-        // var status = JSON.parse(res)
-        
-        // console.log(status);
-        
-        // speechOutput = status;
-    
-
-        // return handlerInput.responseBuilder
-        //     .speak(speechOutput)
-        //     .reprompt("Rimango in attesa di altri comandi")
-        //     .getResponse();

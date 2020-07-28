@@ -2,7 +2,7 @@
 
 /* Initial beliefs and rules */
 
-current_patient("654321").
+current_patient("987654").
 
 /* Initial goals */
 
@@ -82,15 +82,32 @@ current_patient("654321").
 		getMockData(Value) [artifact_id(MockSourceId)];
 		!displayData(CommandId, DataType, Value, Target, Position).
 		
+// -> Some of it use full size visualisation.
 +! requestData(CommandId, "chest_rx", Target, Position)
-	<-	.println("Searching for RX Data");
+	<-	!freeFullSizeMonitor;
+		.println("Searching for RX Data");
 		getMockImage(Value) [artifact_id(MockSourceId)];
 		!displayData(CommandId, "chest_rx", Value, Target, Position).
 	
 +! requestData(CommandId, "tac", Target, Position) : current_patient(P_ID)
-	<-	.println("Searching for TAC data ");
+	<-	!freeFullSizeMonitor;
+		.println("Searching for TAC data ");
 		getTACData(P_ID, Value) [artifact_id(TacSourceId)];
 		!displayData(CommandId, "tac", Value, Target, Position). 
+
++! requestData(CommandId, "patient_initial_condition", Target, Position)
+	<-	! freeFullSizeMonitor;
+		.println("Searching for Initial Condition data ");
+		getPatientInitialCondition(Value) [artifact_id(TraumaId)];
+		!displayData(CommandId, "patient_initial_condition", Value, Target, Position). 
+		
++! freeFullSizeMonitor 
+	<- 	.println("Stopping monitoring")
+
+		.send(roomMonitoringAgent, tell, visualise_on("7"));
+		.send(roomMonitoringAgent, tell, visualise_on("8"));
+		.send(roomMonitoringAgent, tell, visualise_on("6"));
+		.wait(1500).
 
 /* Temporal data */
 +! requestData(CommandId, "eta", Target, Position)
@@ -150,6 +167,13 @@ current_patient("654321").
 	<-	.println("Got TAC value");
 		.println("Displaying TAC in ", Target, " on ", Position);
 		showTAC(Value, Position) [artifact_id(Target)]
+		.println("Display request completed successfully");
+		! completeCommand.
+		
++! displayData(CommandId, "patient_initial_condition", Value, Target, Position)
+	<-	.println("Got Patient Initial Condition value");
+		.println("Displaying Patient Initial Condition in ", Target, " on ", Position);
+		showPatientInitialConditionInfo(Value, Position) [artifact_id(Target)]
 		.println("Display request completed successfully");
 		! completeCommand.
 		

@@ -42,7 +42,6 @@
 +! processCommand(CommandId, "monitoring", DataType, Target, Position) : current_command(Command)
 	<-	.println("Working on Command ", CommandId);
 		.println("Want to monitor ", DataType);
-		!freePosition(Position, DataType);
 		+use_position(Position, DataType);
 		!monitorData(Command, DataType, Target, Position).
 /* ---------- Biometric Data Monitoring ------------------------ */
@@ -210,11 +209,13 @@
 + visualise_on(Position) : use_position (Position, Type)
 	<-	.println("Received message from Visualisation Agent. Want to free position " , Position);
 		.println("Position ", Position , " used by " , Type)
-		! freePosition(Position, Type).
+		! freePosition(Position, Type);
+		-visualise_on(Position).
 		
 + visualise_on(Position)
 	<-	.println("Received message from Visualisation Agent. Want to free position " , Position);
-		.println("Position is free").
+		.println("Position is free");
+		-visualise_on(Position).
 		
 +! freePosition(Position, "blood_pressure")
 	<- 	! stopMonitoringBloodPressure(Position).
@@ -225,12 +226,6 @@
 +! freePosition(Position, "heart_rate")
 	<- 	! stopMonitoringHeartRate(Position).
 	
-+! freePosition(Position, "temperature")
-	<- 	! stopMonitoringTemperature(Position).
-	
-+! freePosition(Position, "temperature")
-	<- 	! stopMonitoringTemperature(Position).
-
 +! freePosition(Position, "temperature")
 	<- 	! stopMonitoringTemperature(Position).
 	

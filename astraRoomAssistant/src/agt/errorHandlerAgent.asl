@@ -104,10 +104,6 @@
 
 /* + last_refused_command(Command, CommandID) [source(TraumaQueue)]
 	<-	.println("A trauma command was refused : " , Command). */
-
-	
-	
-	
 	
 +? find_room_visualisation_queue(RoomVisualQueue) 
 	<-	lookupArtifact("roomVisualisationCommands", RoomVisualQueue).

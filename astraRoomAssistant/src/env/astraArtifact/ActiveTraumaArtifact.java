@@ -63,8 +63,6 @@ public class ActiveTraumaArtifact extends Artifact {
 				    				
 				JSONObject json = new JSONObject(res.getValue());
 				
-				//System.out.println(json);
-				
 				String teamLeader = json.getString("traumaLeader") ;
 				
 				JSONArray t = json.getJSONArray("traumaTeamMembers");
@@ -73,12 +71,7 @@ public class ActiveTraumaArtifact extends Artifact {
 				
 				for(int i = 0; i < t.length(); i++) {
 					team.add((String) t.get(i));
-					//System.out.println("Team Members : " + team);
 				}
-				
-				//System.out.println("Team Leader : " + teamLeader);
-				
-				//System.out.println("Team Members : " + team);
                 
 				traumaLeader.set(teamLeader);
 				traumaTeam.set(team);
@@ -90,7 +83,6 @@ public class ActiveTraumaArtifact extends Artifact {
 			} 
         	
         } catch (IOException ex){
-            //ex.printStackTrace();
             System.out.println("Error : Cannot Reach Trauma Service");
 			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("Trauma Data retrieve failed", "unavailable service", "failed_trauma_data_retrieve" );
@@ -109,8 +101,7 @@ public class ActiveTraumaArtifact extends Artifact {
 			
 			if (res.getKey() == 200) {
 				    				
-				JSONObject json = new JSONObject(res.getValue());
-				
+				JSONObject json = new JSONObject(res.getValue());	
 				preHInfo.set(json);
 				
 			} else {
@@ -120,7 +111,6 @@ public class ActiveTraumaArtifact extends Artifact {
 			} 
         	
         } catch (IOException ex){
-            //ex.printStackTrace();
             System.out.println("Error : Cannot Reach Trauma Service");
 			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("Trauma Data retrieve failed", "unavailable service", "failed_trauma_data_retrieve" );
@@ -139,7 +129,6 @@ public class ActiveTraumaArtifact extends Artifact {
 			if (res.getKey() == 200) {
 				    				
 				JSONObject json = new JSONObject(res.getValue());
-				
 				traumaInfo.set(json);
 				
 			} else {
@@ -149,7 +138,6 @@ public class ActiveTraumaArtifact extends Artifact {
 			} 
         	
         } catch (IOException ex){
-            //ex.printStackTrace();
             System.out.println("Error : Cannot Reach Trauma Service");
 			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("Trauma Data retrieve failed", "unavailable service", "failed_trauma_data_retrieve" );
@@ -178,7 +166,6 @@ public class ActiveTraumaArtifact extends Artifact {
 			} 
         	
         } catch (IOException ex){
-            //ex.printStackTrace();
             System.out.println("Error : Cannot Reach Trauma Service");
 			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("Trauma Data retrieve failed", "unavailable service", "failed_trauma_data_retrieve" );
@@ -197,7 +184,6 @@ public class ActiveTraumaArtifact extends Artifact {
 			if (res.getKey() == 200) {
 				    				
 				JSONArray json = new JSONArray(res.getValue());
-				
 				eventList.set(json);
 				
 			} else {
@@ -226,7 +212,6 @@ public class ActiveTraumaArtifact extends Artifact {
 			if (res.getKey() == 200) {
 				    				
 				JSONObject json = new JSONObject(res.getValue());
-				
 				event.set(json);
 				
 			} else {
@@ -236,7 +221,6 @@ public class ActiveTraumaArtifact extends Artifact {
 			} 
         	
         } catch (IOException ex){
-            //ex.printStackTrace();
             System.out.println("Error : Cannot Reach Trauma Service");
 			getObsProperty("trauma_artifact_status").updateValue(ArtifactStatus.SERVICE_UNREACHABLE.getStatus());
 			failed("Trauma Data retrieve failed", "unavailable service", "failed_trauma_data_retrieve" );
@@ -266,9 +250,7 @@ public class ActiveTraumaArtifact extends Artifact {
 				if (res.getKey() == 200) {	
 					    				
 					JSONObject json = new JSONObject(res.getValue());
-					
 					String st = json.getString("trauma_current_status");
-					
 					String old = (String) status.getValue();
 					
 					if (! old.equals(st)) {
